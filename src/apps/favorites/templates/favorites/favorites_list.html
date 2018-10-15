@@ -1,0 +1,31 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Lista de favoritos{% endblock meta_description %}
+{% block head_title %}- Lista de favoritos{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Lista de favoritos</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+
+  <section class="container">
+    {% include "anuncios/_anuncio_list.html" with anuncios=anuncio_list %}
+
+    {% if anuncio_list %}
+      <section class="row">
+        <div class="col-12">
+          <a class="btn btn-outline-danger" href="{% url 'favorites:delete_all' %}">
+            Limpiar lista de favoritos
+          </a>
+        </div>
+      </section>
+    {% endif %}
+
+    {% include "_pagination.html" %}
+  </section>
+{% endblock accounts_content %}

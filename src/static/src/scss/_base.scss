@@ -1,0 +1,44 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  padding-top: 54px;
+  color: $body-color;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+button {
+  @extend .cursor-pointer;
+}
+
+@include media-breakpoint-down(xs) {
+  // Eliminar paddings izquierdo y derecho en xs.
+  .px-xs-none {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  // En <= md usar todo el ancho de la ventana.
+  .container {
+    width: 98%;
+  }
+}
+
+// Ocultar tags vue mientras carga.
+[v-cloak] {
+  display: none;
+}

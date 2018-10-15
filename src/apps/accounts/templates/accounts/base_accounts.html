@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-3 order-2 order-lg-1">{% include "accounts/_sidenavs.html" %}</div>
+      <div class="col-lg-9 order-1 order-lg-2">{% block accounts_content %}{% endblock accounts_content %}</div>
+    </section>
+  </section>
+{% endblock content %}

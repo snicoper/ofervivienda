@@ -1,0 +1,14 @@
+{% with payment.user as user %}Hola {% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}!
+Se ha completado el pago para {{ payment.item_name }}.
+
+Datos del Pago.
+===============
+
+Nombre de artículo: {{ payment.item_name }}
+Estado: {{ payment.payment_status }}
+Importe del artículo:	{{ payment.total_amount }}€
+ID Transacción : {{ payment.txn_id }}
+ID Factura : {{ payment.invoice }}
+
+Puedes acceder a tu cuenta de {{ site_name }} a través del enlace:
+{{ profile_url }}{% endwith %}

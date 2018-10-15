@@ -1,0 +1,44 @@
+[
+{
+  "model": "pmessages.message",
+  "pk": 1,
+  "fields": {
+    "parent": null,
+    "anuncio": 14,
+    "sender": 2,
+    "recipient": 1,
+    "body": "hola mundo",
+    "subject": "Mensaje de prueba",
+    "recipient_read": true,
+    "sent_at": "2016-11-02T02:09:04.413Z"
+  }
+},
+{
+  "model": "pmessages.message",
+  "pk": 2,
+  "fields": {
+    "parent": null,
+    "anuncio": null,
+    "sender": 2,
+    "recipient": 1,
+    "body": "Hola mundo",
+    "subject": "Hola desde el perfil",
+    "recipient_read": false,
+    "sent_at": "2016-11-02T02:09:38.521Z"
+  }
+},
+{
+  "model": "pmessages.message",
+  "pk": 3,
+  "fields": {
+    "parent": 1,
+    "anuncio": 14,
+    "sender": 1,
+    "recipient": 2,
+    "body": "Hola a ti tambien",
+    "subject": "RE: Mensaje de prueba",
+    "recipient_read": false,
+    "sent_at": "2016-11-02T02:10:17.650Z"
+  }
+}
+]

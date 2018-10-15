@@ -1,0 +1,78 @@
+[
+{
+  "model": "alerts.alertanuncio",
+  "pk": 1,
+  "fields": {
+    "country": "",
+    "state": "",
+    "city": "",
+    "address": "",
+    "zipcode": "",
+    "location_string": "",
+    "latitude": 41.6205,
+    "longitude": 2.2824,
+    "radius": null,
+    "point": null,
+    "polygon": "SRID=4326;POLYGON ((2.2824 41.6105, 2.29601 41.61012, 2.29574 41.6157, 2.29599 41.62076, 2.2824 41.6205, 2.2824 41.6105))",
+    "category": "HABITACION",
+    "type_anuncio": "ALQUILER",
+    "estado_inmueble": "",
+    "metros_cuadrados": null,
+    "precio": "225",
+    "currency": "EUR",
+    "active": true,
+    "create_at": "2016-10-27T02:40:15.685Z",
+    "update_at": "2016-10-27T02:40:15.685Z",
+    "owner": 1,
+    "description": "Habitacion en Granollers"
+  }
+},
+{
+  "model": "alerts.alertanuncio",
+  "pk": 2,
+  "fields": {
+    "country": "",
+    "state": "",
+    "city": "",
+    "address": "",
+    "zipcode": "",
+    "location_string": "",
+    "latitude": 41.60988,
+    "longitude": 2.28917,
+    "radius": null,
+    "point": null,
+    "polygon": "SRID=4326;POLYGON ((2.28917 41.59988, 2.29917 41.59988, 2.28917 41.60988, 2.28917 41.59988))",
+    "category": "APARTAMENTO",
+    "type_anuncio": "VENTA",
+    "estado_inmueble": "BUENESTADO",
+    "metros_cuadrados": 60,
+    "precio": "100998",
+    "currency": "EUR",
+    "active": true,
+    "create_at": "2016-10-27T06:24:48.475Z",
+    "update_at": "2016-10-27T06:24:48.475Z",
+    "owner": 2,
+    "description": "Habitacion en Granollers"
+  }
+},
+{
+  "model": "alerts.alertapartamento",
+  "pk": 2,
+  "fields": {
+    "habitaciones": 1,
+    "banos": 1,
+    "ano_construccion": null,
+    "parking": false
+  }
+},
+{
+  "model": "alerts.alerthabitacion",
+  "pk": 1,
+  "fields": {
+    "genero": "CHICOCHICA",
+    "permite_fumar_habitacion": true,
+    "permite_fumar_piso": false,
+    "internet": false
+  }
+}
+]

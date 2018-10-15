@@ -1,0 +1,114 @@
+.bg-primary-alter {
+  background-color: theme-color("primary-alter");
+  color: $white;
+}
+
+.bg-purple { background-color: theme-color("purple"); }
+.text-purple { color: theme-color("purple"); }
+
+// Colores de fondo según la categoría.
+.bgcolor-piso {
+  background-color: $color-piso;
+  color: #fff;
+}
+
+.bgcolor-casa {
+  background-color: $color-casa;
+  color: #fff;
+}
+
+.bgcolor-apartamento {
+  background-color: $color-apartamento;
+  color: #fff;
+}
+
+.bgcolor-habitacion {
+  background-color: $color-habitacion;
+  color: #fff;
+}
+
+.bgcolor-terreno {
+  background-color: $color-terreno;
+  color: #fff;
+}
+
+.bgcolor-parking {
+  background-color: $color-parking;
+  color: #fff;
+}
+
+.bgcolor-industrial {
+  background-color: $color-industrial;
+  color: #fff;
+}
+
+.bgcolor-local {
+  background-color: $color-local;
+  color: #fff;
+}
+
+// Colores de texto según la categoría.
+.color-piso-text { color: $color-piso; }
+.color-casa-text { color: $color-casa; }
+.color-apartamento-text { color: $color-apartamento; }
+.color-habitacion-text { color: $color-habitacion; }
+.color-terreno-text { color: $color-terreno; }
+.color-parking-text { color: $color-parking; }
+.color-industrial-text { color: $color-industrial; }
+.color-local-text { color: $color-local; }
+
+// Colores de fondo para el tipo de anuncio.
+.bgcolor-tipo-venta {
+  background-color: $color-tipo-venta;
+  color: #fff;
+}
+
+.bgcolor-tipo-alquiler {
+  background-color: $color-tipo-alquiler;
+  color: #fff;
+}
+
+// Colores de texto para el tipo de anuncio.
+.color-tipo-venta { color: $color-tipo-venta; }
+.color-tipo-alquiler { color: $color-tipo-alquiler; }
+
+// Colores de fondo para el estado.
+.bgcolor-estado-obranueva {
+  background-color: $color-estado-obranueva;
+  color: #fff;
+}
+
+.bgcolor-estado-buenestado {
+  background-color: $color-estado-buenestado;
+  color: #fff;
+}
+
+.bgcolor-estado-areformar {
+  background-color: $color-estado-areformar;
+  color: #fff;
+}
+
+// Colores de texto para el estado.
+.color-estado-obranueva { color: $color-estado-obranueva; }
+.color-estado-areformar { color: $color-estado-areformar; }
+
+// Colores de fondo para el genero.
+.bgcolor-chico {
+  background-color: $color-chico;
+  color: #fff;
+}
+
+.bgcolor-chica {
+  background-color: $color-chica;
+  color: #fff;
+}
+
+.bgcolor-chicochica {
+  background-color: $color-chicochica;
+  color: #fff;
+}
+
+// Colores de texto para el genero.
+.color-chico { color: $color-chico; }
+.color-chica { color: $color-chica; }
+.color-chicochica { color: $color-chicochica; }

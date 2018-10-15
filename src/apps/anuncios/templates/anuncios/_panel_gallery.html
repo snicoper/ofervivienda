@@ -1,0 +1,22 @@
+<div class="mb-3">
+  <h2><i class="material-icons md-6">photo</i> Galería</h2>
+  <hr>
+
+  {% with anuncio.image_anuncio.all as images %}
+    <section id="lightgallery" class="row text-center">
+      {% for image in images %}
+        {% with image.description|default:'Sin descripción' as image_description %}
+          <div class="col-sm-6 col-lg-4 my-2">
+            <a href="{{ MEDIA_URL }}{{ image.image }}">
+              <img class="img-fluid rounded z-depth-1"
+                   src="{{ MEDIA_URL }}{{ image.thumbnail }}"
+                   alt="{{ image_description }}"
+                   title="{{ image_description }}"
+              >
+            </a>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </section>
+  {% endwith %}
+</div>

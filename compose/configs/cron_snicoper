@@ -1,0 +1,19 @@
+MAILTO=snicoper@ofervivienda.com
+
+# Backup de la base de datos.
+0 1 * * * /var/webapps/ofervivienda.com/cron/postgres_db_backup.sh
+
+# Eliminar sesiones caducadas.
+2 1 * * * /var/webapps/ofervivienda.com/cron/clear_sessions.sh
+
+# Backup de los archivos media.
+4 1 * * * /var/webapps/ofervivienda.com/cron/media_backup.sh
+
+# Cuentas premium expiradas poner is_premium = False
+6 1 * * * ~/.virtualenvs/ofervivienda.com/bin/python /var/webapps/ofervivienda.com/cron/cuentas_premium_expiradas.py
+
+# Ping Google
+8 1 * * * /var/webapps/ofervivienda.com/cron/ping_google.sh
+
+# rsync para backups
+1 3 * * * /var/webapps/ofervivienda.com/cron/rsync_backups.sh

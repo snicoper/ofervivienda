@@ -1,0 +1,65 @@
+[
+{
+  "model": "gallery.imageanuncio",
+  "pk": 1,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/01.jpg",
+    "thumbnail": "anuncios/thumbnail_01.jpg"
+  }
+},
+{
+  "model": "gallery.imageanuncio",
+  "pk": 2,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/COMEDOR_FINAL.jpg",
+    "thumbnail": "anuncios/thumbnail_COMEDOR_FINAL.jpg"
+  }
+},
+{
+  "model": "gallery.imageanuncio",
+  "pk": 3,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/Interior-4.jpg",
+    "thumbnail": "anuncios/thumbnail_Interior-4.jpg"
+  }
+},
+{
+  "model": "gallery.imageanuncio",
+  "pk": 4,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/p1ahcfl4p4fi1q71p7q1582l7qf.jpg",
+    "thumbnail": "anuncios/thumbnail_p1ahcfl4p4fi1q71p7q1582l7qf.jpg"
+  }
+},
+{
+  "model": "gallery.imageanuncio",
+  "pk": 5,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/p1ahcfmbel215snintsuqvet7l.jpg",
+    "thumbnail": "anuncios/thumbnail_p1ahcfmbel215snintsuqvet7l.jpg"
+  }
+},
+{
+  "model": "gallery.imageanuncio",
+  "pk": 6,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/SALON_FINAL.jpg",
+    "thumbnail": "anuncios/thumbnail_SALON_FINAL.jpg"
+  }
+},
+{
+  "model": "gallery.imageanuncio",
+  "pk": 7,
+  "fields": {
+    "anuncio": 14,
+    "image": "anuncios/V6D_post_pro_72.jpg",
+    "thumbnail": "anuncios/thumbnail_V6D_post_pro_72.jpg"
+  }
+}
+]

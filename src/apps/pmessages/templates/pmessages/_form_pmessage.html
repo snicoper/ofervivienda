@@ -1,0 +1,45 @@
+{% load djtemplateforms_tags %}
+
+<div id="pm"></div>
+{% if user.is_authenticated and user != anuncio.owner %}
+  <div id="btn-show-form-message" class="text-center">
+    <button class="btn btn-outline-primary btn-sm mb-2">
+      <i class="material-icons">message</i> {{ btn_form_message|default:'Mandar mensaje' }}
+    </button>
+  </div>
+
+  <div id="anuncio-form-message" class="row hidden">
+    {% if anuncio.owner.username %}
+      <div class="col-12">
+        <p class="text-muted ml-2">
+          <strong>
+            Mandar mensaje privado a
+            <span class="text-success">{{ anuncio.owner.get_public_name }}</span>
+          </strong>
+        </p>
+      </div>
+    {% endif %}
+
+    <div class="col-12 p-4">
+      <form id="form-pmessages" method="post" action="{% url 'pmessages:create' %}">
+        {% csrf_token %}
+
+        <div class="form-row">
+          {% form form %}
+
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <div class="col-12">
+            <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+            <a id="btn-hide-form-message" class="btn btn-outline-warning btn-sm" href="javascript:void(0);">Cancelar</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% else %}
+  <div class="text-center">
+    <a class="btn btn-outline-primary btn-sm mb-2" href="{% url 'authentication:login' %}?next={{ request.path }}#pm">
+      <i class="material-icons">message</i> Mandar mensaje
+    </a>
+  </div>
+{% endif %}

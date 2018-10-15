@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% block meta_description %}Compra venta y alquiler de Pisos, Casas, Habitaciones, Apartamentos, anuncios gratis{% endblock meta_description %}">
+  <meta name="keywords" content="Venta, casa, piso, apartamento, parking, locales, local, terrenos, naves, industrial, alquiler, habitaciones">
+  <meta name="author" content="Salvador Nicolas <snicoper@ofervivienda.com>">
+  <!-- og properties -->
+  {% block og_properties %}{% endblock og_properties %}
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'logo.png' %}">
+  <title>{{ SITE.name }} {% block head_title %}{% endblock head_title %}</title>
+
+  <!-- CSS -->
+  <link href="{% static 'dist/css/main.css' %}" rel="stylesheet">
+
+  <!-- extras en header -->
+  {% block extra_heads %}{% endblock extra_heads %}
+
+  <!-- Google Analytics -->
+  {% if not debug %}
+    {% include "_google_analytics.html" %}
+  {% endif %}
+</head>
+<body>
+  <!-- header -->
+  {% block header %}
+    {% include "_header.html" %}
+  {% endblock header %}<!-- end header -->
+
+  <!-- content -->
+  <main>
+    <!-- Titulo de la pagina -->
+    {% block page_title %}{% endblock page_title %}
+
+    <!-- Bloque de anuncio -->
+    {% block main_addsense %}
+      {% include "adsense/_adsense_header.html" %}
+    {% endblock main_addsense %}
+
+    <div class="mt-4"></div>
+
+    <!-- Contenido principal -->
+    {% block content %}{% endblock content %}
+  </main><!-- end content -->
+
+  <!-- footer -->
+  {% block footer %}
+    {% include "_footer.html" %}
+  {% endblock footer %}<!-- end footer -->
+
+  <!-- Boton de subir, solo se muestra en resoluciones >= tablets -->
+  <div class="to-top hidden d-none d-md-block"></div>
+
+  <!-- cookieconsent -->
+  {% include "_cookieconsent.html" %}
+
+  <!-- Javascript -->
+  <script src="{% static 'dist/js/third.min.js' %}"></script>
+  <script src="{% static 'dist/js/main.js' %}"></script>
+
+  <!-- mensajes -->
+  {% if messages %}
+    {% include "_messages.html" %}
+  {% endif %}
+
+  <!-- scripts -->
+  {% block scripts %}{% endblock scripts %}
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends "accounts/base_accounts.html" %}
+{% load utils_tags %}
+
+{% block meta_description %}Detalles del mensaje de contacto {{ message.subject }}{% endblock meta_description %}
+{% block head_title %} - Detalles del mensaje de contacto {{ message.subject }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Detalles del mensaje</h1>
+      <hr>
+      <p class="lead">{{ message.subject }}</p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <ul class="list-unstyled">
+          <li><strong>Asunto: </strong>{{ message.subject }}</li>
+          <li><strong>Nombre: </strong>{{ message.username }}</li>
+          <li><strong>Email: </strong>{{ message.email }}</li>
+          <li>
+            <strong>Usuario registrado: </strong>
+            {% display_for message.is_register %}
+          </li>
+          <li><strong>Fecha: </strong>{{ message.create_at|date:"SHORT_DATETIME_FORMAT" }}</li>
+          {% if message.screenshot %}
+            <li class="center-align mt-3">
+              <h3>Captura aportada:</h3>
+
+              <a href="{{ MEDIA_URL }}{{ message.screenshot }}" target="_blank">
+                <img class="img-fluid rounded z-depth-1" src="{{ MEDIA_URL }}{{ message.screenshot }}" alt="Captura">
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+
+        <div>
+          <hr>
+          {{ message.message|escape|linebreaksbr }}
+          <hr>
+        </div>
+
+        <div>
+          <a class="btn btn-primary" href="{% url 'contact:message_list' %}">Volver a mensajes</a>
+          {% if perms.contact_message_contact.can_delete %}
+            <a class="btn btn-danger"
+               target="_blank"
+               href="/admin/contact/contactmessage/{{ message.id }}/change/"
+            >
+              Eliminar
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+  </section>
+{% endblock accounts_content %}

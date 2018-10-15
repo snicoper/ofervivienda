@@ -1,0 +1,13 @@
+Se ha bajado el precio de un anuncio en {{ site_name }}.
+
+El anuncio es: {{ anuncio_title }}
+El precio anterior era de: {{ old_precio }}{{ currency }}
+El nuevo precio es de: {{ new_precio }}{{ currency }}
+
+Para ver los detalles del anuncio, visita el siguiente enlace:
+
+{{ url_anuncio }}
+
+Si no quires seguir recibiendo estas notificaciones, entra en el perfil de usuario para cambiar las opciones.
+
+Atentamente, el equipo de {{ site_name }}

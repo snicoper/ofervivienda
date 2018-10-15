@@ -1,0 +1,67 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Localización{% endblock meta_description %}
+{% block head_title %}- Localización{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Localización</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="row">
+    <div class="col-12">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td><i class="material-icons">language</i> País</td>
+            <td class="text-value">{{ location.country|default:'Sin datos' }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">language</i> Provincia</td>
+            <td class="text-value">{{ location.state|default:'Sin datos' }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">language</i> Población</td>
+            <td class="text-value">{{ location.city|default:'Sin datos' }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">language</i> Dirección</td>
+            <td class="text-value">{{ location.address|default:'Sin datos' }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">language</i> C.P</td>
+            <td class="text-value">{{ location.zipcode|default:'Sin datos' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center">
+        <a class="btn btn-primary" href="{% url 'accounts:location_update' %}">
+          Editar
+        </a>
+
+        {% if location.point.coords.1 %}
+          <a class="btn btn-success set-position-gmaps"
+             href="#"
+             data-toggle="modal"
+             data-target="#map-modal"
+             data-latitude="{{ location.point.coords.1 }}"
+             data-longitude="{{ location.point.coords.0 }}"
+          >
+            <i class="material-icons">place</i> Ver mapa
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% include "_gmaps_modal.html" %}
+{% endblock accounts_content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" %}
+{% endblock scripts %}

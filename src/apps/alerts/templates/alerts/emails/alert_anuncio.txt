@@ -1,0 +1,15 @@
+{% load utils_tags %}Se ha añadido un anuncio en {{ site_name }} que quizá pueda interesarte.
+
+Estas son algunas de las características del anuncio:
+
+Localización: {{ anuncio.location_string }}
+Categoría: {{ anuncio.get_category_display }}
+Precio: {{ anuncio|currency }}
+
+Para ver con mas detalle el anuncio, visita el siguiente enlace:
+
+{{ anuncio_url }}
+
+Si quieres darte de baja en estas alertas, ve al siguiente enlace y edita las alertas:
+
+{{ alerts_url }}

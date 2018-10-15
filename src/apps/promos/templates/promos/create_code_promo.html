@@ -1,0 +1,64 @@
+{% extends "accounts/base_accounts.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Generar código de promoción{% endblock meta_description %}
+{% block title %}- Generar código de promoción{% endblock title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Generar código de promoción</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <div class="alert alert-info alert-icon">
+          El código sera valido durante <strong>{{ promo_expire_days }}</strong> días.<br>
+          <small>Para cambiarlo, modificar <code>src/apps/promos/settings.py</code></small>
+        </div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="form-row">
+            {% form form %}
+
+            <div class="col-12">
+              <div id="user-for-code-promotion" class="mb-3"></div>
+              <button class="btn btn-primary" type="submit">Generar y enviar</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock accounts_content %}
+
+{% block scripts %}
+  {# Muestra nombre y email del id usuario debajo del form. #}
+  <script>
+    $('#id_to_user').on('keyup', function() {
+      var url = "{% url 'promos:api_get_user_in_form' %}";
+
+      $.ajax({
+        url: url,
+        type: 'GET',
+        data: {
+          user_id: $('#id_to_user').val(),
+        }
+      })
+      .done(function(data) {
+        if (data) {
+          var content = $('#user-for-code-promotion');
+          var html = '<strong>Nombre:</strong> ' + data['username'] + '<br>';
+          html += '<strong>Email:</strong> ' + data['email'];
+          content.html(html);
+        }
+      });
+    });
+  </script>
+{% endblock scripts %}

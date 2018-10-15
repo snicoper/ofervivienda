@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Django",
+      "type": "python",
+      "request": "launch",
+      "stopOnEntry": true,
+      "pythonPath": "${config:python.pythonPath}",
+      "program": "${workspaceRoot}/manage.py",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "runserver",
+        "--noreload"
+      ],
+      "debugOptions": [
+        "WaitOnAbnormalExit",
+        "WaitOnNormalExit",
+        "RedirectOutput",
+        "DjangoDebugging"
+      ]
+    },
+    {
+      "name": "Django unittest",
+      "type": "python",
+      "request": "launch",
+      "stopOnEntry": true,
+      "pythonPath": "${config:python.pythonPath}",
+      "program": "${workspaceRoot}/test_manage.py",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "test",
+        "tests.unit"
+      ],
+      "debugOptions": [
+        "WaitOnAbnormalExit",
+        "WaitOnNormalExit",
+        "RedirectOutput",
+        "DjangoDebugging"
+      ]
+    }
+  ]
+}

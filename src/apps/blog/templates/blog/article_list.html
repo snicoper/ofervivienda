@@ -1,0 +1,54 @@
+{% extends "blog/base_blog.html" %}
+{% load utils_tags %}
+
+{% block meta_description %}Pagina de inicio del Blog - Lista de artículos{% endblock meta_description %}
+{% block head_title %} - Blog{% endblock head_title %}
+
+{% block blog_content %}
+  <section class="container">
+    <section class="row">
+      {% for article in article_list %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card card-large mt-4 z-depth-1 border-0">
+            <a href="{% url 'blog:article_detail' article.slug %}">
+              <img class="card-img-top"
+                   src="{{ MEDIA_URL }}{{ article.default_tag.thumbnail }}"
+                   alt="{{ article.title }}"
+              >
+            </a>
+
+            <div class="card-body d-flex flex-column p-0">
+              <small class="bg-secondary p-2">
+                <i class="material-icons md-3">person</i> {{ article.owner.username }}
+                <i class="material-icons md-3">access_time</i> {{ article.create_at|timesince }}
+                {% include "blog/_disqus_num_comments.html" %}
+
+                {% if user.is_superuser %}
+                  <i class="material-icons md-3">remove_red_eye</i> {{ article.views }}
+                {% endif %}
+              </small>
+
+              <h5 class="card-title px-2 mt-2">
+                <a href="{% url 'blog:article_detail' article.slug %}">{{ article.title }}</a>
+              </h5>
+
+              <div class="p-2">
+                {% markdown article.description|truncatechars:200 safe=True %}
+              </div>
+
+              <div class="mt-auto py-4 pl-2">
+                {% for tag in article.tags.all %}
+                  <a href="{% url 'blog:articles_by_tag' tag.slug %}">
+                    <span class="badge badge-secondary">{{ tag.title }}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+
+    <div class="col-12 mt-4">{% include "_pagination.html" %}</div>
+  </section>
+{% endblock blog_content %}

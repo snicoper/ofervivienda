@@ -1,0 +1,32 @@
+{% extends "accounts/base_accounts.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Actualizar perfil{% endblock meta_description %}
+{% block head_title %}- Actualizar perfil{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Actualizar perfil</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="row">
+    <div class="col-12">
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="form-row">
+          {% form form %}
+
+          <div class="col-12">
+            <button class="btn btn-success" type="submit">Actualizar</button>
+            <a class="btn btn-primary" href="{% url 'accounts:profile' %}">Volver</a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </section>
+{% endblock accounts_content %}

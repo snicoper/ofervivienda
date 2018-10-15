@@ -1,0 +1,22 @@
+.navbar {
+  @extend .z-depth-2;
+}
+
+// Drop down login.
+#navbar-form-login {
+  .input-group-addon {
+    background-color: theme-color("dark");
+    color: $white;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  // Ocultar caret en la barra superior.
+  .nav-item {
+    &.dropdown {
+      .dropdown-toggle::after {
+        display: none;
+      }
+    }
+  }
+}

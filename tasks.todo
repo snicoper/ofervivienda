@@ -1,0 +1,291 @@
+Objetivos globales:
+
+  ✘ A final de 2017 al menos ganar 300€ al mes. @cancelled (11/3/2017, 10:34:21 PM) (No conseguido)
+  ✘ A final de 2017 2000 paginas vistas al día. @cancelled (11/3/2017, 10:34:16 PM) (No conseguido)
+
+############################################################################
+
+Tareas sin version:
+
+  ☐ Crear documentación de payments, funcionamiento, etc.
+  ☐ Si hay anuncios suficientes, desactivarlo por tiempo.
+  ☐ Cron, desactivar anuncios, ver ``cron/deactivate_anuncios.py``.
+  ☐ Después X tiempo inactivo un anuncio, ¿eliminar las imágenes del anuncio? (Por el tamaño de las imágenes), ver como aumenta el espacio en disco con las imágenes.
+  ☐ Revisar bloques publicidad, cuando hayan mas visitas añadir uno al menu y otro en los footer de detalles.
+  ☐ Optimizar los querysets.
+  ☐ Cuando hayan anuncios suficientes ver docs/dev/ocultar_anuncios_fake.rst
+  ☐ Hacer pruebas con channel para un chat directo.
+  ☐ Añadir Vue.js en las búsquedas para que sea mas dinámico todo?.
+  ☐ Cuando esta marcado para notificaciones de bajada de precio, el anunciante puede bajar 1€ para que la gente reciba notificaciones y puede ser molesto. Pensar si hacer alguna solución.
+
+  ############################################################################
+
+  Tareas V2.0.0:
+
+    Hacer:
+
+      ☐ Cambiar ip del server para crear backups en mi PC.
+      ☐ Por alguna razon, /admin/ redirecciona al home, la url de /admin/ se ha cambiado a /sadmin/ pero /admin/ siguie redireccionando.
+    ✔ @high En prod, el código de verificación de ipn, siempre es INVALID. Falta comprobar si se ha solucionado. @done (11/9/2017, 7:19:12 AM)
+    ✔ @high Nginx la restricción a la IP no funciona. Actualmente tiene la restricción pero no funciona. (Cambiado /admin/ por /sadmin/ @done (11/5/2017, 4:49:24 PM)
+    ✔ Cambiado gulpfile, ahora no se guarda en el repo los archivos generados por gulp. @done (10/29/2017, 11:08:27 PM)
+    ✔ Añadido display_for para representación de valores en los templates.  @done(2017-10-29 09:46) @project(Tareas V2.0.0 / Hacer)
+    ✔ Busquedas avanzadas (gmaps) ahora se usa django rest frameworks. Muestra una imagen aleatoria en el resultado.  @done(2017-10-28 09:47) @project(Tareas V2.0.0 / Hacer)
+    ✔ Creado djtemplateforms y quitado crispy_forms. @done(2017-10-28 06:23) @project(Tareas V2.0.0 / Hacer)
+    ✔ Movias urls de las apis dentro del modulo api/urls.py. @done(2017-10-28 07:59) @project(Tareas V2.0.0 / Hacer)
+    ✔ Movidos archivos api.py a un directorio api/views.py. @done(2017-10-28 06:23) @project(Tareas V2.0.0 / Hacer)
+    ✔ Añadir login con drop drown en navbar, solo en lg.  @done(2017-10-21 17:56) @project(Tareas V2.0.0 / Hacer)
+    ✔ Bootstrap 4 beta. @done(2017-10-21 17:55) @project(Tareas V2.0.0 / Hacer)
+    ✔ Generar adsense fake como resourceslibres. @done(2017-04-29 05:21) @project(Tareas V1.9.0 / Hacer)
+    ✔ Generar unittest para fecha de expiración de la app promos. @done(2017-04-30 05:13) @project(Tareas V1.9.0 / Hacer)
+    ✔ Implementar en promos días de expiración poniendo los días de expiración en un settings.py @done(2017-04-28 15:59) @project(Tareas V1.9.0 / Hacer)
+    ✔ Probar font Roboto, por defecto con la de Bootstrap se ve algo fea en Chrome. @done(2017-04-28 15:48) @project(Tareas V1.9.0 / Hacer)
+
+===========================================================================
+
+Tareas V1.8.0:
+
+  Hacer:
+
+    ✔ Cambiar Materializecss por Bootstrap. @done(2017-04-24 08:08) @project(Tareas V1.8.0 / Hacer)
+    ✔ Cuando da en buscar normal, si no hay resultados, no lo indica. @done(2017-04-24 08:09) @project(Tareas V1.8.0 / Hacer)
+    ✔ @high En detalles del anuncio, el favorito no se puede quitar (una vez puesto) por ¿select_subclasses()?, ya que favorites pertenece a Anuncio y no a AnuncioXXXX. En la lista de anuncios si lo muestra. @done(2017-04-14 03:33) @project(Tareas V1.8.0 / Hacer)
+    ✔ @high django_utils con select_subclasses no trabaja bien con Django 1.11? @done(2017-04-14 03:33) @project(Tareas V1.8.0 / Hacer)
+    ✔ Eliminar card-panel innecesarios. @done(2017-04-12 17:08) @project(Tareas V1.8.0 / Hacer)
+    ✔ Reducir en unittest los fixtures, solo cargar los necesarios en los base de las apps a ver si reduce tiempos. @done(2017-03-24 22:33) @project(Tareas V1.8.0 / Hacer)
+    ✔ Añadir el genero buscado en Habitaciones, tanto en anuncios, alertas y búsqueda. @done(2017-03-24 21:03) @project(Tareas V1.8.0 / Hacer)
+    ✘ Probar noUiSlider https://refreshless.com/nouislider/ @cancelled(2017-03-22 22:54) @project(Tareas V1.8.0 / Hacer) (De momento no me ha gustado y complica lo hecho)
+    ✔ Renombrar app admin2 por stats. @done(2017-03-22 18:55) @project(Tareas V1.8.0 / Hacer)
+    ✔ Intentar obtener la localización por la ip del usuario en src/static/src/scripts/gmaps/geolocation.js . @done(2017-03-20 22:30) @project(Tareas V1.8.0 / Hacer)
+    ✔ Los usuarios siempre podrán tener settings.ANUNCIO_MAX_ANUNCIOS gratis, sin contar los anuncios premium. @done(2017-03-20 19:44) @project(Tareas V1.8.0 / Hacer)
+    ✔ En profile localización poner un botón de gmaps, en caso de tener location.get_location_string. @done(2017-03-20 00:29) @project(Tareas V1.8.0 / Hacer)
+    ✔ Añadir a payments base_accounts.html @done(2017-03-19 23:17) @project(Tareas V1.8.0 / Hacer)
+    ✔ Aun no hay forma de al activar se actualize update_at en Anuncio. src/apps/anuncios/views.BaseAnuncioToggleView tiene algo pero no funciona. @done(2017-03-19 21:53) @project(Tareas V1.8.0 / Hacer) (Ahora todo se hace desde los templates con ajax)
+    ✔ Los anuncios premium, que puedan una vez cada X días actualizar el create_at, para el posicionamiento. @done(2017-03-19 21:18) @project(Tareas V1.8.0 / Hacer)
+    ✔ El usuario poder tener descripción. @done(2017-03-19 12:17) @project(Tareas V1.8.0 / Hacer)
+    ✔ En context_object_name, nombre singular para un único objeto y singular_list para listas. @done(2017-03-18 16:56) @project(Tareas V1.8.0 / Hacer)
+    ✔ Refactorizar user profile. @done(2017-03-17 11:46) @project(Tareas V1.8.0 / Hacer
+
+  Documentar:
+
+      ✔ Crear documentación de anuncios, funcionamiento, etc. @done(2017-04-15 04:05) @project(Tareas V1.8.0 / Documentar)
+
+  Fixes:
+
+    ✔ Unittest @done(2017-04-24 08:45) @project(Tareas V1.8.0 / Fixes)
+    ✔ Cuando en una habitación se pone como indiferente, ha de coincidir exactamente igual en búsquedas y alertas. @done(2017-03-24 23:12) @project(Tareas V1.8.0 / Fixes)
+    ✔ Al editar un campo con fecha de construccion, da error al editar por que que el año lo combierte en 1,900 en vez de en 1.900.  @done(2017-03-23 12:35) @project(Tareas V1.8.0 / Fixes) (Añadido ano_construccion a localized_fields)
+
+  Revisiones:
+
+    ✔ Ordenación de las búsquedas. @done(2017-03-19 12:37) @project(Tareas V1.8.0 / Revisiones)
+
+===========================================================================
+
+Tareas V1.7.0:
+
+  Hacer:
+
+    ✔ Notificación de cuando bajan los precios, si los tienen en favoritos. @done(2017-03-15 14:49) @project(Tareas V1.7.0 / Hacer)
+    ✔ Añadir valoración de los anuncios. ¿Como las estrellas de resourceslibres? @done(2017-03-14 22:26) @project(Tareas V1.7.0 / Hacer)
+    ✔ Revisar todas las paginas con el container. @done(2017-03-14 23:34) @project(Tareas V1.7.0 / Hacer)
+    ✔ Poder añadir una descripción opcional a cada imagen del anuncio. @done(2017-03-14 11:52) @project(Tareas V1.7.0 / Hacer)
+    ✔ Rediseñar pagina de búsqueda. @done(2017-03-13 17:53) @project(Tareas V1.7.0 / Hacer)
+    ✔ El radio de búsqueda que sea editable y ¿movible?. @done(2017-03-13 02:01) @project(Tareas V1.7.0 / Hacer)
+    ✔ En search advanced poner debajo del mapa la cantidad de anuncios encontrados. @done(2017-03-13 02:01) @project(Tareas V1.7.0 / Hacer)
+    ✔ Revisar meta descriptions. @done(2017-03-16 09:55) @project(Tareas V1.7.0 / Hacer)
+    ✔ Actualizar home. @done(2017-03-13 17:54) @project(Tareas V1.7.0 / Hacer)
+    ✔ Poner dinamicamente los anuncios en la zona del mapa en la que este, marcarlo con un marker de otro color. @done(2017-03-13 02:01) @project(Tareas V1.7.0 / Hacer)
+    ✔ Refactorizar todos los js de mapas y ver opciones. @done(2017-03-11 18:21) @project(Tareas V1.6.0 / Hacer)
+    ✔ Las views con AJAX separar a api.py @done(2017-03-09 17:27) @project(Tareas V1.6.0 / Hacer)
+
+  Fixes:
+
+    ✔ No centra el mapa al terminar un polygon, en alerts. @done(2017-03-14 11:54) @project(Tareas V1.7.0 / Fixes)
+    ✔ Los botones de compartir no funcionan. @done(2017-03-13 02:54) @project(Tareas V1.7.0 / Fixes)
+    ✔ src/apps/alerts/templates/alerts/alerts_form.html en añadir alerta, oculta el form, pero al editar no..., temporalmente solucionado en src/static/src/sass/_forms.scss con form {} @done(2017-03-13 02:54) @project(Tareas V1.7.0 / Fixes)
+
+===========================================================================
+
+
+Tareas V1.6.0:
+
+  Hacer:
+
+    ✔ Actualizar authentication con la version de django-boilerplate (django 1.11). @done(2017-03-09 17:27) @project(Tareas V1.6.0 / Hacer)
+    ✔ Variables de contexto globales en UPPERCASE. @done (3/9/2017, 11:17:08 AM)
+    ✔ Añadir PROTOCOL en las URLs de share icons src/apps/anuncios/templates/anuncios/details.html. @done (3/9/2017, 12:00:48 PM)
+    ✔ Añadir PROTOCOL en src/apps/utils/context_processors.py @done (3/9/2017, 12:00:54 PM)
+
+  Fixes:
+
+    ✔ Mejorar tag markdown igual a django-boilerplate. @done(2017-03-09 17:28) @project(Tareas V1.6.0 / Fixes)
+
+===========================================================================
+
+Tareas V1.5.1:
+
+  Hacer:
+
+    ✔ Actualizar el blog igual que snicoper.com @done(2017-01-31 01:47)
+    ✔ Eliminar blog.models.ArticleCounter y añadir blog.models.Article.views (ver proyecto snicoper.com) @done(2017-01-31 01:47)
+
+===========================================================================
+
+Tareas V1.5.0:
+
+  Hacer:
+
+    ✔ Mover cambio de email de accounts a authentication. @done(2017-01-13 02:43)
+    ✔ Añadido meta_description en los templates. @done(2016-12-10 20:02)
+    ✔ Mejorar URLConfs, opciones de usuario, no necesita la id y en mostrar anuncio de X usuario, usar nombre de usuario como slug. @done(2016-12-06 17:57)
+    ✔ Añadir en habitaciones "conexión a internet". @done(2016-12-05 19:37)
+
+===========================================================================
+
+Tareas V1.4.2:
+
+  Hacer:
+
+    ✔ En los archivos que usa get_user_model(), añadir debajo de los imports UserModel = get_user_model() @done(2016-12-05 15:42)
+    ✘ Actualizar authentication con la ultima version de Django en GitHub. @cancelled(2016-12-05 15:34) (Tiene muchos cambios, esperar a Django 1.11)
+    ✔ Añadir una captura en contact. @done(2016-12-04 22:34)
+
+  Fixes:
+
+    ✔ Al eliminar/cambiar una imagen header de un articulo (blog), la imagen en disco no se elimina. @done(2016-12-04 15:57)
+
+===========================================================================
+
+Tareas V1.4.1:
+
+  Fixes:
+
+    ✔ Search simple no diferencia entra Alquiler y Venta. @done(2016-12-04 15:23)
+
+===========================================================================
+
+Tareas V1.4.0:
+
+  Hacer:
+
+    ✔ Cambiar type_anuncio a ALQUILER si elige habitación en search. @done(2016-11-25 03:20)
+
+  Fixes:
+
+    ✔ El buscador inline, poblaciones en cataluya devuelve el nombre en castellano, algo no deseado.  @done(2016-11-30 08:23) (cambiado param language a 'en')
+
+===========================================================================
+
+Tareas V1.3.0:
+
+  Hacer:
+
+    ✔ Reinstalar de 0 la Aplicación. @done(2016-11-17 16:23)
+
+  Fixes:
+
+    ✔ En móvil, cuesta mucho mover en maps la geometría. @done(2016-11-17 16:01)
+    ✔ En móvil, la pagina de inicio, al poner localización no muestra el resultado. @done(2016-11-17 16:01)
+
+===========================================================================
+
+Tareas V1.2.2:
+
+  Hacer:
+
+    ✔ Añadir un contador simple de veces que se ve el anuncio. @done(2016-11-15 19:34)
+    ✔ Al menos llegar al 90% con coverage. @done(2016-11-16 14:14)
+
+===========================================================================
+
+Tareas V1.2.1:
+
+  Hacer:
+
+    ✔ Se añadio tag de prueba. @done(2016-11-15 17:22)
+
+===========================================================================
+
+Tareas V1.2.0:
+
+  Hacer:
+
+    ✔ Cuando las fechas de cuentas Premium caducan, no pasa nada, sigue siendo Premium. (Cron una vez al día) @done(2016-11-14 16:20)
+    ✔ Generar algunas estadísticas en la pagina para la administración. @done(2016-11-13 19:32)
+    ✔ Pensar en la moneda si solo € o añadir varios tipos de moneda. @done(2016-11-12 12:25)
+
+  Apps:
+
+    ✔ promos (Códigos de promoción) @done(2016-11-14 15:15)
+    ✔ admin2 Administración 2, independiente de la que trae Django. @done(2016-11-14 15:15)
+
+===========================================================================
+
+Tareas V1.1.0:
+
+  Hacer:
+
+    ✔ Añadir un Blog @done(2016-11-11 13:32)
+    ✘ Crear un server stage con la configuración de prod @cancelled(2016-11-09 08:17)
+    ✔ Pulir configuración de emails. @done(2016-11-10 16:31)
+    ✔ Poder subir mas de una imagen de anuncio a la vez. @done(2016-11-10 16:30)
+    ✔ Mejoras en los forms cuando se registra, etc, los avisos. @done(2016-11-09 08:17)
+    ✔ Un anuncio normal, poderlo convertir a Premium. @done(2016-11-05 09:31)
+
+  Fixes:
+    ✔ En el home, en small se montan el logo con el link de Identificar/Mi Cuenta @done(2016-11-06 03:44)
+
+===========================================================================
+
+Tareas V1.0.0:
+
+  Objetivos:
+
+    ✔ Publicarla antes del 1 de enero de 2017 a las 00:00:01 @done(2016-11-09 08:18)
+
+  Hacer:
+
+    ✔ publicar. @done(2016-11-09 08:18)
+    ✔ Dar la posibilidad de convertir un anuncio en Premium si es usuario Premium o tiene anuncios_premium. @done(2016-11-03 04:27)
+    ✔ Separar templates a _imports, al menos los mas utilizados en alerts y search. @done (10/25/2016, 2:47:37 AM)
+    ✔ Ver src/apps/search/views.py en def get_form() para hacer lo mismo en los forms de localización. @done(2016-10-29 04:05)
+    ✔ Documentar partes esenciales. @done(2016-11-05 08:41)
+    ✔ Elegir el nombre para el sitio. (OferVivienda.com) @done(2016-11-03 05:13)
+    ✔ Los mensajes que también se puedan mandar al usuario, por si es un comercio y quiere contactar desde perfil public por ejemplo. @done(2016-11-02 02:42)
+    ✔ Componer el footer del sitio @done(2016-11-05 04:01)
+    ✔ Los slider en los forms, añadir min max adecuados según la categoría. @done (10/25/2016, 1:34:16 AM)
+    ✔ Check Spell. @done(2016-11-03 16:09)
+    ✔ Campos de search y alert, algunos campos con rangeSlider. @done (10/25/2016, 1:34:44 AM)
+    ✔ Cuentas Premium, no vean ningún anuncio en la web. @done(2016-11-03 07:32)
+    ✔ Sitemaps y Ping a Google @done(2016-11-03 04:47)
+    ✔ Añadir cookie consent a pages. @done(2016-11-03 07:17)
+    ✔ Añadir Google Analytics @done(2016-11-03 07:31)
+    ✔ Añadir addsense. @done(2016-11-03 07:31)
+    ✔ Comprobar si puede activar el anuncio, ver si hay anuncios máximos a poner. @done(2016-11-02 22:23)
+    ✔ Revisar todos los Emails. @done(2016-11-05 08:41)
+    ✔ Revisar generación de imágenes y thumbnails. @done (10/23/2016, 8:32:22 AM)
+    ✔ Filtros en las búsquedas. @done (10/24/2016, 4:00:42 AM) (Muy simple, mejorarlo en otras versiones)
+    ✘ app promos, códigos promoción. @cancelled (10/23/2016, 10:03:05 AM) (movido a V1.2)
+    ✔ unittest. @done(2016-11-04 01:24) (Las partes mas criticas, poco a poco ir añadiendo mas)
+
+  Fixes:
+
+    ✔ Los anuncios como terreno, cuando se marca VENDER el js dará un error por que no tiene el campo estado_inmueble @done(2016-10-28 13:53)
+    ✔ En alerts, las habitaciones lo de fumar, las consultas, el anuncio pude ser false @done (10/27/2016, 5:27:05 AM)
+
+  Apps:
+
+    ✔ accounts @done (10/23/2016, 9:50:21 AM)
+    ✔ alerts @done (10/25/2016, 1:33:33 AM)
+    ✔ anuncios @done (10/25/2016, 4:20:58 AM)
+    ✔ authentication @done (10/23/2016, 9:51:13 AM)
+    ✔ contact @done (10/24/2016, 5:04:42 AM)
+    ✔ favorites @done (10/23/2016, 9:51:29 AM)
+    ✔ gallery @done (10/23/2016, 9:51:40 AM)
+    ✘ home @cancelled (10/24/2016, 12:56:23 AM) (app home eliminada)
+    ✔ pages @done (10/24/2016, 5:04:51 AM)
+    ✔ payments @done (10/23/2016, 9:52:05 AM)
+    ✔ pmessages @done (10/23/2016, 9:52:14 AM)
+    ✔ Recommended @done (10/23/2016, 9:52:24 AM)
+    ✔ search @done (10/24/2016, 5:04:22 AM)

@@ -1,0 +1,13 @@
+Este Email se ha enviado por que {{ from_email }} quiere recomendarte un anuncio en {{ site_name }}
+{% if body %}
+Este es el mensaje que ha puesto:
+
+----------------------
+
+{{ body }}
+
+-----------------------
+{% endif %}
+Para ver el mensaje ves al siguiente enlace.
+
+{{ link_anuncio }}

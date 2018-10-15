@@ -1,0 +1,10 @@
+{
+  "parent": null,
+  "anuncio": 14,
+  "sender": 2,
+  "recipient": 1,
+  "body": "hola mundo",
+  "subject": "Mensaje de prueba",
+  "recipient_read": false,
+  "sent_at": "2016-11-02T02:09:04.413Z"
+}

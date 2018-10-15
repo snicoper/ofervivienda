@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Actualizar imagen {{ actual_image.description|default:'Imagen anuncio' }}{% endblock meta_description %}
+{% block head_title %}- Actualizar imagen {{ actual_image.description|default:'Imagen anuncio' }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Actualizar imagen</h1>
+      {% if actual_image.description %}
+        <p class="lead">{{ actual_image.description }}</p>
+      {% endif %}
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-10 m-auto">
+        <div class="text-center mb-3">
+          <img id="img-anuncio"
+               class="img-fluid rounded z-depth-1"
+               src="{% if actual_image %}{{ MEDIA_URL }}{{ actual_image.image }}{% endif %}"
+               alt="{{ actual_image.description|default:'Imagen anuncio' }}"
+               width="400">
+        <hr>
+        </div>
+
+        <form method="post" action="" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+
+          <div class="form-group">
+            <label class="form-control-label" for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+            <input id="{{ form.image.id_for_label }}"
+                   class="form-control-file"
+                   name="image"
+                   type="file"
+                   value="{{ form.image.value }}"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            <input id="{{ form.description.id_for_label }}"
+                   class="form-control"
+                   name="description"
+                   type="text"
+                   value="{{ form.description.value }}"
+            >
+          </div>
+
+          <hr>
+          <button class="btn btn-success" type="submit">Actualizar</button>
+          <a class="btn btn-primary" href="{{ HTTP_REFERER }}">Volver</a>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function() {
+      $('#id_image').change(function() {
+        $('#img-anuncio').parent().show();
+        readImagePreview('#img-anuncio', this);
+      });
+    });
+  </script>
+{% endblock scripts %}

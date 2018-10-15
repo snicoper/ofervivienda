@@ -1,0 +1,16 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  // Python
+  // Path to Python, you can use a custom version of Python by modifying this setting to include the full path.
+  "python.pythonPath": "${env.HOME}/.virtualenvs/ofervivienda.dev/bin/python",
+  // List of paths to libraries and the like that need to be imported by auto complete engine. E.g. when using Google App SDK, the paths are not in system path, hence need to be added into this list.
+  "python.autoComplete.extraPaths": [
+    "${env.HOME}/.virtualenvs/ofervivienda.dev/lib/python3.6/",
+    "${env.HOME}/.virtualenvs/ofervivienda.dev/lib/python3.6/site-packages"
+  ],
+  "cSpell.words": [
+    "pmessage",
+    "pmessages"
+  ],
+  "restructuredtext.confPath": "/home/snicoper/projects/ofervivienda.dev"
+}

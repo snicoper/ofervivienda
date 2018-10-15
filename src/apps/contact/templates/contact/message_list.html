@@ -1,0 +1,53 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Lista de mensajes contacto{% endblock meta_description %}
+{% block head_title %}- Lista de mensajes contacto{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Lista de mensajes</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        {% if message_list %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Asunto</th>
+                <th>Email</th>
+                <th>Registrado</th>
+                <th>Leído</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for message in message_list %}
+                <tr>
+                  <td>
+                    <a href="{% url 'contact:message_detail' pk=message.pk %}">{{ message.subject }}</a>
+                  </td>
+                  <td>{{ message.email }}</td>
+                  <td class="text-center">{% display_for message.is_register %}</td>
+                  <td class="text-center">{% display_for message.read %}</td>
+                  <td>
+                    <small class="text-muted">{{ message.create_at|date:"SHORT_DATETIME_FORMAT" }}</small>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <h4 class="text-center">No hay mensajes para mostrar</h4>
+        {% endif %}
+      </div>
+    </section>
+  </section>
+
+  {% include "_pagination.html" %}
+{% endblock accounts_content %}

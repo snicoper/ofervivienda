@@ -1,0 +1,21 @@
+{% comment %}
+  El archivo que lo incluya, ha de se ha de encargar de poner en el bloque de scripts:
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_APIKEY }}"></script>
+{% endcomment %}
+<!-- Modal Google Map localización. -->
+<div id="map-modal"
+     class="modal fade map-modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby=""
+     aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+</div>

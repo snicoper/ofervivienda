@@ -1,0 +1,10 @@
+{# Inserta tag script de google maps. #}
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_APIKEY }}{% if libraries %}&amp;libraries={{ libraries }}{% endif %}"></script>
+
+{# Si el usuario tiene latitude y longitude en su perfil, lo añade para poderlas obtener desde js #}
+{% if user.is_authenticated and user.user_location.latitude and user.user_location.longitude %}
+  <span id="user-lat-lng"
+        data-user-latitude="{{ user.user_location.latitude }}"
+        data-user-longitude="{{ user.user_location.longitude }}">
+  </span>
+{% endif %}

@@ -1,0 +1,11 @@
+.navbar {
+  .navbar-brand {
+    color: $white;
+  }
+
+  li {
+    > a {
+      color: $white;
+    }
+  }
+}

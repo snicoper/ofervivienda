@@ -1,0 +1,71 @@
+{% load utils_tags %}
+
+<table class="table table-sm">
+  <tbody>
+    {% if anuncio.category == 'HABITACION' %}
+      <tr>
+        <td><i class="material-icons">wc</i> Genero</td>
+        <td class="text-right">
+          {% if anuncio.genero == 'CHICO' %}
+            <span class="badge bgcolor-chico"> Chicos</span>
+          {% elif anuncio.genero == 'CHICA' %}
+            <span class="badge bgcolor-chica"> Chicas</span>
+          {% elif anuncio.genero == 'CHICOCHICA' %}
+            <span class="badge bgcolor-chicochica"> Chicos/Chicas</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endif %}
+    {% if anuncio.metros_cuadrados %}
+      <tr>
+        <td><i class="material-icons">label_outline</i> Metros cuadrados</td>
+        <td class="text-value">{{ anuncio.metros_cuadrados }} m<sup>2</sup></td>
+      </tr>
+    {% endif %}
+    {% if anuncio.habitaciones %}
+      <tr>
+        <td><i class="material-icons">hotel</i> Habitaciones</td>
+        <td class="text-value">{{ anuncio.habitaciones }}</td>
+      </tr>
+    {% endif %}
+    {% if anuncio.banos %}
+      <tr>
+        <td><i class="material-icons">wc</i> Baños</td>
+        <td class="text-value">{{ anuncio.banos }}</td>
+      </tr>
+    {% endif %}
+    {% if anuncio.category == 'HABITACION' %}
+      <tr>
+        <td><i class="material-icons">network_wifi</i> Conexión a internet</td>
+        <td class="text-value">{% display_for anuncio.internet %}</td>
+      </tr>
+      <tr>
+        <td><i class="material-icons">smoking_rooms</i> Permite fumar en habitación</td>
+        <td class="text-value">{% display_for anuncio.permite_fumar_habitacion %}</td>
+      </tr>
+      <tr>
+        <td><i class="material-icons">smoking_rooms</i> Permite fumar en piso</td>
+        <td class="text-value">{% display_for anuncio.permite_fumar_piso %}</td>
+      </tr>
+    {% endif %}
+    {% if anuncio.ano_construccion %}
+      <tr>
+        <td><i class="material-icons">date_range</i> Año de construcción</td>
+        <td class="text-value">{{ anuncio.ano_construccion }}</td>
+      </tr>
+    {% endif %}
+    {% if anuncio.parking %}
+      <tr>
+        <td><i class="material-icons">local_parking</i> Plaza parking</td>
+        <td class="text-value">{% display_for anuncio.parking %}</td>
+      </tr>
+    {% endif %}
+    <tr>
+      <td>
+        <i class="material-icons">attach_money</i>
+        Precio{% if anuncio.type_anuncio == 'ALQUILER' %}/mes{% endif %}
+      </td>
+      <td class="text-value text-success">{{ anuncio|currency }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,19 @@
+<table class="table mb-3 bg-light">
+  <tbody>
+    <tr>
+      <td>Favoritos</td>
+      <td class="text-right">
+        {% include "favorites/_heart_favorites.html" with anuncio=anuncio %}
+      </td>
+    </tr>
+    <tr>
+      <td>Valoración</td>
+      <td class="text-right">
+        {% include "ratings/_rating_stars.html" with anuncio=anuncio %}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">{% include "anuncios/_anuncio_share_icons.html" %}</td>
+    </tr>
+  </tbody>
+</table>

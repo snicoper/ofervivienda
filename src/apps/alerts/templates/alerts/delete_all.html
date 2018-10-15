@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Eliminar todas las alertas{% endblock meta_description %}
+{% block head_title %}- Eliminar todas las alertas{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Eliminar todas las alertas</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-8 m-auto">
+        <div class="alert alert-warning alert-icon">¿Seguro que quieres eliminar todas tos alertas?</div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="delete_all" value="true">
+
+          <button class="btn btn-danger" type="submit">Si, eliminar</button>
+          <a class="btn btn-success" href="{% url 'alerts:list' %}">Cancelar</a>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}

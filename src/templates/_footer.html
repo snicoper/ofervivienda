@@ -1,0 +1,101 @@
+<footer class="footer">
+  <section class="container">
+    <section class="row">
+      <div class="col-md-6 col-lg-4">
+        <ul class="list-unstyled links">
+          <li>
+            <a href="{% url 'anuncios:create_select' %}">
+              <i class="material-icons">add</i> Crear anuncio
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'search:search' %}">
+              <i class="material-icons">search</i> Buscar
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'anuncios:list' %}">
+              <i class="material-icons">chrome_reader_mode</i> Últimos anuncios
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'contact:contact' %}">
+              <i class="material-icons">contact_mail</i> Contacta
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'pages:cookie_consent' %}">
+              <i class="material-icons">description</i> Política de cookies
+            </a>
+          </li>
+        </ul><!-- end Todos los usuarios -->
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <ul class="list-unstyled links">
+          <!-- Usuarios autenticados -->
+          {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'accounts:profile' %}">
+                <i class="material-icons">person</i> Mi cuenta
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'anuncios:list_by_owner' user.slug %}">
+                <i class="material-icons">chrome_reader_mode</i> Mis anuncios
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'pmessages:inbox' %}">
+                <i class="material-icons">message</i> Mensajes
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'favorites:list' %}">
+                <i class="material-icons">star</i> Favoritos
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'authentication:logout' %}">
+                <i class="material-icons">exit_to_app</i> Terminar sesión
+              </a>
+            </li><!-- end Usuarios autenticados -->
+          {% else %}
+            <!-- Usuarios anónimos -->
+            <li>
+              <a href="{% url 'authentication:login' %}?next={{ request.path }}">
+                <i class="material-icons">person</i> Iniciar sesión
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'authentication:register' %}">
+                <i class="material-icons">person_add</i> Registro
+              </a>
+            </li><!-- end Usuarios anónimos -->
+          {% endif %}
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <!-- share icons -->
+        <div class="share-icons">
+          <a class="facebook" onclick="window.open('http://www.facebook.com/sharer/sharer.php?u={{ PROTOCOL }}{{ request.get_host }}', '', 'width=500,height=300');">
+            <i class="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+          <a class="gplus" onclick="window.open('https://plus.google.com/share?url={{ PROTOCOL }}{{ request.get_host }}', '', 'width=500,height=300');">
+            <i class="fa fa-google-plus" aria-hidden="true"></i>
+          </a>
+          <a class="twitter" onclick="window.open('http://twitter.com/intent/tweet?status={{ PROTOCOL }}{{ request.get_host }}', '', 'width=500,height=300');">
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+        </div><!-- end share icons -->
+      </div>
+    </section>
+  </section>
+
+  <section class="row copy">
+      <div class="col-md-12">
+        <section class="container">
+          &copy; 2016-{% now 'Y' %} {{ SITE.name }}
+        </section>
+      </div>
+  </section>
+</footer>

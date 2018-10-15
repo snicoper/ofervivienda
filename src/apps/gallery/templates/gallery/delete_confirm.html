@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Eliminar imagen, confirmación{% endblock meta_description %}
+{% block head_title %}- Eliminar imagen, confirmación{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Eliminar imagen, confirmación</h1>
+      {% if image.description %}
+        <p class="lead">Eliminar: {{ image.description }}</p>
+      {% endif %}
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-10 m-auto">
+        <div class="text-center">
+          <img class="img-fluid rounded z-depth-1"
+               src="{{ MEDIA_URL }}{{ image.thumbnail }}"
+               alt="{{ image.description|default:'Imagen anuncio' }}"
+          >
+        </div>
+
+        <div class="alert alert-warning alert-icon mt-3">¿Estas seguro que quieres eliminar la imagen?</div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="submit">Si, eliminar</button>
+          <a class="btn btn-primary" href="{% url 'gallery:anuncio_gallery_list' image.anuncio.id %}">
+             Cancelar
+          </a>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}

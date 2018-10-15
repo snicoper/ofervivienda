@@ -1,0 +1,32 @@
+{% extends "accounts/base_accounts.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Añadir/Validación código de promoción{% endblock meta_description %}
+{% block title %}- Añadir código de promoción{% endblock title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Añadir código de promoción</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="form-row">
+            {% form form %}
+
+            <div class="col-12">
+              <button class="btn btn-primary" type="submit">Añadir</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock accounts_content %}

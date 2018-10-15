@@ -1,0 +1,15 @@
+{% if DISQUS_SHORTNAME %}
+  <a href="{{ resource.get_absolute_url }}#disqus_thread">
+    <span class="disqus-comment-count" data-disqus-identifier="{{ resource.id }}"></span>
+  </a>
+
+  <script type="text/javascript">
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://{{ DISQUS_SHORTNAME }}.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+  </script>
+{% endif %}

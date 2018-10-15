@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+// Variables
+@import "variables";
+
+// Bootstrap.
+@import "../../../../node_modules/bootstrap/scss/bootstrap";
+
+// FontAwesome.
+@import "../../../../node_modules/components-font-awesome/scss/font-awesome";
+
+// Toastr.
+@import "../../../../node_modules/toastr/toastr.scss";
+
+// lightgallery
+@import "../../../../node_modules/lightgallery/src/sass/lightgallery";
+
+// Roboto.
+@import "roboto";
+
+// Material icons.
+@import "material-icons";
+
+// Base.
+@import "base";
+
+// Components.
+@import "components/main";

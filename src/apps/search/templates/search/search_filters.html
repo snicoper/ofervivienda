@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Búsqueda de {{ category_name }}, compra, venta y alquiler de viviendas{% endblock meta_description %}
+{% block head_title %}- Búsqueda de {{ category_name }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Búsqueda en {{ category_name }}</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-md-4 col-lg-3 bg-light mb-3 py-3">
+        <h3 class="text-primary">Filtros</h3>
+        <hr class="mt-1">
+        <form method="get" action="">
+          <div class="form-row">
+            {% form form %}
+
+            <div class="col-12">
+              <button class="btn btn-primary btn-block" type="submit">Buscar</button>
+              <a class="btn btn-outline-warning btn-block" href="{% url 'search:map' 'piso' %}">
+                <i class="material-icons md-3">place</i> Búsqueda en mapa
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-8 col-lg-9">
+        {% if anuncio_list and form.q.value %}
+          {% include "anuncios/_anuncio_list.html" with anuncio_list=anuncio_list %}
+          {% include "_pagination.html" %}
+        {% elif form.q.value %}
+          <h4 class="text-center">No se han encontrado resultados</h4>
+        {% else %}
+          <h4 class="text-center">Introduce una ubicación para empezar con la búsqueda</h4>
+        {% endif %}
+      </div>
+    </section>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" with libraries="places" %}
+  {% include "search/_scripts.html" %}
+
+  <script>
+    // Inicializa el autocompletado del formulario.
+    initAddressAutocomplete();
+
+    // Carga la pagina segun id_category.
+    var categoryInitial = $('#id_category').val().toLowerCase();
+    $('#id_category').on('change', function() {
+     var value = $(this).val().toLowerCase();
+     if (value && value !== categoryInitial) {
+       var url = '{% url "search:search_category" "piso" %}'.replace('piso', value);
+       window.location.href = url;
+     }
+    });
+  </script>
+{% endblock scripts %}

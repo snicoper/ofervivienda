@@ -1,0 +1,9 @@
+Un usuario {{ register }} ha mandado un Email de contacto.
+
+Username: {{ username }}
+Email: {{ user_email }}
+Tema: {{ subject }}
+
+------------------------------------------------
+
+{{ message }}

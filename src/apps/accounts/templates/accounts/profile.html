@@ -1,0 +1,141 @@
+{% extends "accounts/base_accounts.html" %}
+{% load utils_tags %}
+
+{% block meta_description %}Perfil de usuario{% endblock meta_description %}
+{% block head_title %}- Perfil de usuario{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Perfil de usuario</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="row">
+    <div class="col-12 text-center">
+      <img class="img-fluid z-depth-1" src="{{ user.get_avatar }}" alt="Avatar" width="120px">
+
+      <div class="my-3">
+        <a data-toggle="tooltip" title="Editar avatar" href="{% url 'accounts:avatar_update' %}">
+          <i class="material-icons">mode_edit</i>
+        </a>
+      </div>
+
+      {% if user.description %}
+        <div class="text-left">
+          <h3 class="text-header">Descripción</h3>
+          {% markdown user.description safe=False %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="col-12">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td><i class="material-icons">person</i> Nombre de usuario</td>
+            <td class="text-value">{{ user.username }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">email</i> Email</td>
+            <td class="text-value">
+              {{ user.email }}
+              <a data-toggle="tooltip"
+                 data-placement="left"
+                 title="Editar email"
+                 href="{% url 'authentication:email_update' %}"
+              >
+                <i class="material-icons md-4 ml-2">mode_edit</i>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">group</i> Nombre público</td>
+            <td class="text-value">{{ user.get_public_name }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">phone</i> Teléfono</td>
+            <td class="text-value">{{ user.phone|default:'Sin datos' }}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">enhanced_encryption</i> Contraseña</td>
+            <td class="text-value">
+              ************
+              <a data-toggle="tooltip"
+                 data-placement="left"
+                 title="Editar contraseña"
+                 href="{% url 'authentication:password_change' %}"
+              >
+                <i class="material-icons md-4 ml-2">mode_edit</i>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">payment</i> Tipo de cuenta</td>
+            <td class="text-value">
+              {% if user.is_premium %}
+                <small class="text-muted"
+                      data-toggle="tooltip"
+                      data-placement="left"
+                      title="Fecha de expiración"
+                >
+                  {{ user.expire_premium_at|date:'SHORT_DATE_FORMAT' }}
+                </small>
+                <span class="badge badge-success">Premium</span>
+                <a data-toggle="tooltip"
+                   data-placement="left"
+                   title="Incrementar tiempo"
+                   href="{% url 'payments:process_account_premium' %}">
+                  <i class="material-icons">update</i>
+                </a>
+              {% else %}
+                <span class="badge badge-secondary">Normal</span>
+                <a data-toggle="tooltip"
+                   data-placement="left"
+                   title="Cambiar a cuenta premium"
+                   href="{% url 'payments:process_account_premium' %}"
+                >
+                  <i class="material-icons">add</i>
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">payment</i> Anuncios premium</td>
+            <td class="text-value">
+              <span class="badge badge-{% if user.anuncios_premium %}success{% else %}secondary{% endif %}">
+                {{ user.anuncios_premium }}
+              </span>
+              <a data-toggle="tooltip"
+                  data-placement="left"
+                  title="Añadir anuncio premium"
+                  href="{% url 'payments:process_anuncio_premium' %}"
+              >
+                <i class="material-icons">add</i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center">
+        <a class="btn btn-outline-success" href="{% url 'promos:validate' %}">
+          <i class="material-icons">code</i> Añadir código de promoción
+        </a>
+      </div>
+
+      <div class="text-center mt-3">
+        <a class="btn btn-primary btn-sm" href="{% url 'accounts:profile_public' user.slug %}">
+          <i class="material-icons">remove_red_eye</i> Ver perfil publico
+        </a>
+        <a class="btn btn-primary btn-sm" href="{% url 'accounts:profile_update' %}">
+          <i class="material-icons">mode_edit</i> Editar perfil
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock accounts_content %}

@@ -1,0 +1,57 @@
+{% extends "accounts/base_accounts.html" %}
+{% load payments_tags %}
+
+{% block meta_description %}Convertir en cuenta premium{% endblock meta_description %}
+{% block head_title %}- Cuenta premium{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Cuenta premium</h1>
+      <hr>
+      <p class="lead">
+        {% if user.is_premium %}
+          Incrementar tiempo a tu cuenta premium
+        {% else %}
+          Convertir cuenta en premium
+        {% endif %}
+      </p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <h4>Ventajas de una cuenta premium</h4>
+        <hr>
+
+        <ul>
+          <li>Con una cuenta premium podrás poner todos los anuncios que quieras.</li>
+          <li>Las imágenes tienen una mayor resolución.</li>
+          <li>Todas las imágenes que quieras en cada anuncio.</li>
+          <li>Los posicionamientos de las búsquedas saldrán antes que los anuncios normales.</li>
+          <li>No veras publicidad en ninguna parte de la Web.</li>
+          <li>Actualizar el anuncio cada {{ reload_update_at }} días y subirlos en los resultados.</li>
+        </ul>
+      </div>
+
+      {% if user.is_premium %}
+        <div class="alert alert-info alert-icon">
+          Actualmente tienes activada la cuenta como Premium pero puedes incrementar tu tiempo de premium.
+        </div>
+      {% endif %}
+
+      <section class="row">
+        {% for form in forms %}
+          {% with card_info|get_card_info:forloop.counter0 as card_info %}
+            <div class="col-md-6">
+              {% include "payments/_payments_card.html" with form=form card_info=card_info %}
+            </div>
+          {% endwith %}
+        {% endfor %}
+      </section>
+    </section>
+  </section>
+{% endblock accounts_content %}

@@ -1,0 +1,18 @@
+{% if ADDSENSE_DATA_AD_CLIENT and ADDSENSE_DATA_AD_SLOT %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12 text-center">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="{{ ADDSENSE_DATA_AD_CLIENT }}"
+            data-ad-slot="{{ ADDSENSE_DATA_AD_SLOT }}"
+            data-ad-format="auto"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </section>
+  </section>
+{% endif %}

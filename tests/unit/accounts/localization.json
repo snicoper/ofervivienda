@@ -1,0 +1,13 @@
+{
+  "country": "Espa\u00f1a",
+  "state": "Barcelona",
+  "city": "Granollers",
+  "address": "Ramon Llull 28 1\u00ba 1\u00ba",
+  "zipcode": "08401",
+  "location_string": "",
+  "latitude": 41.6140513,
+  "longitude": 2.28780340000003,
+  "radius": null,
+  "point": "SRID=4326;POINT (2.28780340000003 41.6140513)",
+  "polygon": null
+}

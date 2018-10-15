@@ -1,0 +1,32 @@
+{# Adsense en header #}
+
+{% if not user.is_superuser and not user.is_premium and not debug %}
+  <section class="container mt-4">
+    <section class="row">
+      <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-2">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- header resourceslibres -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1079279802884664"
+             data-ad-slot="8042005435"
+             data-ad-format="auto"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </section>
+  </section>
+{% else %}
+  {% if debug and ADSENSE_IMAGES_FAKE %}
+    <section class="container mt-4">
+      <section class="row">
+        <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-2">
+          <div class="text-center mt-2">
+            <img src="http://fakeimg.pl/350x100/" style="width: 90%; height: 100px;" alt="fake">
+          </div>
+        </div>
+      </section>
+    </section>
+  {% endif %}
+{% endif %}

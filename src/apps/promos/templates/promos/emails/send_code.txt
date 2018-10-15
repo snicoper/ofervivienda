@@ -1,0 +1,16 @@
+Hola {{ user.get_public_name }},
+
+Te enviamos un código de promoción para que lo uses en {{ site_name }}
+
+Promoción: {{ promotion }}
+Código: {{ code }}
+
+{{ link_profile }}
+
+Para usarlo, desde el panel de "Mi cuenta", en la parte de información, hay un botón "Añadir código de promoción".
+
+Copia y pega el código anterior para poder activar el código.
+
+El código sera valido hasta el {{ promo_expire_days }}.
+
+Gracias, el equipo de {{ site_name }}

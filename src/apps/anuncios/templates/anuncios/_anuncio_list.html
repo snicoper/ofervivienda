@@ -1,0 +1,103 @@
+{% comment %}
+  Params:
+    col: col-x-x offset-x-x (opcional)
+{% endcomment %}
+{% load utils_tags %}
+
+<section class="row anuncio-list">
+  {% for anuncio in anuncio_list %}
+    <div class="{{ col|default:'col-12' }} mb-4 px-xs-none">
+      <div class="media pt-1">
+        <img class="d-none d-md-block img-fluid rounded z-depth-1 thumbnail"
+             src="{{ anuncio.get_random_thumbnail }}"
+             alt="{{ anuncio.get_title }}"
+        >
+
+        <!-- body -->
+        <div class="media-body px-2">
+          <h5 class="mt-0 title">
+            <a href="{% url 'anuncios:details' anuncio.pk %}">{{ anuncio.location_string }}</a>
+          </h5>
+
+          <!-- tags -->
+          <div class="tags">
+            <span class="badge bgcolor-{{ anuncio.category|lower }}">
+              {{ anuncio.get_category_display }}
+            </span>
+            <span class="badge bgcolor-tipo-{{ anuncio.type_anuncio|lower }} white-text">
+              {{ anuncio.get_type_anuncio_display }}
+            </span>
+            <span class="badge bgcolor-estado-{{ anuncio.estado_inmueble|lower }}">
+              {{ anuncio.get_estado_inmueble_display }}
+            </span>
+          </div><!-- end tags -->
+
+          {% if anuncio.description %}
+            <div class="description mb-2">
+              {{ anuncio.description|truncatechars:'140' }}
+            </div>
+          {% endif %}
+
+          <div class="caracteristicas">
+            {% include "anuncios/_anuncio_caracteristicas_card.html" %}
+          </div>
+
+          <!-- footer del anuncio -->
+          <div class="d-flex justify-content-end bg-light p-2">
+            <small>
+              <span class="ml-3" data-toggle="tooltip" title="{{ anuncio.update_at|date:'SHORT_DATE_FORMAT' }}">
+                <i class="material-icons">schedule</i>
+              </span>
+
+              <span class="ml-3">
+                {% include "favorites/_heart_favorites.html" with favorite_list_by_owner=favorite_list_by_owner  %}
+              </span>
+
+              {% if user == anuncio.owner %}
+                {% if anuncio.is_premium %}
+                  <span class="ml-3" data-toggle="tooltip" title="Anuncio Premium">
+                    <i class="material-icons">credit_card</i>
+                  </span>
+                {% endif %}
+
+                <a class="ml-3"
+                   data-toggle="tooltip"
+                   title="Editar anuncio"
+                   href="{% url 'anuncios:update' anuncio.get_category_display|lower anuncio.pk %}"
+                >
+                  <i class="material-icons text-muted">edit</i>
+                </a>
+
+                <a class="ml-3"
+                   data-toggle="tooltip"
+                   title="Editar imágenes"
+                   href="{% url 'gallery:anuncio_gallery_list' anuncio.id %}"
+                >
+                  <i class="material-icons text-muted">image</i>
+                </a>
+
+                {% if anuncio.active %}
+                  <span class="ml-3" data-toggle="tooltip" title="Activo / Desactivar">
+                    <a href="{% url 'anuncios:deactivate' anuncio.pk %}?next={{ request.path }}">
+                      <i class="material-icons text-success">fiber_manual_record</i>
+                    </a>
+                  </span>
+                {% else %}
+                  <span class="ml-3" data-toggle="tooltip" title="Inactivo / Activar">
+                    <a href="{% url 'anuncios:activate' anuncio.pk %}?next={{ request.path }}">
+                      <i class="material-icons text-danger">fiber_manual_record</i>
+                    </a>
+                  </span>
+                {% endif %}
+              {% endif %}
+            </small>
+          </div><!-- end footer del anuncio -->
+        </div><!-- end body -->
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12 text-center">
+      <h2>No hay anuncios para mostrar.</h2>
+    </div>
+  {% endfor %}
+</section>

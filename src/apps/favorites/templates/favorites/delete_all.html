@@ -1,0 +1,33 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Eliminar lista de favoritos{% endblock meta_description %}
+{% block head_title %}Eliminar lista de favoritos{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Eliminar lista de favoritos</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <div class="alert alert-warning alert-icon">
+          ¿Seguro que quieres eliminar
+          <span class="badge badge-default">{{ favorite_list.anuncios.count }}</span>
+          de favoritos?
+        </div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+
+          <button class="btn btn-danger" type="submit">Eliminar</button>
+          <a class="btn btn-success" href="{% url 'favorites:list' %}">Cancelar</a>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock accounts_content %}

@@ -1,0 +1,49 @@
+{% extends "accounts/base_accounts.html" %}
+{% load utils_tags %}
+
+{% block meta_description %}Opciones{% endblock meta_description %}
+{% block head_title %}- Opciones{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Opciones</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="row">
+    <div class="col-12">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td><i class="material-icons">phone</i> Teléfono público</td>
+            <td class="text-value">{% display_for options.phone_public %}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">location_city</i> Localización publica</td>
+            <td class="text-value">{% display_for options.address_public %}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">email</i> Email público</td>
+            <td class="text-value">{% display_for options.email_public %}</td>
+          </tr>
+          <tr>
+            <td><i class="material-icons">contact_mail</i> Notificar si mis favoritos baja el precio</td>
+            <td class="text-value">{% display_for options.notify_precio_anuncio_baja %}</td>
+          </tr>
+          <tr class="tr-no-border">
+            <td colspan="2">
+              <div class="center-align">
+                <a class="btn btn-primary" href="{% url 'accounts:options_update' %}">
+                  Editar opciones
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock accounts_content %}

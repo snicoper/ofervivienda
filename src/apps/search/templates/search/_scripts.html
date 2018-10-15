@@ -1,0 +1,13 @@
+<script>
+  /**
+   * Cambiar el type a number, eliminar las class de text y añadir las de number.
+   */
+  function changeTypeField(input) {
+    input.attr('type', 'number');
+    input.addClass('numberinput');
+    input.removeClass('textinput');
+    input.removeClass('textInput');
+  }
+  changeTypeField($('#id_precio'));
+  changeTypeField($('#id_metros_cuadrados'));
+</script>

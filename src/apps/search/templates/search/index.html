@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block meta_description %}Venta alquiler de pisos, casas, apartamentos, alquiler de habitaciones busca lo que necesites o pon a la venta tu vivienda{% endblock meta_description %}
+{% block head_title %}- Inicio{% endblock head_title %}
+
+{# En el home, eliminar adsense. #}
+{% block main_addsense %}{% endblock main_addsense %}
+
+{% block page_title %}
+  <!-- form inline -->
+  <section class="jumbotron">
+    <section class="container">
+        <div class="col-lg-10 m-auto">
+          <form method="get" action="{% url 'search:search' %}">
+            <div class="form-row">
+              <div class="col-12 col-md-4">
+                <select id="id_category" class="form-control mt-1" name="category">
+                  {% for key, value in form.category.field.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <select id="id_type_anuncio" class="form-control mt-1" name="type_anuncio">
+                  {% for key, value in form.type_anuncio.field.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-12 col-md-4 input-group">
+                <input id="id_q" class="form-control mt-1" name="q" type="search" required>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary mt-1" type="submit">
+                    <i class="material-icons left">search</i>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+    </section>
+  </section><!-- end form inline -->
+{% endblock page_title %}
+
+{% block content %}
+  <!-- cards -->
+  <section class="container">
+    <section class="row">
+      <div class="col-md-6 col-lg-4 mt-4 px-xs-none">
+        <div class="card card-large z-depth-2 border-0">
+          <div class="card-block d-flex flex-column">
+            <h4 class="card-title text-primary p-2">Búsqueda de anuncios</h4>
+            <div class="text-center">
+              <img style="max-height: 220px;"
+                   class="img-fluid"
+                   src="{% static 'dist/img/home/search_map.jpeg' %}"
+                   alt="Search Map"
+              >
+            </div>
+            <p class="card-text mt-2 p-2">Busca un anuncio en el mapa por la zona que desees</p>
+            <div class="text-center">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'search:map' 'piso' %}">
+                <i class="material-icons">search</i> Buscar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mt-4 px-xs-none">
+        <div class="card card-large z-depth-2 border-0">
+          <div class="card-block d-flex flex-column">
+            <h4 class="card-title text-primary p-2">Anuncios Gratis</h4>
+            <div class="text-center">
+              <img class="img-fluid" src="{% static 'dist/img/home/unlock.png' %}" alt="Anuncios gratis">
+            </div>
+            <p class="card-text mt-4 p-2">
+              Añade hasta 3 anuncios totalmente gratis.<br>
+              Puedes añadir en cualquier categorías y modificarlos tantas veces como quieras.
+            </p>
+            <div class="text-center mt-4">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'anuncios:create_select' %}">
+                <i class="material-icons">add</i> Crear anuncio
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mt-4 px-xs-none">
+        <div class="card card-large z-depth-2 border-0">
+          <div class="card-block d-flex flex-column">
+            <h4 class="card-title text-primary p-2">Añade los anuncios a Favoritos</h4>
+            <div class="text-center">
+              <img class="img-fluid" src="{% static 'dist/img/home/heart.png' %}" alt="Añadir favoritos">
+            </div>
+            <p class="card-text mt-4 p-2">
+              Añade los anuncios que te han gustado en favoritos y mas tarde poderlos comparar
+            </p>
+            <div class="text-center mt-4">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'favorites:list' %}">
+                <i class="material-icons">favorite</i> Favoritos
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mt-4 px-xs-none">
+        <div class="card card-large z-depth-2 border-0">
+          <div class="card-block d-flex flex-column">
+            <h4 class="card-title text-primary p-2">Crear alertas</h4>
+            <div class="text-center">
+              <img class="img-fluid" src="{% static 'dist/img/home/alertas.jpeg' %}" alt="Alertas">
+            </div>
+            <p class="card-text mt-2 p-2">Genera alertas con filtros para recibir un email cuando se cree un
+              anuncio en la zona.</p>
+            <div class="text-center">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'alerts:create' 'piso' %}">
+                <i class="material-icons left">add_alert</i> Crear alerta
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mt-4 px-xs-none">
+        <div class="card card-large z-depth-2 border-0">
+          <div class="card-block">
+            <h4 class="card-title text-primary p-2">Obtener avisos cuando los precios bajan</h4>
+            <div class="text-center">
+              <img class="img-fluid" src="{% static 'dist/img/home/search_circle.png' %}" alt="Avisos">
+            </div>
+            <p class="card-text mt-2 p-2">Los anuncios que tengas en favoritos, podrás obtener notificaciones
+              de los anuncios que bajen el precio.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mt-4 px-xs-none">
+        <div class="card card-large z-depth-2 border-0">
+          <div class="card-block">
+            <h4 class="card-title text-primary p-2">Privacidad 100%</h4>
+            <div class="text-center">
+              <img class="img-fluid" src="{% static 'dist/img/home/edit.png' %}" alt="Editar">
+            </div>
+            <p class="card-text mt-2 p-2">Todos los contactos se hacen internamente desde la Web, solo se
+              muestran los datos que tu quieras.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section><!-- end cards -->
+
+  <div class="mt-3">{% include "adsense/_adsense_header.html" %}</div>
+{% endblock content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" with libraries="places" %}
+
+  <script>
+    $(window).ready(function () {
+      initAddressAutocomplete();
+    });
+  </script>
+{% endblock scripts %}

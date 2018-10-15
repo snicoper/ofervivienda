@@ -1,0 +1,150 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Administración secundaria{% endblock meta_description %}
+{% block head_title %}- Administración secundaria{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Estadísticas y administración</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12 mb-2 px-0">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th colspan="2">Usuarios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Numero de usuarios</td>
+              <td class="text-value">{{ total_usuarios }}</td>
+            </tr>
+            <tr>
+              <td>Usuarios registrados hoy</td>
+              <td class="text-value">{{ usuarios_hoy }}</td>
+            </tr>
+            <tr>
+              <td>Registros temporales</td>
+              <td class="text-value">{{ registros_temporales }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-12 mb-2 px-0">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th colspan="2">Payments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total payments</td>
+              <td class="text-value">{{ total_payment.receiver_amount__sum|default:0 }} &euro;</td>
+            </tr>
+            <tr>
+              <td>Payments en la ultima semana</td>
+              <td class="text-value">{{ total_payment_week.receiver_amount__sum|default:0 }} &euro;</td>
+            </tr>
+            <tr>
+              <td>Payments en el ultimo mes</td>
+              <td class="text-value">{{ total_payment_month.receiver_amount__sum|default:0 }} &euro;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-12 mb-2 px-0">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th colspan="2">Anuncios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Numero de anuncios</td>
+              <td class="text-value">{{ total_anuncios }}</td>
+            </tr>
+            <tr>
+              <td>Anuncios activos</td>
+              <td class="text-value">{{ anuncios_activos }}</td>
+            </tr>
+            <tr>
+              <td>Anuncios en la ultima semana</td>
+              <td class="text-value">{{ anuncios_ultima_semana }}</td>
+            </tr>
+            <tr>
+              <td>Anuncios hoy</td>
+              <td class="text-value">{{ anuncios_hoy }}</td>
+            </tr>
+            <tr>
+              <td>Total anuncios vistos</td>
+              <td class="text-value">{{ views_all_anuncios.views__sum|default:0 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-12 mb-2 px-0">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th colspan="2">Mensajes privados</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mensajes privados creados</td>
+              <td class="text-value">{{ pmessages_creados }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-12 mb-2 px-0">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th colspan="2">Alertas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alertas de búsquedas creadas</td>
+              <td class="text-value">{{ alertas_creadas }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-12 mb-2 px-0">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th colspan="2">Blog</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Numero de tags</td>
+              <td class="text-value">{{ total_tags }}</td>
+            </tr>
+            <tr>
+              <td>Numero de artículos</td>
+              <td class="text-value">{{ total_articles }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+{% endblock accounts_content %}

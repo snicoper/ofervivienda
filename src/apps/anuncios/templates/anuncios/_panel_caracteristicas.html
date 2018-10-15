@@ -1,0 +1,17 @@
+<div class="mb-3">
+  <h2><i class="material-icons">featured_play_list</i> Características</h2>
+
+  {% include "anuncios/_anuncio_caracteristicas.html" with anuncio=anuncio %}
+
+  <div class="text-center">
+    <a class="set-position-gmaps btn btn-outline-success"
+       href="javascript:void(0);"
+       data-toggle="modal"
+       data-target="#map-modal"
+       data-latitude="{{ anuncio.latitude }}"
+       data-longitude="{{ anuncio.longitude }}"
+    >
+      <i class="material-icons">place</i> Mostrar en mapa
+    </a>
+  </div>
+</div>

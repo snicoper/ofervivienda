@@ -1,0 +1,37 @@
+{% comment %}
+  Requiere de 2 variables:
+    - anuncio (Anuncio): El anuncio a comprobar.
+    - favorite_list_by_owner (Favorites): Lista (PKs) de favoritos del usuario.
+
+  Si el usuario tiene en favoritos en anuncio, mostrara el rojo, en caso contrario
+  el gris.
+
+  Si el usuario no esta logueado, mostrara siempre el gris y como enlace a login,
+  con el ?next= a la pagina actual.
+{% endcomment %}
+{% if user.is_authenticated %}
+  <i class="material-icons
+            text-muted
+            {% if anuncio.pk in favorite_list_by_owner %} hidden{% endif %}
+            add-anuncio-favorite
+            cursor-pointer"
+     data-toggle="tooltip"
+     title="Añadir a favoritos"
+     data-anuncio-id="{{ anuncio.id }}"
+     data-url="{% url 'favorites:api_add' %}">favorite_border</i>
+  <i class="material-icons
+            text-danger
+            {% if anuncio.pk not in favorite_list_by_owner %} hidden{% endif %}
+            remove-anuncio-favorite
+            cursor-pointer"
+     data-toggle="tooltip"
+     title="Eliminar de favoritos"
+     data-anuncio-id="{{ anuncio.id }}"
+     data-url="{% url 'favorites:api_remove' %}">favorite</i>
+{% else %}
+  <a href="{% url 'authentication:login' %}?next={{ request.get_full_path }}">
+    <i class="material-icons text-muted"
+       data-toggle="tooltip"
+       title="Añadir a favoritos (Requiere iniciar sesión)">favorite_border</i>
+  </a>
+{% endif %}

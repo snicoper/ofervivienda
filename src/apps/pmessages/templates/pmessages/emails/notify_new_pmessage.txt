@@ -1,0 +1,5 @@
+Te han enviado un mensaje privado desde {{ site_name }}.
+
+Para ver el mensaje, pulsa en el siguiente enlace.
+
+{{ enlace_message }}

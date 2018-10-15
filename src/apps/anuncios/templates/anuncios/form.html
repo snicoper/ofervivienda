@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}{{ title }} {{ category_name|title }}{% endblock meta_description %}
+{% block head_title %}- {{ title }} {{ category_name|title }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>{{ title }} <small class="badge bgcolor-{{ category|lower }}">{{ category_name|title }}</small></h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-10 m-auto">
+        <form id="form-location" method="post" action="">
+          {% csrf_token %}
+          <div class="form-row">
+            {% form form %}
+
+            <div class="col-12">
+              <a id="form-location-to-coords" class="btn btn-success" href="javascript:void(0);">{{ btn_form_name }}</a>
+              {% if object %}
+                <a class="btn btn-danger" href="{% url 'anuncios:details' object.id %}">Cancelar</a>
+              {% endif %}
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" %}
+{% endblock scripts %}

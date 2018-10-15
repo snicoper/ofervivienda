@@ -1,0 +1,42 @@
+{% extends "accounts/base_accounts.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Editar localización{% endblock meta_description %}
+{% block head_title %}- Editar localización{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Editar localización</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="row">
+    <div class="col-12">
+      <div class="alert alert-info alert-icon">
+        La localización es útil para las búsquedas, mostrara el mapa en una zona aproximada a la que pongas.<br>
+        Para los anunciantes, añadirá en el formulario parte de la localización en el anuncio.<br>
+        Si además en las opciones de usuario lo pones como público, sera mostrados en el perfil
+        público (<strong>No recomendado a particulares</strong>).
+      </div>
+
+      <form id="form-location" method="post" action="">
+        {% csrf_token %}
+        <div class="form-row">
+          {% form form %}
+
+          <div class="col-12">
+            <a id="form-location-to-coords" class="btn btn-success" href="javascript:void(0);">Actualizar</a>
+            <a class="btn btn-primary" href="{% url 'accounts:location' %}">Volver</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock accounts_content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" %}
+{% endblock scripts %}

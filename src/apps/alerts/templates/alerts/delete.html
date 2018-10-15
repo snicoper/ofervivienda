@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Eliminar alerta {{ alert.description }}{% endblock meta_description %}
+{% block head_title %}- Eliminar alerta {{ alert.description }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1 class="text-header">Eliminar alerta</h1>
+      <hr>
+      <p class="lead">{{ alert.description }}</p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-8 m-auto">
+        <div class="alert alert-warning alert-icon">
+          ¿Seguro que quieres eliminar la alerta <strong class="white-text">{{ alert.description }}?</strong>
+        </div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+
+          <button class="btn btn-danger" type="submit">Si, eliminar</button>
+          <a class="btn btn-success" href="{% url 'alerts:list' %}">Cancelar</a>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}

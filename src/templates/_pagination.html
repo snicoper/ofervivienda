@@ -1,0 +1,45 @@
+{% load utils_tags %}
+
+{% if page_obj.paginator.num_pages > 1 %}
+  <section class="row">
+    <div class="col-12">
+      <nav class="mt-2">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="{% previous_pagination %}">
+                <i class="material-icons md-3">keyboard_arrow_left</i> Anterior
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#">
+                <i class="material-icons md-3">keyboard_arrow_left</i> Anterior
+              </a>
+            </li>
+          {% endif %}
+
+          <li class="page-item disabled">
+            <a class="page-link" href="javascript:void(0);">
+              {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </a>
+          </li>
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{% next_pagination %}">
+                Siguiente <i class="material-icons md-3">keyboard_arrow_right</i>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#">
+                Siguiente <i class="material-icons md-3">keyboard_arrow_right</i>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </section>
+{% endif %}

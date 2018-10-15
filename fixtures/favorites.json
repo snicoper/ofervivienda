@@ -1,0 +1,16 @@
+[
+{
+  "model": "favorites.favorites",
+  "pk": 1,
+  "fields": {
+    "anuncios": []
+  }
+},
+{
+  "model": "favorites.favorites",
+  "pk": 2,
+  "fields": {
+    "anuncios": []
+  }
+}
+]

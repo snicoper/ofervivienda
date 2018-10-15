@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load recommend_tags %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Recomendar anuncio {{ anuncio.get_title }} por correo electrónico{% endblock meta_description %}
+{% block head_title %}- Recomendar anuncio {{ anuncio.get_title }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Recomendar anuncio</h1>
+      <hr>
+      <p class="lead">{{ anuncio.get_title }}</p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-8 m-auto">
+        <div class="alert alert-info alert-icon">
+          Tu email sera mostrado a la persona notificada.<br>
+          Vas a recomendar el anuncio <a href="{% url 'anuncios:details' anuncio.pk %}">{{ anuncio.get_title }}</a>
+        </div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="form-row">
+            {% form form %}
+
+            <div class="col-12">
+              <button class="btn btn-primary" type="submit">Enviar</button>
+              <a class="btn btn-success" href="{% url 'anuncios:details' anuncio.pk %}">Volver</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}

@@ -1,0 +1,17 @@
+<div class="card z-depth-2 my-3 card-payment border-0">
+  <div class="card-block">
+    <h5 class="card-title text-center">{{ card_info.title }}</h5>
+    <hr>
+    <p class="card-text">{{ card_info.body }}</p>
+    <div class="text-center mt-4">
+      <p class="h4"><span class="card-precio">{{ card_info.amount }}&euro;</span></p>
+      <form class="mt-4" method="post" action="{{ form_action }}">
+        {{ form }}
+
+        <button class="btn btn-outline-primary btn-sm my-4" type="submit">
+          <i class="fa fa-paypal" aria-hidden="true"></i> PayPal
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

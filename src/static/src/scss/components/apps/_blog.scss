@@ -1,0 +1,21 @@
+.article-details {
+  article {
+    header {
+      h1 {
+        font-size: 1.6rem;
+        color: darken(theme-color("primary"), 10%);
+      }
+    }
+
+    footer {
+      background-color: map-get($colors, gray);
+      padding: 0.5rem;
+
+      .badge-default {
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

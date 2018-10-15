@@ -1,0 +1,51 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Lista de mensajes de contacto{% endblock meta_description %}
+{% block title %}- Lista de mensajes de contacto{% endblock title %}
+
+{% block page_title %}
+  <section class="jumbotron pb-3">
+    <section class="container">
+      <h1>Conversación</h1>
+      <hr>
+      {% with thread_list.0 as message %}
+        <p class="lead">
+          Conversación entre {{ user.get_public_name }} y
+          {% if user == message.sender %}
+            {{ message.recipient }}
+          {% else %}
+            {{ message.sender }}
+          {% endif %}
+        </p>
+        <p>
+          <strong>Asunto: </strong>
+          {% if message.anuncio %}
+            {{ message.anuncio.location_string }}
+          {% else %}
+            {{ message.subject }}
+          {% endif %}
+        </p>
+      {% endwith %}
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        {% include "pmessages/_form_pmessage.html" %}
+      </div>
+    </section>
+
+    {% include "pmessages/_list.html" with message_list=thread_list body=True %}
+
+    <section class="row">
+      <div class="col-12">
+        <a class="btn btn-primary" href="{% url 'pmessages:inbox' %}">Volver</a>
+      </div>
+    </section>
+
+    {% include "_pagination.html" %}
+  </section>
+{% endblock accounts_content %}

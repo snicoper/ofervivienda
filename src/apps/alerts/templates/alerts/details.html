@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load utils_tags %}
+
+{% block meta_description %}Detalles de alerta {{ alert.get_category_display }} - {{ alert.description }}{% endblock meta_description %}
+{% block head_title %}- Detalles de alerta {{ alert.get_category_display }} - {{ alert.description }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1 class="text-header">
+        Detalles alerta
+        <span class="badge bgcolor-{{ alert.category|lower }}">{{ alert.get_category_display }}</span>
+      </h1>
+      <hr>
+      <p class="lead">{{ alert.description }}</p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <div class="text-center d-lg-none mb-3">
+          <a class="btn btn-outline-success btn-map-modal"
+             href="javascript:void(0);"
+             data-toggle="modal"
+             data-target="#map-modal"
+          >
+            <i class="material-icons">place</i> Mostrar en mapa
+          </a>
+
+          {# Requerido para google maps, no quitar. #}
+          <input id="id_latitude" type="hidden" name="latitude" value="{{ alert.latitude }}">
+          <input id="id_longitude" type="hidden" name="longitude" value="{{ alert.longitude }}">
+          <input id="id_polygon" type="hidden" name="polygon" value="{{ alert.polygon }}">
+        </div>
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-lg-4">
+        <table class="table">
+          <tbody>
+            {% if alert.category %}
+              <tr>
+                <td>Categoría</td>
+                <td class="text-right">
+                  <span class="badge bgcolor-{{ alert.category|lower }}">
+                    {{ alert.get_category_display }}
+                  </span>
+                </td>
+              </tr>
+            {% endif %}
+            {% if alert.type_anuncio %}
+              <tr>
+                <td>Tipo</td>
+                <td class="text-right">
+                  <span class="badge bgcolor-tipo-{{ alert.type_anuncio|lower }} white-text">
+                    {{ alert.get_type_anuncio_display }}
+                  </span>
+                </td>
+              </tr>
+            {% endif %}
+            {% if alert.estado_inmueble %}
+              <tr>
+                <td>Estado</td>
+                <td class="text-right">
+                  <span class="badge bgcolor-estado-{{ alert.estado_inmueble|lower }}">
+                    {{ alert.get_estado_inmueble_display }}
+                  </span>
+                </td>
+              </tr>
+            {% endif %}
+            {% if alert.metros_cuadrados %}
+              <tr>
+                <td>Mínimo metros cuadrados</td>
+                <td class="text-right">{{ alert.metros_cuadrados }}</td>
+              </tr>
+            {% endif %}
+            {% if alert.habitaciones %}
+              <tr>
+                <td>Mínimo habitaciones</td>
+                <td class="text-value">{{ alert.habitaciones }}</td>
+              </tr>
+            {% endif %}
+            {% if alert.banos %}
+              <tr>
+                <td>Mínimo baños</td>
+                <td class="text-value">{{ alert.banos }}</td>
+              </tr>
+            {% endif %}
+            {% if alert.genero %}
+              <tr>
+                <td>Genero</td>
+                <td class="text-right">
+                  {% if alert.genero == 'CHICO' %}
+                    <span class="badge bgcolor-chico">Chicos</span>
+                  {% elif alert.genero == 'CHICA' %}
+                    <span class="badge bgcolor-chica">Chicas</span>
+                  {% elif alert.genero == 'CHICOCHICA' %}
+                    <span class="badge bgcolor-chicochica">Chicas/Chicos</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+            {% if alert.internet %}
+              <tr>
+                <td>Conexión internet</td>
+                <td class="text-right">{% display_for alert.internet %}</td>
+              </tr>
+            {% endif %}
+            {% if alert.permite_fumar_piso %}
+              <tr>
+                <td>Permite fumar en piso</td>
+                <td class="text-right">{% display_for alert.permite_fumar_piso %}</td>
+              </tr>
+            {% endif %}
+            {% if alert.permite_fumar_habitacion %}
+              <tr>
+                <td>Permite fumar en habitación</td>
+                <td class="text-right">{% display_for alert.permite_fumar_habitacion %}</td>
+              </tr>
+            {% endif %}
+            {% if alert.precio %}
+              <tr>
+                <td>Precio máximo</td>
+                <td class="text-value">{{ alert|currency }}</td>
+              </tr>
+            {% endif %}
+            {% if alert.create_at %}
+              <tr>
+                <td>Fecha creación alerta</td>
+                <td class="text-value">{{ alert.create_at|date:'SHORT_DATE_FORMAT' }}</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+
+        <a class="btn btn-primary" href="{% url 'alerts:update' alert.pk %}">Editar</a>
+        <a class="btn btn-success" href="{% url 'alerts:list' %}">Volver</a>
+        <a class="btn btn-danger" href="{% url 'alerts:delete' alert.pk %}">Eliminar</a>
+      </div>
+
+      <div class="col-lg-8 d-none d-lg-block">
+        <div id="map-large" style="width: 100%; height: 550px;"></div>
+      </div>
+    </section>
+  </section>
+
+  {% include "_gmaps_modal.html" %}
+{% endblock content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" with libraries="drawing" %}
+
+  <script>
+    // Cargar mapa.
+    initShapeMap(false);
+  </script>
+{% endblock scripts %}

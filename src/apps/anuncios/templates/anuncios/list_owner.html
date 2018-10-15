@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Lista de anuncios de {{ owner.get_public_name }}{% endblock meta_description %}
+{% block head_title %}- Lista de anuncios de {{ owner.get_public_name }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Lista anuncios de {{ owner.get_public_name }}</h1>
+      <hr>
+      <p class="lead">Últimos anuncios</p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    {% include "anuncios/_anuncio_list.html" with anuncios=anuncio_list col="col-lg-10 offset-lg-1" %}
+
+    {% include "_pagination.html" %}
+  </section>
+{% endblock content %}

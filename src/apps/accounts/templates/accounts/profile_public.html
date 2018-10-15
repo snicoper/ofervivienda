@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load utils_tags %}
+
+{% block meta_description %}Perfil público de {{ profile.username }}{% endblock meta_description %}
+{% block head_title %}- Perfil público de {{ profile.username }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Perfil público de {{ profile.get_public_name }}</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-10 m-auto">
+        <div class="text-center">
+          <img class="img-fluid" src="{{ profile.get_avatar }}" alt="avatar">
+        </div>
+
+        {% if profile.description %}
+          <div class="mt-3">
+            <h3>Descripción</h3>
+            <hr>
+            {% markdown profile.description safe=False %}
+          </div>
+        {% endif %}
+
+
+        <div class="mt-3">
+          <h3>Contacto</h3>
+
+          <table class="table table-sm">
+            <tbody>
+              {% with profile.user_options as user_options %}
+                {% if user_options.email_public %}
+                  <tr>
+                    <td><i class="material-icons">email</i> Email</td>
+                    <td class="text-value">{{ profile.email }}</td>
+                  </tr>
+                {% endif %}
+
+                {% if user_options.phone_public %}
+                  <tr>
+                    <td><i class="material-icons">phone</i> Teléfono</td>
+                    <td class="text-value">
+                      {{ profile.phone|default:'<i class="material-icons text-danger">highlight_off</i>' }}
+                    </td>
+                  </tr>
+                {% endif %}
+
+                {% with profile.user_location as user_location %}
+                  {% if user_options.address_public %}
+                    <tr>
+                      <td><i class="material-icons">location_on</i> Dirección</td>
+                      <td class="text-value">
+                        {{ user_location.location_string|default:'<i class="material-icons text-danger">highlight_off</i>' }}
+                        {% if user_location.point.coords.1 %}
+                          <a class="btn btn-sm btn-outline-success set-position-gmaps"
+                             href="#modal-marker-gmap"
+                             data-toggle="modal"
+                             data-target="#map-modal"
+                             data-latitude="{{ user_location.point.coords.1 }}"
+                             data-longitude="{{ user_location.point.coords.0 }}"
+                          >
+                            <i class="material-icons md-3">place</i>
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endif %}
+                {% endwith %}
+              {% endwith %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if profile.anuncios_owner.count %}
+          <div class="mb-2">
+            <a class="btn btn-primary" href="{% url 'anuncios:list_by_owner' profile.slug %}">Ver anuncios</a>
+            <a class="btn btn-success" href="{{ HTTP_REFERER }}">Volver</a>
+          </div>
+        {% endif %}
+
+        {% if profile != user %}
+          {% include "pmessages/_form_pmessage.html" %}
+        {% endif %}
+      </div>
+    </section>
+  </section>
+
+  {% include "_gmaps_modal.html" %}
+{% endblock content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" with libraries="places" %}
+{% endblock scripts %}

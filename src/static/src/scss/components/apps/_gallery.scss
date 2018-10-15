@@ -1,0 +1,28 @@
+// Galleria de imágenes del anuncio.
+.gallery-anuncio {
+  .img-anuncio {
+    width: 100%;
+  }
+
+  .img-actions {
+    position: relative;
+    background-color: $white;
+    opacity: 0.4;
+    top: -35px;
+    padding: 0.3rem;
+    text-align: right;
+    transition: all 0.5s;
+
+    @if $enable-rounded {
+      border-radius: 0 0 4px 4px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

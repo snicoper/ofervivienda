@@ -1,0 +1,9 @@
+Hola! te enviamos este mensaje desde {{ site_domain }} por que {{ name }} te ha recomendado el siguiente articulo que quizás te pueda interesar.
+
+{% if request.is_secure %}https://{% else %}http://{% endif %}{{ site_domain }}{{ article.get_absolute_url }}
+
+{% if message %}
+{{ name }} te ha añadido el siguiente mensaje.
+
+{{ message }}
+{% endif %}

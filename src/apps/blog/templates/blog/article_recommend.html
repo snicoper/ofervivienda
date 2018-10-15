@@ -1,0 +1,32 @@
+{% extends "blog/base_blog.html" %}
+{% load djtemplateforms_tags %}
+
+{% block meta_description %}Recomendar articulo {{ article.title }}{% endblock meta_description %}
+{% block head_title %}Recomendar articulo {{ article.title }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Recomendar articulo</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-6 m-auto">
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="form-row">
+            {% form form %}
+
+            <div class="col-12">
+              <button class="btn btn-primary" type="submit">Enviar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}

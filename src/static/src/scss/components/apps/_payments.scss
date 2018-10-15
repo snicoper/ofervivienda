@@ -1,0 +1,15 @@
+// Cards precios.
+.card-payment {
+  .card-title {
+    padding: 1rem 0 0;
+  }
+
+  .card-precio {
+    background-color: $green;
+    border-radius: 50px;
+    color: $white;
+    font-weight: bold;
+    padding: 0.5rem 0.8rem;
+    vertical-align: middle;
+  }
+}

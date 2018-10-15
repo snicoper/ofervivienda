@@ -1,0 +1,46 @@
+{% load ratings_tags %}
+
+{% comment %}
+  Requiere pasarle el objeto anuncio y readonly (opcional).
+  Si readonly se le pasa con cualquier valor, sera de solo lectura,
+  si se omite, se considera que sera editable.
+
+  Un usuario no puede puntuar su anuncio.
+
+  Example:
+    Solo lectura.
+    {% include 'ratings/_rating_stars.html' with anuncio=anuncio readonly='1' %}
+
+    Editable
+    {% include 'ratings/_rating_stars.html' with anuncio=anuncio %}
+{% endcomment %}
+
+<!-- rating -->
+<div class="anuncio-rating"
+     data-toggle="tooltip"
+     data-html="true"
+     title="{{ anuncio.ratio|default:'0' }} con {{ anuncio.ratio_anuncio.count }} votos
+           {% if user == anuncio.owner %}<br>No puedes votar tu anuncio{% endif %}"
+>
+  <select class="anuncio-rating-stars"
+          data-value="{{ anuncio.ratio }}"
+          data-readonly="{% if user.is_authenticated and user != anuncio.owner and not readonly %}0{% else %}1{% endif %}"
+          data-url="{% url 'ratings:api_rating_anuncio' anuncio.pk %}"
+          data-message-text="Tu puntuación: "
+          data-message-success="¡Gracias por puntuar!"
+  >
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+
+  {# Solo mostrar la punctuation del usuario si esta en detalles, de lo contrario evitar queries. #}
+  {% if not readonly %}
+    {% get_user_score_for_anuncio anuncio as user_score %}
+    <div class="anuncio-user-score text-muted{% if not user_score %} hidden{% endif %}">
+      <small>Tu puntuación: {{ user_score }} <i class="material-icons md-4">star</i></small>
+    </div>
+  {% endif %}
+</div><!-- end rating -->

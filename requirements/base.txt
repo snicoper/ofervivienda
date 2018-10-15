@@ -1,0 +1,13 @@
+# Archivo requirements base
+
+django-debug-toolbar==1.8.0
+django-model-utils==3.0.0
+Django==1.11.7
+djangorestframework==3.7.1
+googlemaps==2.5.1
+markdown2==2.3.4
+Pillow==4.3.0
+psycopg2==2.7.3.2
+python-dateutil==2.6.1
+pytz==2017.3
+requests==2.18.4

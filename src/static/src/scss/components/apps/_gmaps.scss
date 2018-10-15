@@ -1,0 +1,46 @@
+// Modal para los mapas.
+#map-modal {
+  padding: 0 !important;
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+
+    .modal-content {
+      border: 0;
+      min-height: 100%;
+
+      .modal-body {
+        padding: 0;
+
+        .close {
+          position: absolute;
+          right: 15px;
+          top: 5px;
+          z-index: 1;
+          background-color: theme-color("primary");
+          border-radius: 40px;
+          padding: 0.4rem 0.3rem 0.1rem;
+          text-shadow: none;
+
+          &:hover {
+            color: $white;
+          }
+
+          &::before {
+            content: "\E5CD";
+            font-family: "Material Icons";
+          }
+        }
+
+        #map {
+          position: absolute !important;
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

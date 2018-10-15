@@ -1,0 +1,3808 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.6.6
+-- Dumped by pg_dump version 9.6.6
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: topology; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA topology;
+
+
+ALTER SCHEMA topology OWNER TO postgres;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
+
+
+--
+-- Name: postgis_topology; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS postgis_topology WITH SCHEMA topology;
+
+
+--
+-- Name: EXTENSION postgis_topology; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION postgis_topology IS 'PostGIS topology spatial types and functions';
+
+
+--
+-- Name: unaccent; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION unaccent; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION unaccent IS 'text search dictionary that removes accents';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: accounts_user; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE accounts_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(30) NOT NULL,
+    last_name character varying(30) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL,
+    avatar character varying(100) NOT NULL,
+    public_name character varying(50) NOT NULL,
+    phone character varying(30) NOT NULL,
+    is_premium boolean NOT NULL,
+    anuncios_premium integer NOT NULL,
+    expire_premium_at timestamp with time zone NOT NULL,
+    slug character varying(150) NOT NULL,
+    description text NOT NULL
+);
+
+
+ALTER TABLE accounts_user OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_user_groups; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE accounts_user_groups (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE accounts_user_groups OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE accounts_user_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE accounts_user_groups_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE accounts_user_groups_id_seq OWNED BY accounts_user_groups.id;
+
+
+--
+-- Name: accounts_user_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE accounts_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE accounts_user_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE accounts_user_id_seq OWNED BY accounts_user.id;
+
+
+--
+-- Name: accounts_user_user_permissions; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE accounts_user_user_permissions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE accounts_user_user_permissions OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE accounts_user_user_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE accounts_user_user_permissions_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE accounts_user_user_permissions_id_seq OWNED BY accounts_user_user_permissions.id;
+
+
+--
+-- Name: accounts_userlocation; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE accounts_userlocation (
+    country character varying(100) NOT NULL,
+    state character varying(100) NOT NULL,
+    city character varying(100) NOT NULL,
+    address character varying(200) NOT NULL,
+    zipcode character varying(100) NOT NULL,
+    latitude double precision NOT NULL,
+    longitude double precision NOT NULL,
+    radius integer,
+    point geometry(Point,4326),
+    polygon geometry(Polygon,4326),
+    user_id integer NOT NULL,
+    location_string character varying(255) NOT NULL
+);
+
+
+ALTER TABLE accounts_userlocation OWNER TO oferviviendacom;
+
+--
+-- Name: accounts_useroptions; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE accounts_useroptions (
+    user_id integer NOT NULL,
+    phone_public boolean NOT NULL,
+    address_public boolean NOT NULL,
+    email_public boolean NOT NULL,
+    notify_precio_anuncio_baja boolean NOT NULL
+);
+
+
+ALTER TABLE accounts_useroptions OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertanuncio; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertanuncio (
+    id integer NOT NULL,
+    country character varying(100) NOT NULL,
+    state character varying(100) NOT NULL,
+    city character varying(100) NOT NULL,
+    address character varying(200) NOT NULL,
+    zipcode character varying(100) NOT NULL,
+    latitude double precision NOT NULL,
+    longitude double precision NOT NULL,
+    radius integer,
+    point geometry(Point,4326),
+    polygon geometry(Polygon,4326),
+    category character varying(50) NOT NULL,
+    type_anuncio character varying(50) NOT NULL,
+    estado_inmueble character varying(50) NOT NULL,
+    metros_cuadrados integer,
+    precio numeric(7,0),
+    currency character varying(3) NOT NULL,
+    active boolean NOT NULL,
+    create_at timestamp with time zone NOT NULL,
+    update_at timestamp with time zone NOT NULL,
+    description character varying(255) NOT NULL,
+    owner_id integer NOT NULL,
+    location_string character varying(255) NOT NULL,
+    CONSTRAINT alerts_alertanuncio_metros_cuadrados_check CHECK ((metros_cuadrados >= 0))
+);
+
+
+ALTER TABLE alerts_alertanuncio OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertanuncio_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE alerts_alertanuncio_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE alerts_alertanuncio_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertanuncio_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE alerts_alertanuncio_id_seq OWNED BY alerts_alertanuncio.id;
+
+
+--
+-- Name: alerts_alertapartamento; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertapartamento (
+    alertanuncio_ptr_id integer NOT NULL,
+    habitaciones smallint NOT NULL,
+    banos smallint NOT NULL,
+    ano_construccion smallint,
+    parking boolean NOT NULL,
+    CONSTRAINT alerts_alertapartamento_ano_construccion_check CHECK ((ano_construccion >= 0)),
+    CONSTRAINT alerts_alertapartamento_banos_check CHECK ((banos >= 0)),
+    CONSTRAINT alerts_alertapartamento_habitaciones_check CHECK ((habitaciones >= 0))
+);
+
+
+ALTER TABLE alerts_alertapartamento OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertcasa; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertcasa (
+    alertanuncio_ptr_id integer NOT NULL,
+    habitaciones smallint NOT NULL,
+    banos smallint NOT NULL,
+    ano_construccion smallint,
+    parking boolean NOT NULL,
+    CONSTRAINT alerts_alertcasa_ano_construccion_check CHECK ((ano_construccion >= 0)),
+    CONSTRAINT alerts_alertcasa_banos_check CHECK ((banos >= 0)),
+    CONSTRAINT alerts_alertcasa_habitaciones_check CHECK ((habitaciones >= 0))
+);
+
+
+ALTER TABLE alerts_alertcasa OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alerthabitacion; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alerthabitacion (
+    alertanuncio_ptr_id integer NOT NULL,
+    permite_fumar_habitacion boolean NOT NULL,
+    permite_fumar_piso boolean NOT NULL,
+    internet boolean NOT NULL,
+    genero character varying(20) NOT NULL
+);
+
+
+ALTER TABLE alerts_alerthabitacion OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertindustrial; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertindustrial (
+    alertanuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE alerts_alertindustrial OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertlocal; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertlocal (
+    alertanuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE alerts_alertlocal OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertparking; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertparking (
+    alertanuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE alerts_alertparking OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertpiso; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertpiso (
+    alertanuncio_ptr_id integer NOT NULL,
+    habitaciones smallint NOT NULL,
+    banos smallint NOT NULL,
+    ano_construccion smallint,
+    parking boolean NOT NULL,
+    CONSTRAINT alerts_alertpiso_ano_construccion_check CHECK ((ano_construccion >= 0)),
+    CONSTRAINT alerts_alertpiso_banos_check CHECK ((banos >= 0)),
+    CONSTRAINT alerts_alertpiso_habitaciones_check CHECK ((habitaciones >= 0))
+);
+
+
+ALTER TABLE alerts_alertpiso OWNER TO oferviviendacom;
+
+--
+-- Name: alerts_alertterreno; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE alerts_alertterreno (
+    alertanuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE alerts_alertterreno OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anuncio; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anuncio (
+    id integer NOT NULL,
+    country character varying(100) NOT NULL,
+    state character varying(100) NOT NULL,
+    city character varying(100) NOT NULL,
+    address character varying(200) NOT NULL,
+    zipcode character varying(100) NOT NULL,
+    latitude double precision NOT NULL,
+    longitude double precision NOT NULL,
+    radius integer,
+    point geometry(Point,4326),
+    polygon geometry(Polygon,4326),
+    category character varying(50) NOT NULL,
+    type_anuncio character varying(50) NOT NULL,
+    estado_inmueble character varying(50) NOT NULL,
+    metros_cuadrados integer,
+    precio numeric(7,0),
+    currency character varying(3) NOT NULL,
+    active boolean NOT NULL,
+    create_at timestamp with time zone NOT NULL,
+    is_premium boolean NOT NULL,
+    phone character varying(20) NOT NULL,
+    views integer NOT NULL,
+    update_at timestamp with time zone NOT NULL,
+    owner_id integer NOT NULL,
+    location_string character varying(255) NOT NULL,
+    description text NOT NULL,
+    CONSTRAINT anuncios_anuncio_metros_cuadrados_check CHECK ((metros_cuadrados >= 0))
+);
+
+
+ALTER TABLE anuncios_anuncio OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anuncio_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE anuncios_anuncio_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE anuncios_anuncio_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anuncio_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE anuncios_anuncio_id_seq OWNED BY anuncios_anuncio.id;
+
+
+--
+-- Name: anuncios_anuncioapartamento; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anuncioapartamento (
+    anuncio_ptr_id integer NOT NULL,
+    habitaciones smallint NOT NULL,
+    banos smallint NOT NULL,
+    ano_construccion smallint,
+    parking boolean NOT NULL,
+    CONSTRAINT anuncios_anuncioapartamento_ano_construccion_check CHECK ((ano_construccion >= 0)),
+    CONSTRAINT anuncios_anuncioapartamento_banos_check CHECK ((banos >= 0)),
+    CONSTRAINT anuncios_anuncioapartamento_habitaciones_check CHECK ((habitaciones >= 0))
+);
+
+
+ALTER TABLE anuncios_anuncioapartamento OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anunciocasa; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anunciocasa (
+    anuncio_ptr_id integer NOT NULL,
+    habitaciones smallint NOT NULL,
+    banos smallint NOT NULL,
+    ano_construccion smallint,
+    parking boolean NOT NULL,
+    CONSTRAINT anuncios_anunciocasa_ano_construccion_check CHECK ((ano_construccion >= 0)),
+    CONSTRAINT anuncios_anunciocasa_banos_check CHECK ((banos >= 0)),
+    CONSTRAINT anuncios_anunciocasa_habitaciones_check CHECK ((habitaciones >= 0))
+);
+
+
+ALTER TABLE anuncios_anunciocasa OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anunciohabitacion; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anunciohabitacion (
+    anuncio_ptr_id integer NOT NULL,
+    permite_fumar_habitacion boolean NOT NULL,
+    permite_fumar_piso boolean NOT NULL,
+    internet boolean NOT NULL,
+    genero character varying(20) NOT NULL
+);
+
+
+ALTER TABLE anuncios_anunciohabitacion OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anuncioindustrial; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anuncioindustrial (
+    anuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE anuncios_anuncioindustrial OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anunciolocal; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anunciolocal (
+    anuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE anuncios_anunciolocal OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anuncioparking; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anuncioparking (
+    anuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE anuncios_anuncioparking OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anunciopiso; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anunciopiso (
+    anuncio_ptr_id integer NOT NULL,
+    habitaciones smallint NOT NULL,
+    banos smallint NOT NULL,
+    ano_construccion smallint,
+    parking boolean NOT NULL,
+    CONSTRAINT anuncios_anunciopiso_ano_construccion_check CHECK ((ano_construccion >= 0)),
+    CONSTRAINT anuncios_anunciopiso_banos_check CHECK ((banos >= 0)),
+    CONSTRAINT anuncios_anunciopiso_habitaciones_check CHECK ((habitaciones >= 0))
+);
+
+
+ALTER TABLE anuncios_anunciopiso OWNER TO oferviviendacom;
+
+--
+-- Name: anuncios_anuncioterreno; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE anuncios_anuncioterreno (
+    anuncio_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE anuncios_anuncioterreno OWNER TO oferviviendacom;
+
+--
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE auth_group (
+    id integer NOT NULL,
+    name character varying(80) NOT NULL
+);
+
+
+ALTER TABLE auth_group OWNER TO oferviviendacom;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE auth_group_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_group_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE auth_group_id_seq OWNED BY auth_group.id;
+
+
+--
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE auth_group_permissions (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE auth_group_permissions OWNER TO oferviviendacom;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE auth_group_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_group_permissions_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE auth_group_permissions_id_seq OWNED BY auth_group_permissions.id;
+
+
+--
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE auth_permission OWNER TO oferviviendacom;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE auth_permission_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_permission_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE auth_permission_id_seq OWNED BY auth_permission.id;
+
+
+--
+-- Name: authentication_registeruser; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE authentication_registeruser (
+    id integer NOT NULL,
+    username character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    password character varying(128) NOT NULL,
+    token character varying(32) NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE authentication_registeruser OWNER TO oferviviendacom;
+
+--
+-- Name: authentication_registeruser_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE authentication_registeruser_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE authentication_registeruser_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: authentication_registeruser_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE authentication_registeruser_id_seq OWNED BY authentication_registeruser.id;
+
+
+--
+-- Name: authentication_useremailupdate; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE authentication_useremailupdate (
+    user_id integer NOT NULL,
+    new_email character varying(254) NOT NULL,
+    token character varying(30) NOT NULL,
+    create_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE authentication_useremailupdate OWNER TO oferviviendacom;
+
+--
+-- Name: blog_article; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE blog_article (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    slug character varying(255) NOT NULL,
+    image_header character varying(100),
+    body text NOT NULL,
+    active boolean NOT NULL,
+    create_at timestamp with time zone NOT NULL,
+    update_at timestamp with time zone NOT NULL,
+    default_tag_id integer NOT NULL,
+    owner_id integer NOT NULL,
+    views integer NOT NULL,
+    description character varying(100) NOT NULL
+);
+
+
+ALTER TABLE blog_article OWNER TO oferviviendacom;
+
+--
+-- Name: blog_article_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE blog_article_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE blog_article_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: blog_article_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE blog_article_id_seq OWNED BY blog_article.id;
+
+
+--
+-- Name: blog_article_tags; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE blog_article_tags (
+    id integer NOT NULL,
+    article_id integer NOT NULL,
+    tag_id integer NOT NULL
+);
+
+
+ALTER TABLE blog_article_tags OWNER TO oferviviendacom;
+
+--
+-- Name: blog_article_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE blog_article_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE blog_article_tags_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: blog_article_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE blog_article_tags_id_seq OWNED BY blog_article_tags.id;
+
+
+--
+-- Name: blog_articlesubscribe; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE blog_articlesubscribe (
+    id integer NOT NULL,
+    email character varying(254) NOT NULL,
+    token_unsigned character varying(30) NOT NULL
+);
+
+
+ALTER TABLE blog_articlesubscribe OWNER TO oferviviendacom;
+
+--
+-- Name: blog_articlesubscribe_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE blog_articlesubscribe_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE blog_articlesubscribe_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: blog_articlesubscribe_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE blog_articlesubscribe_id_seq OWNED BY blog_articlesubscribe.id;
+
+
+--
+-- Name: blog_tag; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE blog_tag (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    slug character varying(255) NOT NULL,
+    views integer NOT NULL,
+    thumbnail character varying(100) NOT NULL
+);
+
+
+ALTER TABLE blog_tag OWNER TO oferviviendacom;
+
+--
+-- Name: blog_tag_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE blog_tag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE blog_tag_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: blog_tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE blog_tag_id_seq OWNED BY blog_tag.id;
+
+
+--
+-- Name: contact_contactmessage; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE contact_contactmessage (
+    id integer NOT NULL,
+    subject character varying(255) NOT NULL,
+    message text NOT NULL,
+    username character varying(100) NOT NULL,
+    email character varying(254) NOT NULL,
+    read boolean NOT NULL,
+    is_register boolean NOT NULL,
+    create_at timestamp with time zone NOT NULL,
+    screenshot character varying(100) NOT NULL
+);
+
+
+ALTER TABLE contact_contactmessage OWNER TO oferviviendacom;
+
+--
+-- Name: contact_contactmessage_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE contact_contactmessage_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE contact_contactmessage_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: contact_contactmessage_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE contact_contactmessage_id_seq OWNED BY contact_contactmessage.id;
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE django_admin_log OWNER TO oferviviendacom;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE django_admin_log_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_admin_log_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE django_admin_log_id_seq OWNED BY django_admin_log.id;
+
+
+--
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE django_content_type OWNER TO oferviviendacom;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE django_content_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_content_type_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE django_content_type_id_seq OWNED BY django_content_type.id;
+
+
+--
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE django_migrations (
+    id integer NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE django_migrations OWNER TO oferviviendacom;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE django_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_migrations_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE django_migrations_id_seq OWNED BY django_migrations.id;
+
+
+--
+-- Name: django_session; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE django_session OWNER TO oferviviendacom;
+
+--
+-- Name: django_site; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE django_site (
+    id integer NOT NULL,
+    domain character varying(100) NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE django_site OWNER TO oferviviendacom;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE django_site_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_site_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE django_site_id_seq OWNED BY django_site.id;
+
+
+--
+-- Name: favorites_favorites; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE favorites_favorites (
+    owner_id integer NOT NULL
+);
+
+
+ALTER TABLE favorites_favorites OWNER TO oferviviendacom;
+
+--
+-- Name: favorites_favorites_anuncios; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE favorites_favorites_anuncios (
+    id integer NOT NULL,
+    favorites_id integer NOT NULL,
+    anuncio_id integer NOT NULL
+);
+
+
+ALTER TABLE favorites_favorites_anuncios OWNER TO oferviviendacom;
+
+--
+-- Name: favorites_favorites_anuncios_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE favorites_favorites_anuncios_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE favorites_favorites_anuncios_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: favorites_favorites_anuncios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE favorites_favorites_anuncios_id_seq OWNED BY favorites_favorites_anuncios.id;
+
+
+--
+-- Name: gallery_imageanuncio; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE gallery_imageanuncio (
+    id integer NOT NULL,
+    image character varying(100) NOT NULL,
+    thumbnail character varying(100) NOT NULL,
+    anuncio_id integer NOT NULL,
+    description character varying(100) NOT NULL
+);
+
+
+ALTER TABLE gallery_imageanuncio OWNER TO oferviviendacom;
+
+--
+-- Name: gallery_imageanuncio_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE gallery_imageanuncio_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE gallery_imageanuncio_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: gallery_imageanuncio_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE gallery_imageanuncio_id_seq OWNED BY gallery_imageanuncio.id;
+
+
+--
+-- Name: payments_paymentipn; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE payments_paymentipn (
+    id integer NOT NULL,
+    item_name character varying(127) NOT NULL,
+    item_number character varying(127) NOT NULL,
+    invoice character varying(127) NOT NULL,
+    txn_id character varying(255) NOT NULL,
+    payment_status character varying(10) NOT NULL,
+    total_amount double precision NOT NULL,
+    receiver_amount double precision NOT NULL,
+    post_data text NOT NULL,
+    payment_date timestamp with time zone NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE payments_paymentipn OWNER TO oferviviendacom;
+
+--
+-- Name: payments_paymentipn_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE payments_paymentipn_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE payments_paymentipn_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: payments_paymentipn_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE payments_paymentipn_id_seq OWNED BY payments_paymentipn.id;
+
+
+--
+-- Name: pmessages_message; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE pmessages_message (
+    id integer NOT NULL,
+    body text NOT NULL,
+    subject character varying(255) NOT NULL,
+    recipient_read boolean NOT NULL,
+    sent_at timestamp with time zone NOT NULL,
+    anuncio_id integer,
+    parent_id integer,
+    recipient_id integer NOT NULL,
+    sender_id integer NOT NULL
+);
+
+
+ALTER TABLE pmessages_message OWNER TO oferviviendacom;
+
+--
+-- Name: pmessages_message_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE pmessages_message_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE pmessages_message_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: pmessages_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE pmessages_message_id_seq OWNED BY pmessages_message.id;
+
+
+--
+-- Name: promos_promo; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE promos_promo (
+    id integer NOT NULL,
+    code character varying(12) NOT NULL,
+    payment_promo character varying(20) NOT NULL,
+    active boolean NOT NULL,
+    create_at timestamp with time zone NOT NULL,
+    expire_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE promos_promo OWNER TO oferviviendacom;
+
+--
+-- Name: promos_promo_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE promos_promo_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE promos_promo_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: promos_promo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE promos_promo_id_seq OWNED BY promos_promo.id;
+
+
+--
+-- Name: ratings_ratio; Type: TABLE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE TABLE ratings_ratio (
+    id integer NOT NULL,
+    score smallint NOT NULL,
+    anuncio_id integer NOT NULL,
+    user_id integer NOT NULL,
+    CONSTRAINT ratings_ratio_score_check CHECK ((score >= 0))
+);
+
+
+ALTER TABLE ratings_ratio OWNER TO oferviviendacom;
+
+--
+-- Name: ratings_ratio_id_seq; Type: SEQUENCE; Schema: public; Owner: oferviviendacom
+--
+
+CREATE SEQUENCE ratings_ratio_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ratings_ratio_id_seq OWNER TO oferviviendacom;
+
+--
+-- Name: ratings_ratio_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oferviviendacom
+--
+
+ALTER SEQUENCE ratings_ratio_id_seq OWNED BY ratings_ratio.id;
+
+
+--
+-- Name: accounts_user id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user ALTER COLUMN id SET DEFAULT nextval('accounts_user_id_seq'::regclass);
+
+
+--
+-- Name: accounts_user_groups id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_groups ALTER COLUMN id SET DEFAULT nextval('accounts_user_groups_id_seq'::regclass);
+
+
+--
+-- Name: accounts_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('accounts_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- Name: alerts_alertanuncio id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertanuncio ALTER COLUMN id SET DEFAULT nextval('alerts_alertanuncio_id_seq'::regclass);
+
+
+--
+-- Name: anuncios_anuncio id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncio ALTER COLUMN id SET DEFAULT nextval('anuncios_anuncio_id_seq'::regclass);
+
+
+--
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group ALTER COLUMN id SET DEFAULT nextval('auth_group_id_seq'::regclass);
+
+
+--
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_permission ALTER COLUMN id SET DEFAULT nextval('auth_permission_id_seq'::regclass);
+
+
+--
+-- Name: authentication_registeruser id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY authentication_registeruser ALTER COLUMN id SET DEFAULT nextval('authentication_registeruser_id_seq'::regclass);
+
+
+--
+-- Name: blog_article id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article ALTER COLUMN id SET DEFAULT nextval('blog_article_id_seq'::regclass);
+
+
+--
+-- Name: blog_article_tags id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article_tags ALTER COLUMN id SET DEFAULT nextval('blog_article_tags_id_seq'::regclass);
+
+
+--
+-- Name: blog_articlesubscribe id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_articlesubscribe ALTER COLUMN id SET DEFAULT nextval('blog_articlesubscribe_id_seq'::regclass);
+
+
+--
+-- Name: blog_tag id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_tag ALTER COLUMN id SET DEFAULT nextval('blog_tag_id_seq'::regclass);
+
+
+--
+-- Name: contact_contactmessage id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY contact_contactmessage ALTER COLUMN id SET DEFAULT nextval('contact_contactmessage_id_seq'::regclass);
+
+
+--
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_admin_log ALTER COLUMN id SET DEFAULT nextval('django_admin_log_id_seq'::regclass);
+
+
+--
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_content_type ALTER COLUMN id SET DEFAULT nextval('django_content_type_id_seq'::regclass);
+
+
+--
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_migrations ALTER COLUMN id SET DEFAULT nextval('django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: django_site id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_site ALTER COLUMN id SET DEFAULT nextval('django_site_id_seq'::regclass);
+
+
+--
+-- Name: favorites_favorites_anuncios id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites_anuncios ALTER COLUMN id SET DEFAULT nextval('favorites_favorites_anuncios_id_seq'::regclass);
+
+
+--
+-- Name: gallery_imageanuncio id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY gallery_imageanuncio ALTER COLUMN id SET DEFAULT nextval('gallery_imageanuncio_id_seq'::regclass);
+
+
+--
+-- Name: payments_paymentipn id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY payments_paymentipn ALTER COLUMN id SET DEFAULT nextval('payments_paymentipn_id_seq'::regclass);
+
+
+--
+-- Name: pmessages_message id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY pmessages_message ALTER COLUMN id SET DEFAULT nextval('pmessages_message_id_seq'::regclass);
+
+
+--
+-- Name: promos_promo id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY promos_promo ALTER COLUMN id SET DEFAULT nextval('promos_promo_id_seq'::regclass);
+
+
+--
+-- Name: ratings_ratio id; Type: DEFAULT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY ratings_ratio ALTER COLUMN id SET DEFAULT nextval('ratings_ratio_id_seq'::regclass);
+
+
+--
+-- Data for Name: accounts_user; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY accounts_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, avatar, public_name, phone, is_premium, anuncios_premium, expire_premium_at, slug, description) FROM stdin;
+2	pbkdf2_sha256$30000$ts6xD92WQt6m$7SekYKlFXER7A8Q690ITZvw90nmQbT++E3+eSpKeLxM=	2016-11-30 08:46:10+01	f	jferri			ferri1989@gmail.com	f	t	2016-11-28 00:15:08+01		Jordi	645738784	t	1	2050-01-01 00:00:00+01	jferri	
+1	pbkdf2_sha256$36000$CnPKQOj93XqB$TfsPf/wb4fNGiEsRHC1cyf06X5u4n0M/1+rZWAKSiDU=	2018-01-18 23:13:55.617895+01	t	ofervivienda			snicoper@ofervivienda.com	t	t	2016-11-17 16:40:52+01	accounts/avatar/logo_large.png	OferVivienda		f	1	2016-11-16 16:40:52+01	ofervivienda	
+3	pbkdf2_sha256$36000$iWQtgG7ZoZvT$/vxdUtzJQyZyxG0vJ09itBMwdD0LcIZRnO90lDs/cB0=	2017-04-30 20:46:18.925481+02	f	Monica			mnpmonica@hotmail.com	f	t	2017-04-30 17:23:58.914794+02				f	0	2017-04-29 17:23:58.915161+02	monica	
+4	pbkdf2_sha256$36000$CzO14ljBEUDn$Y7GHRLnbfYQjrba+9SZnIfV6SXUuUh1zQYHZ6AOyLQk=	2017-07-30 21:16:39.127785+02	f	Dolores			lolapereiro@outlook.com	f	t	2017-07-30 21:14:15.310167+02				f	0	2017-07-29 21:14:15.310856+02	dolores	
+\.
+
+
+--
+-- Data for Name: accounts_user_groups; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY accounts_user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- Name: accounts_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('accounts_user_groups_id_seq', 1, false);
+
+
+--
+-- Name: accounts_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('accounts_user_id_seq', 4, true);
+
+
+--
+-- Data for Name: accounts_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY accounts_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Name: accounts_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('accounts_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- Data for Name: accounts_userlocation; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY accounts_userlocation (country, state, city, address, zipcode, latitude, longitude, radius, point, polygon, user_id, location_string) FROM stdin;
+España	Barcelona	Montcada i Reixac	Moli	08110	41.4716011000000009	2.18497619999993997	\N	0101000020E6100000004E4CCDD47A0140FAA0C26C5DBC4440	\N	2	España, Barcelona, Montcada i Reixac, Moli, 08110
+					0	0	\N	\N	\N	3	
+					0	0	\N	\N	\N	4	
+España	Barcelona	Granollers	Ramon Llull 28	08401	41.6140512999999999	2.2878034000000298	\N	0101000020E6100000006C75DE6B4D02407CC8A53B99CE4440	\N	1	España, Barcelona, Granollers, Ramon Llull 28, 08401
+\.
+
+
+--
+-- Data for Name: accounts_useroptions; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY accounts_useroptions (user_id, phone_public, address_public, email_public, notify_precio_anuncio_baja) FROM stdin;
+2	f	f	f	t
+1	f	f	f	t
+3	f	f	f	t
+4	f	f	f	t
+\.
+
+
+--
+-- Data for Name: alerts_alertanuncio; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertanuncio (id, country, state, city, address, zipcode, latitude, longitude, radius, point, polygon, category, type_anuncio, estado_inmueble, metros_cuadrados, precio, currency, active, create_at, update_at, description, owner_id, location_string) FROM stdin;
+1						41.5994799999999998	2.2905899999999999	\N	\N	0103000020E61000000100000007000000016A6AD95A5F0240529B38B9DFCD4440F6234564584502400AD7A3703DCE4440459E245D3339024092AE997CB3CD4440A323B9FC87340240E353008C67CC4440C9C859D8D34E0240CE531D7233CC44406C5B94D920530240944DB9C2BBCC4440016A6AD95A5F0240529B38B9DFCD4440	PISO	ALQUILER		50	503	EUR	t	2016-12-02 13:14:06.576688+01	2017-04-14 21:26:56.465069+02	Piso alquiler en Granollers	1	
+2						41.6075099999999978	2.28086000000000011	\N	\N	0103000020E61000000100000005000000F146E6913F58024075ABE7A4F7CD444035B56CAD2F5202407FBC57AD4CCC44400A80F10C1A3A02402332ACE28DCC444057091687333F024019FF3EE3C2CD4440F146E6913F58024075ABE7A4F7CD4440	HABITACION	ALQUILER		\N	300	EUR	t	2017-03-25 14:31:28.661995+01	2017-06-07 04:26:40.806906+02	Habitacion en Granollers	1	
+\.
+
+
+--
+-- Name: alerts_alertanuncio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('alerts_alertanuncio_id_seq', 2, true);
+
+
+--
+-- Data for Name: alerts_alertapartamento; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertapartamento (alertanuncio_ptr_id, habitaciones, banos, ano_construccion, parking) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alerts_alertcasa; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertcasa (alertanuncio_ptr_id, habitaciones, banos, ano_construccion, parking) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alerts_alerthabitacion; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alerthabitacion (alertanuncio_ptr_id, permite_fumar_habitacion, permite_fumar_piso, internet, genero) FROM stdin;
+2	t	f	t	CHICOCHICA
+\.
+
+
+--
+-- Data for Name: alerts_alertindustrial; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertindustrial (alertanuncio_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alerts_alertlocal; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertlocal (alertanuncio_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alerts_alertparking; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertparking (alertanuncio_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alerts_alertpiso; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertpiso (alertanuncio_ptr_id, habitaciones, banos, ano_construccion, parking) FROM stdin;
+1	2	1	\N	f
+\.
+
+
+--
+-- Data for Name: alerts_alertterreno; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY alerts_alertterreno (alertanuncio_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: anuncios_anuncio; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anuncio (id, country, state, city, address, zipcode, latitude, longitude, radius, point, polygon, category, type_anuncio, estado_inmueble, metros_cuadrados, precio, currency, active, create_at, is_premium, phone, views, update_at, owner_id, location_string, description) FROM stdin;
+12	España	Zaragoza	Zaragoza	Calle Cortés De Aragón	50005	41.6447872000000032	-0.892841399999952046	\N	0101000020E61000000078B0202892ECBF9170106388D24440	\N	PISO	VENTA	BUENESTADO	140	338000	EUR	t	2016-11-24 21:08:13.314047+01	f		87	2016-11-24 21:08:13.314168+01	1	España, Zaragoza, Zaragoza, Calle Cortés De Aragón, 50005	
+35	España	Granada	Granada	Calle Santa Clara	18007	37.1583499999999987	-3.6008342000000102	\N	0101000020E6100000008C3A2982CE0CC02AA913D044944240	\N	PISO	VENTA	BUENESTADO	76	89900	EUR	t	2016-11-27 11:30:15.575012+01	f		104	2016-11-27 11:30:15.575126+01	1	España, Granada, Granada, Calle Santa Clara, 18007	
+2	España	Barcelona	Hospitalet de llobregat	La Florida	08905	41.3674351000000016	2.10590520000005021	\N	0101000020E610000000D053D3E4D8004085F3041D08AF4440	\N	PISO	VENTA	BUENESTADO	65	110000	EUR	t	2016-11-23 20:42:27.206757+01	f		76	2016-11-23 20:42:27.206867+01	1	España, Barcelona, Hospitalet de llobregat, La Florida, 08905	
+21	España	Valladolid	Valladolid	San Vicente	47013	41.6431064000000006	-4.71836959999995997	\N	0101000020E610000000C3C9479CDF12C095EC7D4F51D24440	\N	PISO	VENTA	BUENESTADO	85	69000	EUR	t	2016-11-25 14:01:16.822402+01	f		84	2016-11-25 14:01:16.822531+01	1	España, Valladolid, Valladolid, San Vicente, 47013	
+18	España	Zaragoza	Zaragoza	C/Pedro II El Católico	50010	41.654767200000002	-0.907808100000010998	\N	0101000020E610000000689192C30CEDBF293F5F69CFD34440	\N	PISO	VENTA	BUENESTADO	80	99000	EUR	t	2016-11-24 21:24:39.16295+01	f		102	2016-11-24 21:24:39.163124+01	1	España, Zaragoza, Zaragoza, C/Pedro II El Católico, 50010	
+5	España	Madrid	Madrid	Calle Santa Beatriz	28038	40.4018853999999976	-3.66275329999995991	\N	0101000020E61000000087269A514D0DC0B4DE14FB70334440	\N	PISO	VENTA	BUENESTADO	73	75000	EUR	t	2016-11-24 14:13:54.229903+01	f		79	2016-11-24 14:13:54.230015+01	1	España, Madrid, Madrid, Calle Santa Beatriz, 28038	
+22	España	Valladolid	Valladolid	Calle del pelícano	47012	41.6468027000000021	-4.70965369999998984	\N	0101000020E610000000F1A375AFD612C073BB4D6ECAD24440	\N	PISO	VENTA	BUENESTADO	79	83500	EUR	t	2016-11-25 14:03:22.357411+01	f		102	2016-11-25 14:03:22.357537+01	1	España, Valladolid, Valladolid, Calle del pelícano, 47012	
+30	España	Girona	Girona	Carrer santiago	17003	41.9686280999999966	2.81650289999992998	\N	0101000020E610000000B624AC3288064049BE6D01FCFB4440	\N	PISO	VENTA	BUENESTADO	115	140000	EUR	t	2016-11-25 17:38:15.885082+01	f		96	2016-11-25 17:38:15.885191+01	1	España, Girona, Girona, Carrer santiago, 17003	
+25	España	Valladolid	Valladolid	Paseo Zorrilla	47006	41.6314338999999975	-4.74044530000003039	\N	0101000020E610000080E8EF4A37F612C0F90A77D3D2D04440	\N	PISO	VENTA	BUENESTADO	80	49500	EUR	t	2016-11-25 14:10:11.598882+01	f		87	2016-11-25 14:10:11.59913+01	1	España, Valladolid, Valladolid, Paseo Zorrilla, 47006	
+39	España	Granada	Albolote	Calle Eolo	18290	37.2499674999999968	-3.65298039999992996	\N	0101000020E6100000006EB7C94D390DC00CC85EEFFE9F4240	\N	PISO	VENTA	BUENESTADO	104	106000	EUR	t	2016-11-27 11:44:16.831101+01	f		96	2016-11-27 11:44:16.831221+01	1	España, Granada, Albolote, Calle Eolo, 18290	
+17	España	Zaragoza	Zaragoza	La Jota	50014	41.6618738000000022	-0.861851800000068002	\N	0101000020E610000000F8DF394A94EBBF258ADA47B8D44440	\N	PISO	VENTA	BUENESTADO	82	62000	EUR	t	2016-11-24 21:22:25.803077+01	f		76	2016-11-24 21:22:25.80326+01	1	España, Zaragoza, Zaragoza, La Jota, 50014	
+10	España	Madrid	Móstoles	Corro 263 1º	AV. CARLOS V	40.3232129000000015	-3.8676290999999301	\N	0101000020E610000000768C86E7F00EC09A92510A5F294440	\N	PISO	VENTA	BUENESTADO	120	155000	EUR	t	2016-11-24 14:31:59.93562+01	f		94	2016-11-24 14:31:59.935808+01	1	España, Madrid, Móstoles, Corro 263 1º, AV. CARLOS V	
+9	España	Madrid	Móstoles	Avda Carlos V	28938	40.3163235000000029	-3.85363459999995994	\N	0101000020E610000000DF8D603ED40EC067BAD7497D284440	\N	PISO	VENTA	BUENESTADO	90	126000	EUR	t	2016-11-24 14:30:01.404236+01	f		88	2016-11-24 14:30:01.404437+01	1	España, Madrid, Móstoles, Avda Carlos V, 28938	
+50	España	Barcelona	Barcelona	C/Europa	08014	41.3850638999999987	2.17340349999994986	\N	0101000020E61000000018CC5F2163014063AF1CC649B14440	\N	PISO	ALQUILER		65	1100	EUR	t	2017-01-25 17:42:25.376288+01	f		90	2017-01-25 17:42:25.376397+01	1	España, Barcelona, Barcelona, C/Europa, 08014	
+34	España	Valencia	Valencia	Avd. Doctor Waksman	46004	39.4559423999999979	-0.371563199999969007	\N	0101000020E610000000681904B1C7D7BF0C6E10525CBA4340	\N	PISO	VENTA	BUENESTADO	69	70000	EUR	t	2016-11-26 12:42:28.363304+01	f		102	2016-11-26 12:42:28.363464+01	1	España, Valencia, Valencia, Avd. Doctor Waksman, 46004	
+16	España	Zaragoza	Zaragoza	Actur	50018	41.671684599999999	-0.88886900000000002	\N	0101000020E610000000B4AD669D71ECBF091DCFC2F9D54440	\N	PISO	VENTA	BUENESTADO	120	230000	EUR	t	2016-11-24 21:20:47.282477+01	f		76	2016-11-24 21:20:47.282657+01	1	España, Zaragoza, Zaragoza, Actur, 50018	
+15	España	Zaragoza	Zaragoza	Paseo de las damas	50008	41.6445057999999975	-0.883603300000003977	\N	0101000020E61000000068846D7A46ECBF898A822A7FD24440	\N	PISO	VENTA	BUENESTADO	130	260000	EUR	t	2016-11-24 21:19:06.034899+01	f		92	2016-11-24 21:19:06.035004+01	1	España, Zaragoza, Zaragoza, Paseo de las damas, 50008	
+19	España	Zaragoza	Zaragoza	Calle francisco de vitoria	50008	41.6460961000000012	-0.880129300000020987	\N	0101000020E6100000000CF8EB042AECBF5DC9E946B3D24440	\N	PISO	VENTA	BUENESTADO	95	200000	EUR	t	2016-11-24 21:26:16.768632+01	f		89	2016-11-24 21:26:16.768779+01	1	España, Zaragoza, Zaragoza, Calle francisco de vitoria, 50008	
+31	España	Valencia	Valencia	Castan tobeñas	46014	39.472863199999999	-0.401595499999985006	\N	0101000020E61000000020AE9CBDB3D9BFAFBD05C886BC4340	\N	PISO	VENTA	BUENESTADO	48	39900	EUR	t	2016-11-26 12:35:34.880055+01	f		90	2016-11-26 12:35:34.880262+01	1	España, Valencia, Valencia, Castan tobeñas, 46014	
+37	España	Granada	Armilla	Calle Santander	18100	37.1414092999999994	-3.62672060000000007	\N	0101000020E610000000D6051786030DC0D56C2FB319924240	\N	PISO	VENTA	BUENESTADO	89	79000	EUR	t	2016-11-27 11:37:07.964942+01	f		111	2016-11-27 11:37:07.965054+01	1	España, Granada, Armilla, Calle Santander, 18100	
+11	España	Barcelona	Premià de mar	Carrer joan vilano	08330	41.492898799999999	2.35428760000002013	\N	0101000020E61000000007BBBC94D502406B1ED14E17BF4440	\N	PISO	VENTA	BUENESTADO	144	252000	EUR	t	2016-11-24 21:04:25.09827+01	f		74	2016-11-24 21:04:25.098388+01	1	España, Barcelona, Premià de mar, Carrer joan vilano, 08330	
+29	España	Girona	Girona	Carrer pau casals	17001	41.9831052999999983	2.81352049999998011	\N	0101000020E610000000013109178206401B03FC64D6FD4440	\N	PISO	VENTA	BUENESTADO	165	220000	EUR	t	2016-11-25 17:36:52.490621+01	f		98	2016-11-25 17:36:52.490737+01	1	España, Girona, Girona, Carrer pau casals, 17001	
+1	España	Barcelona	Barcelona	Poble sec	08004	41.3724302999999978	2.1628777999999298	\N	0101000020E610000000F441E0924D01400D45CBCBABAF4440	\N	PISO	VENTA	BUENESTADO	81	299000	EUR	t	2016-11-23 20:40:38.02029+01	f		87	2016-11-23 20:40:38.020422+01	1	España, Barcelona, Barcelona, Poble sec, 08004	
+7	España	Madrid	Madrid	C/Felisa Méndez	28053	40.3936643999999987	-3.67103010000005003	\N	0101000020E6100000000E7107455E0DC0BBCC559863324440	\N	PISO	VENTA	BUENESTADO	93	79000	EUR	t	2016-11-24 14:23:45.093917+01	f		77	2016-11-24 14:23:45.09403+01	1	España, Madrid, Madrid, C/Felisa Méndez, 28053	
+24	España	Valladolid	Valladolid	Paseo Zorrilla	98.000	41.6314338999999975	-4.74044530000003039	\N	0101000020E610000080E8EF4A37F612C0F90A77D3D2D04440	\N	PISO	VENTA	BUENESTADO	91	98000	EUR	t	2016-11-25 14:08:29.78469+01	f		85	2016-11-25 14:08:29.784803+01	1	España, Valladolid, Valladolid, Paseo Zorrilla, 98.000	
+26	España	Valladolid	Valladolid	Paseo De Zorrilla	47009	41.6314338999999975	-4.74044530000003039	\N	0101000020E610000080E8EF4A37F612C0F90A77D3D2D04440	\N	PISO	VENTA	BUENESTADO	96	127000	EUR	t	2016-11-25 14:13:13.777873+01	f		79	2016-11-25 14:13:13.777987+01	1	España, Valladolid, Valladolid, Paseo De Zorrilla, 47009	
+8	España	Madrid	Madrid	Calle de isla de la gomera	28039	40.4618207999999981	-3.70754330000000021	\N	0101000020E6100000000830760CA90DC0684EA8F11C3B4440	\N	PISO	VENTA	BUENESTADO	62	149500	EUR	t	2016-11-24 14:26:44.095222+01	f		82	2016-11-24 14:26:44.09534+01	1	España, Madrid, Madrid, Calle de isla de la gomera, 28039	
+6	España	Madrid	Collado villalba	Calle Real	28047	40.6307548999999995	-4.00560320000000036	\N	0101000020E6100000000363D8BC0510C058A59993BC504440	\N	PISO	VENTA	BUENESTADO	73	59000	EUR	t	2016-11-24 14:20:20.910043+01	f		99	2016-11-24 14:20:20.910171+01	1	España, Madrid, Collado villalba, Calle Real, 28047	
+14	España	Zaragoza	Zaragoza	Vía Hispanidad	50009	41.6447429999999983	-0.916301999999972971	\N	0101000020E6100000004C68925852EDBF97A949F086D24440	\N	PISO	VENTA	BUENESTADO	70	60000	EUR	t	2016-11-24 21:16:30.518215+01	f		86	2016-11-24 21:16:30.518343+01	1	España, Zaragoza, Zaragoza, Vía Hispanidad, 50009	
+54	España	Gerona	Bàscara	Bàscara	17016	42.1581165999999996	2.91072980000001014	\N	0101000020E610000000F193B42C49074034FA2C2A3D144540	\N	CASA	VENTA	BUENESTADO	145	220000	EUR	t	2017-03-14 09:25:01.76406+01	f		89	2017-03-14 09:25:01.764197+01	1	España, Gerona, Bàscara, Bàscara, 17016	Casa unifamiliar en venta situada en Bàscara. La vivienda tiene 145 m2 contruidos y la finca posee 558 m2. Con piscina descubierta y jardín. En perfecto estado de conservación. Dispone de 4 amplios dormitorios, 1 baño y 1 gran salón-comedor con chimenea y acceso a terraza.\r\n\r\nLa casa se situa a una distancia de los siguientes puntos:\r\n* 23 KM a Gerona por carretera.\r\n* 18 KM a Figueres por carretera.\r\n* 24 KM a l'Escala por carretera (zona de playa).\r\n* 34 KM a Roses por carretera (zona de playa).
+43	España	Barcelona	Granollers	Francesc Ribas	08402	41.6132023999999987	2.29367239999998995	\N	0101000020E610000000E74DEA7059024013EA8E6A7DCE4440	\N	PISO	VENTA	BUENESTADO	61	58000	EUR	t	2016-12-01 19:03:38.735614+01	f		105	2016-12-01 19:03:38.73572+01	1	España, Barcelona, Granollers, Francesc Ribas, 08402	
+13	España	Zaragoza	Zaragoza	María zayas sotomayor	50018	41.6673291000000035	-0.891278699999930035	\N	0101000020E610000000E083E85A85ECBFA6153A0A6BD54440	\N	PISO	VENTA	BUENESTADO	66	132000	EUR	t	2016-11-24 21:10:48.746593+01	f		80	2016-11-24 21:10:48.746699+01	1	España, Zaragoza, Zaragoza, María zayas sotomayor, 50018	
+32	España	Valencia	Valencia	Calle Torreta de Miramar	46020	39.4883954000000017	-0.363628899999980992	\N	0101000020E610000000585826B245D7BF29428FBD83BE4340	\N	PISO	VENTA	BUENESTADO	126	170000	EUR	t	2016-11-26 12:37:58.407722+01	f		80	2016-11-26 12:37:58.407862+01	1	España, Valencia, Valencia, Calle Torreta de Miramar, 46020	
+45	España	Barcelona	Granollers	Roger de Flor	08401	41.6065514000000007	2.28314729999999999	\N	0101000020E6100000009B4BBBE2430240E82BED79A3CD4440	\N	PISO	VENTA	BUENESTADO	61	64100	EUR	t	2016-12-01 19:13:23.504675+01	f		100	2016-12-01 19:13:23.504838+01	1	España, Barcelona, Granollers, Roger de Flor, 08401	
+48	España	Vizcaya	Bilbao	Lehendakari Aguirre	48015	43.2761264000000025	-2.95983630000000986	\N	0101000020E6100000001C70A7BEAD07C0F7C7201C58A34540	\N	PISO	VENTA	OBRANUEVA	72	312100	EUR	t	2016-12-12 16:16:07.646936+01	f		94	2016-12-12 16:16:07.647214+01	1	España, Vizcaya, Bilbao, Lehendakari Aguirre, 48015	
+42	España	Barcelona	Palafolls	C/ Verge Maria	08389	41.6609674999999982	2.75000260000002017	\N	0101000020E61000000052F75C01000640041C42959AD44440	\N	PISO	VENTA	BUENESTADO	46	59000	EUR	t	2016-12-01 18:54:35.596231+01	f		93	2016-12-01 18:54:35.596348+01	1	España, Barcelona, Palafolls, C/ Verge Maria, 08389	
+46	España	Barcelona	Granollers	Francesc Ribas	08402	41.6132023999999987	2.29367239999998995	\N	0101000020E610000000E74DEA7059024013EA8E6A7DCE4440	\N	PISO	VENTA	BUENESTADO	72	65000	EUR	t	2016-12-01 19:19:08.159506+01	f		102	2016-12-01 19:19:08.159613+01	1	España, Barcelona, Granollers, Francesc Ribas, 08402	
+33	España	Valencia	Valencia	Arte mayor de la seda	46018	39.470035799999998	-0.397632799999997011	\N	0101000020E61000000048F4D7D072D9BF7F7912222ABC4340	\N	PISO	VENTA	BUENESTADO	91	93000	EUR	t	2016-11-26 12:39:53.490054+01	f		102	2016-11-26 12:39:53.490176+01	1	España, Valencia, Valencia, Arte mayor de la seda, 46018	
+49	España	Vizcaya	Bilbao	Loruri Etxaldea	48007	43.270950599999999	-2.92600560000005006	\N	0101000020E6100000004EBF9F756807C071EA5E82AEA24540	\N	PISO	VENTA	BUENESTADO	70	120000	EUR	t	2016-12-12 16:23:07.18769+01	f		112	2016-12-12 16:23:07.187821+01	1	España, Vizcaya, Bilbao, Loruri Etxaldea, 48007	
+28	España	Girona	Girona	Carrer de mossèn baldiri reixac	17003	41.9714269999999985	2.8230260999999901	\N	0101000020E610000000093AB58E950640C7B94DB857FC4440	\N	PISO	VENTA	BUENESTADO	113	190000	EUR	t	2016-11-25 17:35:17.707032+01	f		84	2016-11-25 17:35:17.70727+01	1	España, Girona, Girona, Carrer de mossèn baldiri reixac, 17003	
+53	España	Barcelona	Granollers	Font de l'Escot	08401	41.6127207999999982	2.28835030000005002	\N	0101000020E61000000056229A8A4E02401BCA9AA26DCE4440	\N	PISO	VENTA	BUENESTADO	90	145000	EUR	t	2017-02-18 22:06:18.944213+01	f	677 308 871	114	2017-02-18 22:06:18.944362+01	1	España, Barcelona, Granollers, Font de l'Escot, 08401	
+38	España	Granada	Granada	Calle Santa Clara	18007	37.1583499999999987	-3.6008342000000102	\N	0101000020E6100000008C3A2982CE0CC02AA913D044944240	\N	PISO	VENTA	BUENESTADO	107	95000	EUR	t	2016-11-27 11:39:06.919504+01	f		108	2016-11-27 11:39:06.919615+01	1	España, Granada, Granada, Calle Santa Clara, 18007	
+47	España	Barcelona	Granollers	Urgell	08402	41.5913158999999979	2.28932059999999993	\N	0101000020E610000000799851875002406A0D4A3DB0CB4440	\N	PISO	VENTA	BUENESTADO	73	73607	EUR	t	2016-12-01 19:28:15.107231+01	f		109	2016-12-01 19:28:15.107407+01	1	España, Barcelona, Granollers, Urgell, 08402	
+23	España	Valladolid	Valladolid	Paseo De Zorrilla	47006	41.6314338999999975	-4.74044530000003039	\N	0101000020E610000080E8EF4A37F612C0F90A77D3D2D04440	\N	PISO	VENTA	BUENESTADO	80	59000	EUR	t	2016-11-25 14:06:45.033085+01	f		86	2016-11-25 14:06:45.033291+01	1	España, Valladolid, Valladolid, Paseo De Zorrilla, 47006	
+27	España	Valladolid	Valladolid	Paseo San Vicente	47013	41.6431064000000006	-4.71836959999995997	\N	0101000020E610000000C3C9479CDF12C095EC7D4F51D24440	\N	PISO	VENTA	BUENESTADO	75	71000	EUR	t	2016-11-25 14:15:38.455977+01	f		86	2016-11-25 14:15:38.456139+01	1	España, Valladolid, Valladolid, Paseo San Vicente, 47013	
+52	España	Barcelona	Barcelona	Les corts	08029	41.3834895000000031	2.11679709999999011	\N	0101000020E61000000024665133EF0040016E162F16B14440	\N	PISO	ALQUILER		85	1300	EUR	t	2017-01-25 17:55:06.466009+01	f		108	2017-01-25 17:55:06.466243+01	1	España, Barcelona, Barcelona, Les corts, 08029	
+20	España	Zaragoza	Zaragoza	Rosalia de Castro	50018	41.6488226000000026	-0.889085300000033052	\N	0101000020E61000000058DB036373ECBFEEF3739E0CD34440	\N	PISO	VENTA	BUENESTADO	69	160000	EUR	t	2016-11-24 21:28:05.539946+01	f		97	2016-11-24 21:28:05.540072+01	1	España, Zaragoza, Zaragoza, Rosalia de Castro, 50018	
+41	España	Barcelona	Montcada i Reixac	Moli 22	08110	41.4715056000000004	2.18459729999994989	\N	0101000020E6100000007033260E7A0140C0F0A54B5ABC4440	\N	PARKING	ALQUILER		\N	140	EUR	t	2016-11-28 00:19:06.458924+01	f	645738784	108	2016-11-28 00:19:06.459156+01	2	España, Barcelona, Montcada i Reixac, Moli 22, 08110	
+3	España	Barcelona	Barcelona	Sant Antoni	08011	41.3772662000000011	2.1585314000000202	\N	0101000020E6100000001D531CAC4401406F7143424AB04440	\N	PISO	VENTA	BUENESTADO	90	332000	EUR	t	2016-11-23 20:45:16.33713+01	f		78	2016-11-23 20:45:16.337239+01	1	España, Barcelona, Barcelona, Sant Antoni, 08011	
+40	España	Granada	Churriana de la vega	Calle San Ramón	18194	37.1463188999999971	-3.64715230000002011	\N	0101000020E61000000040602F5E2D0DC0B224E593BA924240	\N	CASA	VENTA	BUENESTADO	408	210500	EUR	t	2016-11-27 11:47:12.315899+01	f		101	2016-11-27 11:47:12.316011+01	1	España, Granada, Churriana de la vega, Calle San Ramón, 18194	
+36	España	Granada	La zubia	Calle El Greco	18140	37.1160969000000023	-3.6104023999999999	\N	0101000020E610000000334BA71AE20CC060556243DC8E4240	\N	CASA	VENTA	BUENESTADO	179	179900	EUR	t	2016-11-27 11:34:30.647829+01	f		99	2016-11-27 11:34:30.647941+01	1	España, Granada, La zubia, Calle El Greco, 18140	
+51	España	Barcelona	Barcelona	Avenida Madrid	08028	41.379369699999998	2.12913540000000001	\N	0101000020E6100000000CFE2378080140F24BB32F8FB04440	\N	PISO	ALQUILER		82	980	EUR	t	2017-01-25 17:48:22.313696+01	f		103	2017-01-25 17:48:22.313797+01	1	España, Barcelona, Barcelona, Avenida Madrid, 08028	
+4	España	Barcelona	Sant adrià de besòs	Carrer de Ricard	08930	41.4303811999999994	2.21769930000004978	\N	0101000020E610000000E66E21D9BD014018682DBB16B74440	\N	PISO	VENTA	BUENESTADO	116	189800	EUR	t	2016-11-23 20:49:53.824806+01	f		80	2016-11-23 20:49:53.824919+01	1	España, Barcelona, Sant adrià de besòs, Carrer de Ricard, 08930	
+44	España	Barcelona	Granollers	Navarra	08401	41.603985999999999	2.28443289999996013	\N	0101000020E610000000409BC184460240F59ECA694FCD4440	\N	PISO	VENTA	BUENESTADO	59	61000	EUR	t	2016-12-01 19:09:43.831035+01	f		124	2016-12-01 19:09:43.831165+01	1	España, Barcelona, Granollers, Navarra, 08401	
+55	España	Madrid	Madrid	Corredera Baja de San Pablo	28004	40.4225791000000001	-3.7037050999999801	\N	0101000020E6100000003AB42330A10DC08F3C6B1217364440	\N	CASA	ALQUILER		140	1700	EUR	t	2017-03-14 09:48:39.546367+01	f		94	2017-03-14 09:48:39.54647+01	1	España, Madrid, Madrid, Corredera Baja de San Pablo, 28004	Corredera Baja de San Pablo, Piso de tres habitaciones, dos vestidores, dos baños, cocina independiente. Exterior con cuatro balcones. Reformado. Finca rehabilitada con ascensor.
+56	España	Madrid	Madrid	Calle De La Victoria	28012	40.4161173000000034	-3.70167279999997989	\N	0101000020E610000000F103A1069D0DC06166E95443354440	\N	LOCAL	ALQUILER		300	4500	EUR	t	2017-03-14 10:31:22.718379+01	f		94	2017-03-14 10:31:22.718529+01	1	España, Madrid, Madrid, Calle De La Victoria, 28012	Oficina en Puerta de Sol, edificio en esquina. Antigua escuela de idiomas, dividida en tres oficinas diáfanas cada una con aseo, más una sala de recepción y un trastero. Acceso independiente en el portal y acceso principal desde la planta. Amplios ventanales con vistas a calle Victoria, Carrera de San Jerónimo y a la propia Puerta de Sol. Luminoso, calefacción de gas y aire acondicionado en todas las estancias.
+58	España	Salamanca	Salamanca	Paseo De Luis Cortes	37008	40.956963199999997	-5.68351600000004975	\N	0101000020E6100000002C499EEBBB16C0DDBC27C57D7A4440	\N	PISO	VENTA	BUENESTADO	65	115000	EUR	t	2017-03-19 11:35:54.491545+01	f		91	2017-03-19 11:35:54.491662+01	1	España, Salamanca, Salamanca, Paseo De Luis Cortes, 37008	Piso de dos dormitorios dobles, salón con balcón y buenas vistas, cocina con terraza,amuebalda. Un baño, calefacción individual de gas,ascensor,exterior, buenas calidades. Con piscina comunitaria y garaje amplio cerrado. Se vende totalmente amueblado. Alto. Exterior,luminoso. Tranquilo
+59	España	Salamanca	Salamanca	Paseo Del Doctor Torres Villarroel	37005	40.9729038999999986	-5.66288199999997044	\N	0101000020E6100000806DFC89CAA616C04F53701D887C4440	\N	PISO	VENTA	BUENESTADO	65	211300	EUR	t	2017-03-19 11:40:27.159805+01	f		91	2017-03-19 11:40:27.159924+01	1	España, Salamanca, Salamanca, Paseo Del Doctor Torres Villarroel, 37005	Piso en muy buen estado en el primer tramo de torres villarroel, tres dormitorios y un baño, orientación sur-oeste, exterior salón y un dormitorio a la avenida, servicios centrales económicos 110€, zonas comunes reformadas, acceso sin barreras arquitectónicas
+60	España	Salamanca	Salamanca	La Alamedilla	37001	40.9667455000000018	-5.65632660000006027	\N	0101000020E610000000FB891414A016C00E070951BE7B4440	\N	PISO	VENTA	BUENESTADO	96	220000	EUR	t	2017-03-19 11:43:31.250675+01	f		101	2017-03-19 11:43:31.250778+01	1	España, Salamanca, Salamanca, La Alamedilla, 37001	Piso de cuatro dormitorios, dos baños, salón y cocina con terraza de 100 mts rodeando toda la vivienda, exterior, con servicios centrales CON CONTADOR INDIVIDUAL y ascensor. Con plaza de garaje a la cual accede desde ascensor del edificio. A tan solo ocho minutos de plaza mayor, en zona dotada de todo tipo de sevicios. Buen vecindario.
+61	España	Barcelona	La Batlloria	Horts 3	08476	41.7169144000000003	2.54513139999995008	\N	0101000020E6100000002EF8D96D5C04400704DFD9C3DB4440	\N	PISO	VENTA	BUENESTADO	96	185000	EUR	t	2017-04-30 17:26:22.743833+02	f		78	2017-04-30 17:26:22.743939+02	3	España, Barcelona, La Batlloria, Horts 3, 08476	
+57	España	Madrid	Madrid	Plaza De España	28015	40.4233827999999988	-3.71216470000002019	\N	0101000020E610000000EDFE6783B20DC02ED8576831364440	\N	PISO	ALQUILER		84	1400	EUR	t	2017-03-14 11:03:39.354529+01	f		90	2017-03-14 11:03:39.354631+01	1	España, Madrid, Madrid, Plaza De España, 28015	Ático totalmente reformado y amueblado de 70 metros cuadrados útiles más terraza de 9 metros cuadrados, distribuida en dos dormitorios, un cuarto de baño, cocina independiente y amplio salón exterior con dos estancias. Cuenta con calefacción eléctrica. En estupenda finca con portero físico. No tiene ascensor.\r\nExterior a Calle Juan de Dios, con orientación Sur. Puertas interiores de madera y puerta exterior acorazada, ventanas climalit. Conserva el suelo de terrazo original de la vivienda y paredes lisas color vainilla.\r\nSalón con acceso a la terraza y amueblado completo.\r\nHabitación grande con cama de matrimonio y amplio armario, y habitación pequeña dedicada a cuarto de estudio, con posibilidad de poner una cama. ambas con ventana y muy luminosas.\r\nCuarto de baño completo con bañera y plato de ducha, lavabo, espejo e inodoro.\r\nCocina independiente completa, con todas las comodidades. Horno, microondas, lavavajillas, frigorífico y placa de vitrocerámica con campana.\r\nTerraza con buenas vistas, exterior a calle Juan de Dios, desde donde puedes ver el emblemático Edificio España.\r\nSituado en el barrio de Malasaña, zona privilegiada en pleno auge, a 150 metros de Gran Vía y calle Princesa, con la tranquilidad de la zona de Conde Duque. Comunicaciones excelentes en transporte público, a la vuelta de la esquina de acceso en ascensor al metro Plaza de España con líneas 3 y 10.\r\nSe requieren dos meses de fianza legal más mes de honorarios de agencia, así como demostrar solvencia económica. Contrato mínimo de un año.
+62	España	Barcelona	Granollers	Carrer de Corró	08401	41.6153225999999989	2.29029149999997017	\N	0101000020E6100000FF73965984520240AFBE15E4C2CE4440	\N	HABITACION	ALQUILER		\N	325	EUR	t	2017-07-30 21:26:28.312646+02	f	657878370	56	2017-07-30 21:26:28.312743+02	4	España, Barcelona, Granollers, Carrer de Corró, 08401	
+\.
+
+
+--
+-- Name: anuncios_anuncio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('anuncios_anuncio_id_seq', 62, true);
+
+
+--
+-- Data for Name: anuncios_anuncioapartamento; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anuncioapartamento (anuncio_ptr_id, habitaciones, banos, ano_construccion, parking) FROM stdin;
+\.
+
+
+--
+-- Data for Name: anuncios_anunciocasa; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anunciocasa (anuncio_ptr_id, habitaciones, banos, ano_construccion, parking) FROM stdin;
+40	4	2	1970	f
+55	3	2	1900	f
+36	3	1	1998	f
+54	4	1	\N	f
+\.
+
+
+--
+-- Data for Name: anuncios_anunciohabitacion; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anunciohabitacion (anuncio_ptr_id, permite_fumar_habitacion, permite_fumar_piso, internet, genero) FROM stdin;
+62	t	f	f	CHICO
+\.
+
+
+--
+-- Data for Name: anuncios_anuncioindustrial; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anuncioindustrial (anuncio_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: anuncios_anunciolocal; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anunciolocal (anuncio_ptr_id) FROM stdin;
+56
+\.
+
+
+--
+-- Data for Name: anuncios_anuncioparking; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anuncioparking (anuncio_ptr_id) FROM stdin;
+41
+\.
+
+
+--
+-- Data for Name: anuncios_anunciopiso; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anunciopiso (anuncio_ptr_id, habitaciones, banos, ano_construccion, parking) FROM stdin;
+30	4	2	1990	f
+48	2	1	\N	t
+57	2	1	\N	f
+31	2	1	1963	f
+45	3	1	1962	f
+10	4	2	1983	f
+24	4	1	1978	f
+20	2	1	1996	f
+21	3	1	1972	f
+49	2	1	1957	f
+52	4	2	1973	f
+43	3	1	1966	f
+58	2	1	\N	f
+22	3	1	\N	f
+42	1	1	2010	f
+59	3	1	\N	f
+50	3	1	1976	t
+47	3	1	\N	f
+18	3	2	1980	f
+25	3	1	\N	f
+27	3	1	1969	f
+19	4	2	1976	f
+6	3	1	\N	f
+37	3	1	2004	f
+9	3	2	1990	f
+44	3	1	1967	f
+34	2	1	1965	f
+8	3	1	1965	f
+60	4	1	\N	f
+29	3	1	1995	f
+51	3	1	1965	f
+28	4	2	1970	f
+3	3	1	1974	f
+12	3	1	1992	f
+2	2	1	1975	f
+13	3	1	1988	f
+15	5	2	1959	f
+5	3	1	1955	f
+1	3	1	\N	f
+16	3	2	1993	f
+4	3	2	1992	f
+38	3	1	1965	f
+39	3	2	2003	f
+7	3	1	1915	f
+53	2	1	\N	f
+33	3	1	1976	f
+17	3	1	1970	f
+61	3	2	2007	t
+11	2	2	2002	f
+14	3	1	1971	f
+23	3	1	1960	f
+26	3	1	\N	f
+46	4	1	1969	f
+32	4	2	1982	f
+35	2	1	2003	f
+\.
+
+
+--
+-- Data for Name: anuncios_anuncioterreno; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY anuncios_anuncioterreno (anuncio_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('auth_group_id_seq', 1, false);
+
+
+--
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add log entry	1	add_logentry
+2	Can change log entry	1	change_logentry
+3	Can delete log entry	1	delete_logentry
+4	Can add group	2	add_group
+5	Can change group	2	change_group
+6	Can delete group	2	delete_group
+7	Can add permission	3	add_permission
+8	Can change permission	3	change_permission
+9	Can delete permission	3	delete_permission
+10	Can add content type	4	add_contenttype
+11	Can change content type	4	change_contenttype
+12	Can delete content type	4	delete_contenttype
+13	Can add session	5	add_session
+14	Can change session	5	change_session
+15	Can delete session	5	delete_session
+16	Can add site	6	add_site
+17	Can change site	6	change_site
+18	Can delete site	6	delete_site
+19	Can add opciones de usuario	7	add_useroptions
+20	Can change opciones de usuario	7	change_useroptions
+21	Can delete opciones de usuario	7	delete_useroptions
+22	Can add localización de usuario	8	add_userlocation
+23	Can change localización de usuario	8	change_userlocation
+24	Can delete localización de usuario	8	delete_userlocation
+25	Can add Usuario	9	add_user
+26	Can change Usuario	9	change_user
+27	Can delete Usuario	9	delete_user
+31	Can add alert anuncio	11	add_alertanuncio
+32	Can change alert anuncio	11	change_alertanuncio
+33	Can delete alert anuncio	11	delete_alertanuncio
+34	Can add alert local	12	add_alertlocal
+35	Can change alert local	12	change_alertlocal
+36	Can delete alert local	12	delete_alertlocal
+37	Can add alert piso	13	add_alertpiso
+38	Can change alert piso	13	change_alertpiso
+39	Can delete alert piso	13	delete_alertpiso
+40	Can add alert parking	14	add_alertparking
+41	Can change alert parking	14	change_alertparking
+42	Can delete alert parking	14	delete_alertparking
+43	Can add alert habitacion	15	add_alerthabitacion
+44	Can change alert habitacion	15	change_alerthabitacion
+45	Can delete alert habitacion	15	delete_alerthabitacion
+46	Can add alert casa	16	add_alertcasa
+47	Can change alert casa	16	change_alertcasa
+48	Can delete alert casa	16	delete_alertcasa
+49	Can add alert terreno	17	add_alertterreno
+50	Can change alert terreno	17	change_alertterreno
+51	Can delete alert terreno	17	delete_alertterreno
+52	Can add alert industrial	18	add_alertindustrial
+53	Can change alert industrial	18	change_alertindustrial
+54	Can delete alert industrial	18	delete_alertindustrial
+55	Can add alert apartamento	19	add_alertapartamento
+56	Can change alert apartamento	19	change_alertapartamento
+57	Can delete alert apartamento	19	delete_alertapartamento
+58	Can add anuncio	20	add_anuncio
+59	Can change anuncio	20	change_anuncio
+60	Can delete anuncio	20	delete_anuncio
+61	Can add anuncio parking	21	add_anuncioparking
+62	Can change anuncio parking	21	change_anuncioparking
+63	Can delete anuncio parking	21	delete_anuncioparking
+64	Can add anuncio apartamento	22	add_anuncioapartamento
+65	Can change anuncio apartamento	22	change_anuncioapartamento
+66	Can delete anuncio apartamento	22	delete_anuncioapartamento
+67	Can add anuncio casa	23	add_anunciocasa
+68	Can change anuncio casa	23	change_anunciocasa
+69	Can delete anuncio casa	23	delete_anunciocasa
+70	Can add anuncio habitacion	24	add_anunciohabitacion
+71	Can change anuncio habitacion	24	change_anunciohabitacion
+72	Can delete anuncio habitacion	24	delete_anunciohabitacion
+73	Can add anuncio industrial	25	add_anuncioindustrial
+74	Can change anuncio industrial	25	change_anuncioindustrial
+75	Can delete anuncio industrial	25	delete_anuncioindustrial
+76	Can add anuncio piso	26	add_anunciopiso
+77	Can change anuncio piso	26	change_anunciopiso
+78	Can delete anuncio piso	26	delete_anunciopiso
+79	Can add anuncio local	27	add_anunciolocal
+80	Can change anuncio local	27	change_anunciolocal
+81	Can delete anuncio local	27	delete_anunciolocal
+82	Can add anuncio terreno	28	add_anuncioterreno
+83	Can change anuncio terreno	28	change_anuncioterreno
+84	Can delete anuncio terreno	28	delete_anuncioterreno
+85	Can add registro usuario temporal	29	add_registeruser
+86	Can change registro usuario temporal	29	change_registeruser
+87	Can delete registro usuario temporal	29	delete_registeruser
+88	Can add suscrito a artículos	30	add_articlesubscribe
+89	Can change suscrito a artículos	30	change_articlesubscribe
+90	Can delete suscrito a artículos	30	delete_articlesubscribe
+91	Can add articulo	31	add_article
+92	Can change articulo	31	change_article
+93	Can delete articulo	31	delete_article
+97	Can add etiqueta	33	add_tag
+98	Can change etiqueta	33	change_tag
+99	Can delete etiqueta	33	delete_tag
+100	Can add Mensaje Contacto	34	add_contactmessage
+101	Can change Mensaje Contacto	34	change_contactmessage
+102	Can delete Mensaje Contacto	34	delete_contactmessage
+103	Puede ver mensaje contacto	34	can_view_messages
+104	Can add favorites	35	add_favorites
+105	Can change favorites	35	change_favorites
+106	Can delete favorites	35	delete_favorites
+107	Can add image anuncio	36	add_imageanuncio
+108	Can change image anuncio	36	change_imageanuncio
+109	Can delete image anuncio	36	delete_imageanuncio
+110	Can add payment ipn	37	add_paymentipn
+111	Can change payment ipn	37	change_paymentipn
+112	Can delete payment ipn	37	delete_paymentipn
+113	Can add Mensaje Privado	38	add_message
+114	Can change Mensaje Privado	38	change_message
+115	Can delete Mensaje Privado	38	delete_message
+116	Can add promo	39	add_promo
+117	Can change promo	39	change_promo
+118	Can delete promo	39	delete_promo
+119	Can add actualizar Email	40	add_useremailupdate
+120	Can change actualizar Email	40	change_useremailupdate
+121	Can delete actualizar Email	40	delete_useremailupdate
+122	Can add Ratio	41	add_ratio
+123	Can change Ratio	41	change_ratio
+124	Can delete Ratio	41	delete_ratio
+\.
+
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('auth_permission_id_seq', 124, true);
+
+
+--
+-- Data for Name: authentication_registeruser; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY authentication_registeruser (id, username, email, password, token, date_joined) FROM stdin;
+\.
+
+
+--
+-- Name: authentication_registeruser_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('authentication_registeruser_id_seq', 6, true);
+
+
+--
+-- Data for Name: authentication_useremailupdate; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY authentication_useremailupdate (user_id, new_email, token, create_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: blog_article; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY blog_article (id, title, slug, image_header, body, active, create_at, update_at, default_tag_id, owner_id, views, description) FROM stdin;
+1	Creado el sitio OferVivienda.com para compra venta de pisos, casas y mas	creado-el-sitio-oferviviendacom-para-compra-venta-de-pisos-casas-y-mas		Se ha creado el sitio [www.ofervivienda.com](https://www.ofervivienda.com/) para poner anuncios de\r\nviviendas, locales, terrenos, parking y alquiler de habitaciones entre otros.\r\n\r\nPuedes poner anuncios totalmente gratuitos o buscar, aunque de momento apenas hay contenido pero\r\nte animo a que pongas tus anuncios, solo requiere crear una [cuenta](https://www.ofervivienda.com/auth/register/)\r\n\r\nCualquier sugerencia y/o duda, por favor, ponte en [contacto](https://www.ofervivienda.com/contact/)\r\ncon nosotros, se agradecerá mucho.\r\n\r\nPoco a poco se ira agregando mas funcionalidades y mejoras para el sitio.\r\n\r\n\r\nGracias, el equipo de [www.ofervivienda.com](https://www.ofervivienda.com/)	t	2016-11-18 09:46:53.769865+01	2017-02-03 01:34:20.129773+01	1	1	27	
+\.
+
+
+--
+-- Name: blog_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('blog_article_id_seq', 1, true);
+
+
+--
+-- Data for Name: blog_article_tags; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY blog_article_tags (id, article_id, tag_id) FROM stdin;
+1	1	1
+\.
+
+
+--
+-- Name: blog_article_tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('blog_article_tags_id_seq', 1, true);
+
+
+--
+-- Data for Name: blog_articlesubscribe; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY blog_articlesubscribe (id, email, token_unsigned) FROM stdin;
+\.
+
+
+--
+-- Name: blog_articlesubscribe_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('blog_articlesubscribe_id_seq', 1, false);
+
+
+--
+-- Data for Name: blog_tag; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY blog_tag (id, title, slug, views, thumbnail) FROM stdin;
+1	OferVivienda	ofervivienda	1	blog/tags/tag_ofervivienda.png
+\.
+
+
+--
+-- Name: blog_tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('blog_tag_id_seq', 1, true);
+
+
+--
+-- Data for Name: contact_contactmessage; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY contact_contactmessage (id, subject, message, username, email, read, is_register, create_at, screenshot) FROM stdin;
+2	Anuncio premium	Hola,\r\n\r\nHe comprado un anuncio premium pero no lo veo como tal.\r\n\r\nSaludos!	jferri	ferri1989@gmail.com	t	t	2016-11-28 00:22:59.524058+01	
+3	búsqueda	Hola,\r\n\r\nHe registrado mi anuncio de plaza de parking en montcada i reixac pero en búsqueda de parking, alquiler de montcada no aparece nada\r\n\r\nSaludos	jferri	ferri1989@gmail.com	t	t	2016-11-28 00:23:33.992302+01	
+\.
+
+
+--
+-- Name: contact_contactmessage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('contact_contactmessage_id_seq', 4, true);
+
+
+--
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2016-11-17 16:43:19.511329+01	1	www.ofervivienda.com	2	[{"changed": {"fields": ["domain", "name"]}}]	6	1
+2	2016-11-17 22:08:28.135425+01	1	OferVivienda	1	[{"added": {}}]	33	1
+3	2016-11-18 09:46:53.947112+01	1	Creado el sitio OferVivienda.com para compra venta de pisos, casas y mas	1	[{"added": {}}]	31	1
+4	2016-11-18 20:41:12.865271+01	1	Creado el sitio OferVivienda.com para compra venta de pisos, casas y mas	2	[{"changed": {"fields": ["image_header"]}}, {"changed": {"name": "article counter", "object": "ArticleCounter object", "fields": ["views"]}}]	31	1
+5	2016-11-18 20:46:19.003285+01	1	Creado el sitio OferVivienda.com para compra venta de pisos, casas y mas	2	[{"changed": {"fields": ["image_header"]}}]	31	1
+6	2016-11-18 20:46:52.315212+01	1	Creado el sitio OferVivienda.com para compra venta de pisos, casas y mas	2	[{"changed": {"name": "article counter", "object": "ArticleCounter object", "fields": ["views"]}}]	31	1
+7	2016-11-24 01:30:22.103431+01	1	Creado el sitio OferVivienda.com para compra venta de pisos, casas y mas	2	[{"changed": {"fields": ["image_header"]}}]	31	1
+8	2016-11-28 03:02:30.994884+01	2	jferri	2	[{"changed": {"fields": ["is_premium", "expire_premium_at"]}}]	9	1
+9	2016-12-06 18:14:52.63086+01	2	jferri	2	[]	9	1
+10	2016-12-06 18:15:00.214715+01	1	ofervivienda	2	[]	9	1
+11	2017-03-02 20:37:53.012962+01	4	Prueba	3		34	1
+12	2017-03-02 20:38:08.378287+01	1	Mensaje de prueba	3		34	1
+13	2017-03-23 12:04:02.440694+01	60	España, Salamanca, Granollers, La Alamedilla, 37001	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+14	2017-03-23 12:05:55.561916+01	49	España, Vizcaya, Bilbao, Loruri Etxaldea, 48007	2	[]	20	1
+15	2017-03-23 12:06:35.874256+01	48	España, Vizcaya, Bilbao, Lehendakari Aguirre, 48015	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+16	2017-03-23 12:07:14.080819+01	47	España, Barcelona, Granollers, Urgell, 08402	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+17	2017-03-23 12:07:42.482463+01	46	España, Barcelona, Granollers, Francesc Ribas, 08402	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+18	2017-03-23 12:08:08.442687+01	45	España, Barcelona, Granollers, Roger de Flor, 08401	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+19	2017-03-23 12:08:42.422768+01	44	España, Barcelona, Granollers, Navarra, 08401	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+20	2017-03-23 12:09:09.894123+01	43	España, Barcelona, Granollers, Francesc Ribas, 08402	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+21	2017-03-23 12:09:40.730446+01	42	España, Barcelona, Palafolls, C/ Verge Maria, 08389	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+22	2017-03-23 12:10:07.993406+01	40	España, Granada, Churriana de la vega, Calle San Ramón, 18194	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+23	2017-03-23 12:10:36.52617+01	39	España, Granada, Albolote, Calle Eolo, 18290	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+24	2017-03-23 12:10:58.880448+01	38	España, Granada, Granada, Calle Santa Clara, 18007	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+25	2017-03-23 12:11:19.601476+01	37	España, Granada, Armilla, Calle Santander, 18100	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+26	2017-03-23 12:12:08.280686+01	36	España, Granada, La zubia, Calle El Greco, 18140	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+27	2017-03-23 12:12:21.939779+01	35	España, Granada, Granada, Calle Santa Clara, 18007	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+28	2017-03-23 12:12:35.253974+01	34	España, Valencia, Valencia, Avd. Doctor Waksman, 46004	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+29	2017-03-23 12:12:51.364765+01	33	España, Valencia, Valencia, Arte mayor de la seda, 46018	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+30	2017-03-23 12:13:06.044581+01	32	España, Valencia, Valencia, Calle Torreta de Miramar, 46020	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+31	2017-03-23 12:13:31.28052+01	31	España, Valencia, Valencia, Castan tobeñas, 46014	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+32	2017-03-23 12:13:46.281523+01	30	España, Girona, Girona, Carrer santiago, 17003	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+33	2017-03-23 12:14:00.642578+01	29	España, Girona, Girona, Carrer pau casals, 17001	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+34	2017-03-23 12:14:20.310385+01	28	España, Girona, Girona, Carrer de mossèn baldiri reixac, 17003	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+35	2017-03-23 12:14:35.392399+01	27	España, Valladolid, Valladolid, Paseo San Vicente, 47013	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+36	2017-03-23 12:14:52.898451+01	26	España, Valladolid, Valladolid, Paseo De Zorrilla, 47009	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+37	2017-03-23 12:15:05.687683+01	25	España, Valladolid, Valladolid, Paseo Zorrilla, 47006	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+38	2017-03-23 12:15:56.266919+01	24	España, Valladolid, Valladolid, Paseo Zorrilla, 98.000	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+39	2017-03-23 12:16:10.731367+01	23	España, Valladolid, Valladolid, Paseo De Zorrilla, 47006	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+40	2017-03-23 12:16:22.786148+01	22	España, Valladolid, Valladolid, Calle del pelícano, 47012	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+41	2017-03-23 12:16:34.821888+01	21	España, Valladolid, Valladolid, San Vicente, 47013	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+42	2017-03-23 12:16:48.427379+01	20	España, Zaragoza, Zaragoza, Rosalia de Castro, 50018	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+43	2017-03-23 12:18:11.34398+01	19	España, Zaragoza, Zaragoza, Calle francisco de vitoria, 50008	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+44	2017-03-23 12:20:29.638109+01	18	España, Zaragoza, Zaragoza, C/Pedro II El Católico, 50010	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+45	2017-03-23 12:20:41.663073+01	17	España, Zaragoza, Zaragoza, La Jota, 50014	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+46	2017-03-23 12:20:55.378555+01	16	España, Zaragoza, Zaragoza, Actur, 50018	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+47	2017-03-23 12:21:10.714327+01	15	España, Zaragoza, Zaragoza, Paseo de las damas, 50008	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+48	2017-03-23 12:21:23.620618+01	14	España, Zaragoza, Zaragoza, Vía Hispanidad, 50009	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+49	2017-03-23 12:21:38.173728+01	13	España, Zaragoza, Zaragoza, María zayas sotomayor, 50018	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+50	2017-03-23 12:21:50.054532+01	12	España, Zaragoza, Zaragoza, Calle Cortés De Aragón, 50005	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+51	2017-03-23 12:22:01.297886+01	11	España, Barcelona, Premià de mar, Carrer joan vilano, 08330	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+52	2017-03-23 12:22:13.093394+01	10	España, Madrid, Móstoles, Corro 263 1º, AV. CARLOS V	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+53	2017-03-23 12:22:25.031591+01	9	España, Madrid, Móstoles, Avda Carlos V, 28938	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+54	2017-03-23 12:22:36.888614+01	8	España, Madrid, Madrid, Calle de isla de la gomera, 28039	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+55	2017-03-23 12:22:50.077774+01	7	España, Madrid, Madrid, C/Felisa Méndez, 28053	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+56	2017-03-23 12:23:02.354669+01	6	España, Madrid, Collado villalba, Calle Real, 28047	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+57	2017-03-23 12:23:14.802357+01	5	España, Madrid, Madrid, Calle Santa Beatriz, 28038	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+58	2017-03-23 12:23:27.100126+01	4	España, Barcelona, Sant adrià de besòs, Carrer de Ricard, 08930	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+59	2017-03-23 12:23:40.38055+01	3	España, Barcelona, Barcelona, Sant Antoni, 08011	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+60	2017-03-23 12:23:52.447649+01	2	España, Barcelona, Hospitalet de llobregat, La Florida, 08905	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+61	2017-03-23 12:24:06.075011+01	1	España, Barcelona, Barcelona, Poble sec, 08004	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+62	2017-03-23 20:22:56.868696+01	59	España, Salamanca, Salamanca, Paseo Del Doctor Torres Villarroel, 37005	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+63	2017-03-23 20:23:13.154366+01	58	España, Salamanca, Salamanca, Paseo De Luis Cortes, 37008	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+64	2017-03-23 20:23:30.089319+01	53	España, Barcelona, Granollers, Font de l'Escot, 08401	2	[{"changed": {"fields": ["estado_inmueble"]}}]	20	1
+65	2017-04-28 15:45:01.710072+02	1	Promo object	3		39	1
+66	2017-06-20 05:31:43.989864+02	1	ofervivienda.com	2	[{"changed": {"fields": ["domain"]}}]	6	1
+67	2017-07-27 22:59:31.193874+02	5	gilbertsap@mail.ru	3		29	1
+68	2017-07-31 08:07:23.804618+02	62	Habitacion en Alquiler: España, Barcelona, Granollers, Carrer de Corró, 08401	2	[{"changed": {"fields": ["address"]}}]	24	1
+\.
+
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('django_admin_log_id_seq', 68, true);
+
+
+--
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	group
+3	auth	permission
+4	contenttypes	contenttype
+5	sessions	session
+6	sites	site
+7	accounts	useroptions
+8	accounts	userlocation
+9	accounts	user
+11	alerts	alertanuncio
+12	alerts	alertlocal
+13	alerts	alertpiso
+14	alerts	alertparking
+15	alerts	alerthabitacion
+16	alerts	alertcasa
+17	alerts	alertterreno
+18	alerts	alertindustrial
+19	alerts	alertapartamento
+20	anuncios	anuncio
+21	anuncios	anuncioparking
+22	anuncios	anuncioapartamento
+23	anuncios	anunciocasa
+24	anuncios	anunciohabitacion
+25	anuncios	anuncioindustrial
+26	anuncios	anunciopiso
+27	anuncios	anunciolocal
+28	anuncios	anuncioterreno
+29	authentication	registeruser
+30	blog	articlesubscribe
+31	blog	article
+33	blog	tag
+34	contact	contactmessage
+35	favorites	favorites
+36	gallery	imageanuncio
+37	payments	paymentipn
+38	pmessages	message
+39	promos	promo
+40	authentication	useremailupdate
+41	ratings	ratio
+\.
+
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('django_content_type_id_seq', 41, true);
+
+
+--
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2016-11-17 16:40:00.318065+01
+2	contenttypes	0002_remove_content_type_name	2016-11-17 16:40:00.340491+01
+3	auth	0001_initial	2016-11-17 16:40:00.402842+01
+4	auth	0002_alter_permission_name_max_length	2016-11-17 16:40:00.417163+01
+5	auth	0003_alter_user_email_max_length	2016-11-17 16:40:00.433118+01
+6	auth	0004_alter_user_username_opts	2016-11-17 16:40:00.449056+01
+7	auth	0005_alter_user_last_login_null	2016-11-17 16:40:00.466393+01
+8	auth	0006_require_contenttypes_0002	2016-11-17 16:40:00.468918+01
+9	auth	0007_alter_validators_add_error_messages	2016-11-17 16:40:00.483942+01
+10	auth	0008_alter_user_username_max_length	2016-11-17 16:40:00.499722+01
+11	accounts	0001_initial	2016-11-17 16:40:00.725381+01
+12	admin	0001_initial	2016-11-17 16:40:00.770404+01
+13	admin	0002_logentry_remove_auto_add	2016-11-17 16:40:00.800784+01
+14	alerts	0001_initial	2016-11-17 16:40:01.084236+01
+15	anuncios	0001_initial	2016-11-17 16:40:01.366427+01
+16	authentication	0001_initial	2016-11-17 16:40:01.385672+01
+17	blog	0001_initial	2016-11-17 16:40:01.69107+01
+18	contact	0001_initial	2016-11-17 16:40:01.710627+01
+19	favorites	0001_initial	2016-11-17 16:40:01.819067+01
+20	gallery	0001_initial	2016-11-17 16:40:01.974619+01
+21	payments	0001_initial	2016-11-17 16:40:02.198928+01
+22	pmessages	0001_initial	2016-11-17 16:40:02.343341+01
+23	promos	0001_initial	2016-11-17 16:40:02.361748+01
+24	sessions	0001_initial	2016-11-17 16:40:02.384789+01
+25	sites	0001_initial	2016-11-17 16:40:02.403486+01
+26	sites	0002_alter_domain_unique	2016-11-17 16:40:02.421341+01
+27	blog	0002_auto_20161118_0944	2016-11-18 09:45:56.611597+01
+28	alerts	0002_auto_20161127_1149	2016-11-27 12:07:03.840168+01
+29	anuncios	0002_auto_20161127_1149	2016-11-27 12:07:04.160713+01
+30	alerts	0003_auto_20161128_1541	2016-11-28 17:37:43.851238+01
+31	anuncios	0003_auto_20161128_1541	2016-11-28 17:37:44.14456+01
+32	accounts	0002_userlocation_location_string	2016-12-04 14:57:32.902675+01
+33	accounts	0003_auto_20161204_1331	2016-12-04 14:57:32.993238+01
+34	accounts	0004_auto_20161204_1344	2016-12-04 14:57:33.086469+01
+35	accounts	0005_auto_20161204_1346	2016-12-04 14:57:33.183619+01
+36	alerts	0004_alertanuncio_location_string	2016-12-04 14:57:33.292941+01
+37	alerts	0005_auto_20161204_1331	2016-12-04 14:57:33.389212+01
+38	alerts	0006_auto_20161204_1344	2016-12-04 14:57:33.484877+01
+39	alerts	0007_auto_20161204_1346	2016-12-04 14:57:33.591483+01
+40	anuncios	0004_anuncio_location_string	2016-12-04 14:57:33.754703+01
+41	anuncios	0005_auto_20161204_1331	2016-12-04 14:57:33.845679+01
+42	anuncios	0006_auto_20161204_1344	2016-12-04 14:57:33.935953+01
+43	anuncios	0007_auto_20161204_1346	2016-12-04 14:57:34.032488+01
+44	contact	0002_contactmessage_image	2016-12-04 22:40:36.172942+01
+45	contact	0003_auto_20161204_2146	2016-12-04 22:40:36.190307+01
+46	contact	0004_auto_20161204_2151	2016-12-04 22:40:36.21073+01
+47	alerts	0008_alerthabitacion_internet	2016-12-05 19:39:24.644528+01
+48	anuncios	0008_anunciohabitacion_internet	2016-12-05 19:39:24.739655+01
+49	accounts	0006_user_slug	2016-12-06 18:11:14.895865+01
+50	accounts	0007_auto_20170113_0206	2017-01-13 02:45:03.093527+01
+51	authentication	0002_useremailupdate	2017-01-13 02:45:03.210231+01
+52	blog	0003_auto_20170131_0049	2017-01-31 01:49:11.59235+01
+53	authentication	0003_auto_20170227_2204	2017-02-27 23:48:20.435105+01
+54	accounts	0008_auto_20170308_1825	2017-03-08 18:26:55.157375+01
+55	alerts	0009_auto_20170308_1825	2017-03-08 18:26:56.216228+01
+56	anuncios	0009_auto_20170308_1825	2017-03-08 18:26:57.384996+01
+57	contact	0005_auto_20170308_1825	2017-03-08 18:26:57.419225+01
+58	favorites	0002_auto_20170308_1825	2017-03-08 18:26:57.561288+01
+59	gallery	0002_auto_20170308_1825	2017-03-08 18:26:57.745972+01
+60	payments	0002_auto_20170308_1825	2017-03-08 18:26:57.933159+01
+61	pmessages	0002_auto_20170308_1825	2017-03-08 18:26:57.974943+01
+62	promos	0002_auto_20170308_1825	2017-03-08 18:26:58.012987+01
+63	alerts	0010_auto_20170309_0911	2017-03-09 09:12:37.781106+01
+64	anuncios	0010_auto_20170309_0911	2017-03-09 09:12:38.333904+01
+65	anuncios	0011_auto_20170309_1101	2017-03-09 11:40:01.746719+01
+66	gallery	0003_imageanuncio_description	2017-03-14 11:57:12.544014+01
+67	ratings	0001_initial	2017-03-15 08:18:38.590727+01
+68	accounts	0009_useroptions_notify_precio_anuncio_baja	2017-03-15 14:50:38.423176+01
+69	accounts	0002_auto_20170318_2041	2017-03-18 20:42:17.758254+01
+70	accounts	0003_user_description	2017-03-19 12:28:16.534659+01
+71	alerts	0002_auto_20170323_1138	2017-03-23 11:59:13.033967+01
+72	alerts	0003_auto_20170323_1150	2017-03-23 11:59:13.138895+01
+73	anuncios	0002_auto_20170323_1138	2017-03-23 11:59:13.210299+01
+74	anuncios	0003_auto_20170323_1150	2017-03-23 11:59:13.282679+01
+75	alerts	0004_alerthabitacion_genero	2017-03-24 23:29:27.830804+01
+76	alerts	0005_auto_20170324_1624	2017-03-24 23:29:27.885302+01
+77	alerts	0006_auto_20170324_2311	2017-03-24 23:29:27.934161+01
+78	anuncios	0004_anunciohabitacion_genero	2017-03-24 23:29:27.999023+01
+79	anuncios	0005_auto_20170324_1624	2017-03-24 23:29:28.056035+01
+80	anuncios	0006_auto_20170324_2311	2017-03-24 23:29:28.118559+01
+81	promos	0002_auto_20170428_1724	2017-04-28 17:28:39.920464+02
+82	blog	0002_auto_20170607_0602	2017-06-07 06:04:05.728467+02
+83	blog	0003_article_description	2017-10-21 11:41:02.723421+02
+\.
+
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('django_migrations_id_seq', 83, true);
+
+
+--
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY django_session (session_key, session_data, expire_date) FROM stdin;
+kbv1ypf1sl3900zodm2r0w7mfzmvmrlj	NmIyZjMxZTM0ZjdjN2JiNTNlODExMmE0MDhiNzAxNjUzMmQ0ZjNhODp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImF1dGhlbnRpY2F0aW9uLmJhY2tlbmRzLkVtYWlsT3JVc2VybmFtZU1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9oYXNoIjoiNjI1OTM0MDQzOGNkMzJkN2E3NWM0N2M1YmFmMWQ5NjlhOWE3YTg4ZSJ9	2018-01-31 00:05:04.728613+01
+k8ykmjnwlusxjuaas4o7qxwao6ujudzm	NmIyZjMxZTM0ZjdjN2JiNTNlODExMmE0MDhiNzAxNjUzMmQ0ZjNhODp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImF1dGhlbnRpY2F0aW9uLmJhY2tlbmRzLkVtYWlsT3JVc2VybmFtZU1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9oYXNoIjoiNjI1OTM0MDQzOGNkMzJkN2E3NWM0N2M1YmFmMWQ5NjlhOWE3YTg4ZSJ9	2018-02-01 23:13:55.648438+01
+\.
+
+
+--
+-- Data for Name: django_site; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY django_site (id, domain, name) FROM stdin;
+1	ofervivienda.com	OferVivienda
+\.
+
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('django_site_id_seq', 1, true);
+
+
+--
+-- Data for Name: favorites_favorites; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY favorites_favorites (owner_id) FROM stdin;
+1
+2
+3
+4
+\.
+
+
+--
+-- Data for Name: favorites_favorites_anuncios; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY favorites_favorites_anuncios (id, favorites_id, anuncio_id) FROM stdin;
+\.
+
+
+--
+-- Name: favorites_favorites_anuncios_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('favorites_favorites_anuncios_id_seq', 9, true);
+
+
+--
+-- Data for Name: gallery_imageanuncio; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY gallery_imageanuncio (id, image, thumbnail, anuncio_id, description) FROM stdin;
+1	anuncios/IDc2974400-0000-0500-0000-000002400985.jpg	anuncios/thumbnail_IDc2974400-0000-0500-0000-000002400985.jpg	41	
+2	anuncios/0900b388804b30ca.jpg	anuncios/thumbnail_0900b388804b30ca.jpg	42	
+3	anuncios/0900b388804c935a.jpg	anuncios/thumbnail_0900b388804c935a.jpg	42	
+4	anuncios/0900b388804ce9b1.jpg	anuncios/thumbnail_0900b388804ce9b1.jpg	42	
+5	anuncios/0900b38880492178.jpg	anuncios/thumbnail_0900b38880492178.jpg	42	
+6	anuncios/0900b388804d0332.jpg	anuncios/thumbnail_0900b388804d0332.jpg	42	
+7	anuncios/0900b38881233cb6.jpg	anuncios/thumbnail_0900b38881233cb6.jpg	43	
+8	anuncios/0900b38881233cb7.jpg	anuncios/thumbnail_0900b38881233cb7.jpg	43	
+9	anuncios/0900b38881233cb8.jpg	anuncios/thumbnail_0900b38881233cb8.jpg	43	
+10	anuncios/0900b38881233ceb.jpg	anuncios/thumbnail_0900b38881233ceb.jpg	43	
+11	anuncios/0900b38880bc2bdd.jpg	anuncios/thumbnail_0900b38880bc2bdd.jpg	44	
+12	anuncios/0900b38880bc2be0.jpg	anuncios/thumbnail_0900b38880bc2be0.jpg	44	
+13	anuncios/0900b38880bc2c0c.jpg	anuncios/thumbnail_0900b38880bc2c0c.jpg	44	
+14	anuncios/0900b38880bc2c0d.jpg	anuncios/thumbnail_0900b38880bc2c0d.jpg	44	
+15	anuncios/0900b38880bc2c12.jpg	anuncios/thumbnail_0900b38880bc2c12.jpg	44	
+16	anuncios/0900b36a8036db8d.jpg	anuncios/thumbnail_0900b36a8036db8d.jpg	45	
+17	anuncios/0900b36a8036db8e.jpg	anuncios/thumbnail_0900b36a8036db8e.jpg	45	
+18	anuncios/0900b36a8036db8f.jpg	anuncios/thumbnail_0900b36a8036db8f.jpg	45	
+19	anuncios/0900b36a8036db91.jpg	anuncios/thumbnail_0900b36a8036db91.jpg	45	
+20	anuncios/0900b36a8036db92.jpg	anuncios/thumbnail_0900b36a8036db92.jpg	45	
+21	anuncios/0900b388812f2385.jpg	anuncios/thumbnail_0900b388812f2385.jpg	46	
+22	anuncios/0900b388810bc551.jpg	anuncios/thumbnail_0900b388810bc551.jpg	47	
+23	anuncios/0900b388810bc552.jpg	anuncios/thumbnail_0900b388810bc552.jpg	47	
+24	anuncios/0900b388810bc553.jpg	anuncios/thumbnail_0900b388810bc553.jpg	47	
+25	anuncios/0900b388810bc554.jpg	anuncios/thumbnail_0900b388810bc554.jpg	47	
+26	anuncios/0900b38881244871.jpg	anuncios/thumbnail_0900b38881244871.jpg	48	
+27	anuncios/0900b388813cd19e.jpg	anuncios/thumbnail_0900b388813cd19e.jpg	49	
+28	anuncios/01.jpg	anuncios/thumbnail_01.jpg	50	
+29	anuncios/02.jpg	anuncios/thumbnail_02.jpg	50	
+30	anuncios/03.jpg	anuncios/thumbnail_03.jpg	51	
+31	anuncios/04.jpg	anuncios/thumbnail_04.jpg	51	
+32	anuncios/01_oP8fyUm.jpg	anuncios/thumbnail_01_oP8fyUm.jpg	52	
+33	anuncios/02_u2oOcbJ.jpg	anuncios/thumbnail_02_u2oOcbJ.jpg	52	
+34	anuncios/987668df768.jpg	anuncios/thumbnail_987668df768.jpg	54	
+35	anuncios/2130908098.jpg	anuncios/thumbnail_2130908098.jpg	54	
+37	anuncios/aasd2134.jpg	anuncios/thumbnail_aasd2134.jpg	56	
+38	anuncios/12dsadf3.jpg	anuncios/thumbnail_12dsadf3.jpg	56	
+36	anuncios/9876hh43342.jpg	anuncios/thumbnail_9876hh43342.jpg	55	
+39	anuncios/jhkjhdsf87.jpg	anuncios/thumbnail_jhkjhdsf87.jpg	58	
+40	anuncios/sdfrsdf23.jpg	anuncios/thumbnail_sdfrsdf23.jpg	58	
+41	anuncios/386095051.jpg	anuncios/thumbnail_386095051.jpg	59	
+42	anuncios/sdffrsdf23.jpg	anuncios/thumbnail_sdffrsdf23.jpg	59	
+43	anuncios/382831931.jpg	anuncios/thumbnail_382831931.jpg	60	
+44	anuncios/382831933.jpg	anuncios/thumbnail_382831933.jpg	60	
+45	anuncios/IMG-20170728-WA0000.jpg	anuncios/thumbnail_IMG-20170728-WA0000.jpg	62	
+46	anuncios/IMG-20170728-WA0001.jpg	anuncios/thumbnail_IMG-20170728-WA0001.jpg	62	
+\.
+
+
+--
+-- Name: gallery_imageanuncio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('gallery_imageanuncio_id_seq', 46, true);
+
+
+--
+-- Data for Name: payments_paymentipn; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY payments_paymentipn (id, item_name, item_number, invoice, txn_id, payment_status, total_amount, receiver_amount, post_data, payment_date, user_id) FROM stdin;
+1	Anuncio Premium	ANUNCIO	zh51GUcdEqRhhZNpbKg2lQ74VLhH7j	13A44141XE701160G	Completed	2	1.58000000000000007	{\n  "protection_eligibility": "Eligible",\n  "residence_country": "ES",\n  "notify_version": "3.8",\n  "address_name": "Jordi Ferri Pereiro",\n  "payment_gross": "",\n  "item_name": "Anuncio Premium",\n  "receiver_id": "EHGX3HQYMLBW8",\n  "address_country": "Spain",\n  "payment_status": "Completed",\n  "payer_id": "AARCS6UESK3UN",\n  "verify_sign": "AFcWxV21C7fd0v3bYYYRCpSSRl31A6PhtpBsnzoO1BdEecLVw56f5OWW",\n  "payment_fee": "",\n  "last_name": "Ferri Pereiro",\n  "transaction_subject": "",\n  "charset": "windows-1252",\n  "custom": "2",\n  "mc_fee": "0.42",\n  "address_city": "Granollers",\n  "address_state": "Barcelona",\n  "item_number": "ANUNCIO",\n  "address_zip": "08401",\n  "mc_gross": "2.00",\n  "resend": "true",\n  "ipn_track_id": "84b96d4abdd76",\n  "payment_type": "instant",\n  "txn_id": "13A44141XE701160G",\n  "address_country_code": "ES",\n  "receiver_email": "snicoper@ofervivienda.com",\n  "first_name": "Jordi",\n  "address_status": "confirmed",\n  "invoice": "zh51GUcdEqRhhZNpbKg2lQ74VLhH7j",\n  "address_street": "C\\\\Ramon Llull N\\ufffd28 1\\ufffd 1\\ufffd",\n  "payer_email": "ferri1989@gmail.com",\n  "payer_status": "verified",\n  "payment_date": "23:48:15 Nov 29, 2016 PST",\n  "quantity": "1",\n  "txn_type": "web_accept",\n  "mc_currency": "EUR",\n  "business": "snicoper@ofervivienda.com"\n}	2016-11-30 14:35:24.842007+01	2
+2	Anuncio Premium	ANUNCIO	yltegmd84bXObcZfNXDJvhFuWv7jAX	3JN809299F2283319	Completed	2	1.58000000000000007	{\n  "item_name": "Anuncio Premium",\n  "payment_type": "instant",\n  "payer_email": "snicoper@gmail.com",\n  "payment_date": "22:15:01 Nov 08, 2017 PST",\n  "address_status": "confirmed",\n  "insurance_amount": "0.00",\n  "txn_id": "3JN809299F2283319",\n  "business": "snicoper@ofervivienda.com",\n  "payer_id": "BGJ8G26ZSVTCC",\n  "discount": "0.00",\n  "payment_gross": "",\n  "payer_status": "verified",\n  "address_name": "Salvador Nicolas Pereiro",\n  "residence_country": "ES",\n  "protection_eligibility": "Eligible",\n  "invoice": "yltegmd84bXObcZfNXDJvhFuWv7jAX",\n  "shipping_method": "Default",\n  "address_city": "Granollers",\n  "address_street": "Ramon Llull 28 1\\u00ba 1\\u00aa",\n  "quantity": "1",\n  "mc_fee": "0.42",\n  "last_name": "Nicolas Pereiro",\n  "address_country": "Spain",\n  "receiver_id": "EHGX3HQYMLBW8",\n  "mc_currency": "EUR",\n  "payment_fee": "",\n  "address_zip": "08401",\n  "notify_version": "3.8",\n  "txn_type": "web_accept",\n  "first_name": "Salvador",\n  "receiver_email": "snicoper@ofervivienda.com",\n  "ipn_track_id": "690b274aa86",\n  "payer_business_name": "ResourcesLibres",\n  "shipping_discount": "0.00",\n  "address_state": "Barcelona",\n  "custom": "1",\n  "address_country_code": "ES",\n  "payment_status": "Completed",\n  "mc_gross": "2.00",\n  "item_number": "ANUNCIO",\n  "charset": "UTF-8",\n  "transaction_subject": "",\n  "verify_sign": "AqJ4-Y8ul0BEB03CvGYh1y50NJVBAlrxUwsxvZFIVNVTZgjRXSNlm4yF"\n}	2017-11-09 07:15:05.895278+01	1
+\.
+
+
+--
+-- Name: payments_paymentipn_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('payments_paymentipn_id_seq', 2, true);
+
+
+--
+-- Data for Name: pmessages_message; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY pmessages_message (id, body, subject, recipient_read, sent_at, anuncio_id, parent_id, recipient_id, sender_id) FROM stdin;
+\.
+
+
+--
+-- Name: pmessages_message_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('pmessages_message_id_seq', 1, false);
+
+
+--
+-- Data for Name: promos_promo; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY promos_promo (id, code, payment_promo, active, create_at, expire_at) FROM stdin;
+\.
+
+
+--
+-- Name: promos_promo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('promos_promo_id_seq', 1, true);
+
+
+--
+-- Data for Name: ratings_ratio; Type: TABLE DATA; Schema: public; Owner: oferviviendacom
+--
+
+COPY ratings_ratio (id, score, anuncio_id, user_id) FROM stdin;
+\.
+
+
+--
+-- Name: ratings_ratio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oferviviendacom
+--
+
+SELECT pg_catalog.setval('ratings_ratio_id_seq', 1, false);
+
+
+--
+-- Data for Name: spatial_ref_sys; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text) FROM stdin;
+\.
+
+
+SET search_path = topology, pg_catalog;
+
+--
+-- Data for Name: topology; Type: TABLE DATA; Schema: topology; Owner: postgres
+--
+
+COPY topology (id, name, srid, "precision", hasz) FROM stdin;
+\.
+
+
+--
+-- Data for Name: layer; Type: TABLE DATA; Schema: topology; Owner: postgres
+--
+
+COPY layer (topology_id, layer_id, schema_name, table_name, feature_column, feature_type, level, child_id) FROM stdin;
+\.
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: accounts_user_groups accounts_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_groups
+    ADD CONSTRAINT accounts_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: accounts_user_groups accounts_user_groups_user_id_59c0b32f_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_groups
+    ADD CONSTRAINT accounts_user_groups_user_id_59c0b32f_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- Name: accounts_user accounts_user_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user
+    ADD CONSTRAINT accounts_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: accounts_user_user_permissions accounts_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_user_permissions
+    ADD CONSTRAINT accounts_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: accounts_user_user_permissions accounts_user_user_permissions_user_id_2ab516c2_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_user_permissions
+    ADD CONSTRAINT accounts_user_user_permissions_user_id_2ab516c2_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- Name: accounts_user accounts_user_username_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user
+    ADD CONSTRAINT accounts_user_username_key UNIQUE (username);
+
+
+--
+-- Name: accounts_userlocation accounts_userlocation_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_userlocation
+    ADD CONSTRAINT accounts_userlocation_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: accounts_useroptions accounts_useroptions_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_useroptions
+    ADD CONSTRAINT accounts_useroptions_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: alerts_alertanuncio alerts_alertanuncio_owner_id_1cc0e80e_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertanuncio
+    ADD CONSTRAINT alerts_alertanuncio_owner_id_1cc0e80e_uniq UNIQUE (owner_id, description);
+
+
+--
+-- Name: alerts_alertanuncio alerts_alertanuncio_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertanuncio
+    ADD CONSTRAINT alerts_alertanuncio_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: alerts_alertapartamento alerts_alertapartamento_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertapartamento
+    ADD CONSTRAINT alerts_alertapartamento_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alertcasa alerts_alertcasa_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertcasa
+    ADD CONSTRAINT alerts_alertcasa_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alerthabitacion alerts_alerthabitacion_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alerthabitacion
+    ADD CONSTRAINT alerts_alerthabitacion_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alertindustrial alerts_alertindustrial_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertindustrial
+    ADD CONSTRAINT alerts_alertindustrial_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alertlocal alerts_alertlocal_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertlocal
+    ADD CONSTRAINT alerts_alertlocal_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alertparking alerts_alertparking_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertparking
+    ADD CONSTRAINT alerts_alertparking_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alertpiso alerts_alertpiso_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertpiso
+    ADD CONSTRAINT alerts_alertpiso_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: alerts_alertterreno alerts_alertterreno_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertterreno
+    ADD CONSTRAINT alerts_alertterreno_pkey PRIMARY KEY (alertanuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anuncio anuncios_anuncio_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncio
+    ADD CONSTRAINT anuncios_anuncio_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: anuncios_anuncioapartamento anuncios_anuncioapartamento_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioapartamento
+    ADD CONSTRAINT anuncios_anuncioapartamento_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anunciocasa anuncios_anunciocasa_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciocasa
+    ADD CONSTRAINT anuncios_anunciocasa_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anunciohabitacion anuncios_anunciohabitacion_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciohabitacion
+    ADD CONSTRAINT anuncios_anunciohabitacion_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anuncioindustrial anuncios_anuncioindustrial_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioindustrial
+    ADD CONSTRAINT anuncios_anuncioindustrial_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anunciolocal anuncios_anunciolocal_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciolocal
+    ADD CONSTRAINT anuncios_anunciolocal_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anuncioparking anuncios_anuncioparking_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioparking
+    ADD CONSTRAINT anuncios_anuncioparking_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anunciopiso anuncios_anunciopiso_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciopiso
+    ADD CONSTRAINT anuncios_anunciopiso_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: anuncios_anuncioterreno anuncios_anuncioterreno_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioterreno
+    ADD CONSTRAINT anuncios_anuncioterreno_pkey PRIMARY KEY (anuncio_ptr_id);
+
+
+--
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authentication_registeruser authentication_registeruser_email_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY authentication_registeruser
+    ADD CONSTRAINT authentication_registeruser_email_key UNIQUE (email);
+
+
+--
+-- Name: authentication_registeruser authentication_registeruser_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY authentication_registeruser
+    ADD CONSTRAINT authentication_registeruser_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authentication_registeruser authentication_registeruser_username_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY authentication_registeruser
+    ADD CONSTRAINT authentication_registeruser_username_key UNIQUE (username);
+
+
+--
+-- Name: authentication_useremailupdate authentication_useremailupdate_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY authentication_useremailupdate
+    ADD CONSTRAINT authentication_useremailupdate_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: blog_article blog_article_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article
+    ADD CONSTRAINT blog_article_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_article blog_article_slug_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article
+    ADD CONSTRAINT blog_article_slug_key UNIQUE (slug);
+
+
+--
+-- Name: blog_article_tags blog_article_tags_article_id_b78a22e9_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article_tags
+    ADD CONSTRAINT blog_article_tags_article_id_b78a22e9_uniq UNIQUE (article_id, tag_id);
+
+
+--
+-- Name: blog_article_tags blog_article_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article_tags
+    ADD CONSTRAINT blog_article_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_article blog_article_title_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article
+    ADD CONSTRAINT blog_article_title_key UNIQUE (title);
+
+
+--
+-- Name: blog_articlesubscribe blog_articlesubscribe_email_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_articlesubscribe
+    ADD CONSTRAINT blog_articlesubscribe_email_key UNIQUE (email);
+
+
+--
+-- Name: blog_articlesubscribe blog_articlesubscribe_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_articlesubscribe
+    ADD CONSTRAINT blog_articlesubscribe_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_articlesubscribe blog_articlesubscribe_token_unsigned_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_articlesubscribe
+    ADD CONSTRAINT blog_articlesubscribe_token_unsigned_key UNIQUE (token_unsigned);
+
+
+--
+-- Name: blog_tag blog_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_tag
+    ADD CONSTRAINT blog_tag_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_tag blog_tag_slug_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_tag
+    ADD CONSTRAINT blog_tag_slug_key UNIQUE (slug);
+
+
+--
+-- Name: blog_tag blog_tag_title_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_tag
+    ADD CONSTRAINT blog_tag_title_key UNIQUE (title);
+
+
+--
+-- Name: contact_contactmessage contact_contactmessage_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY contact_contactmessage
+    ADD CONSTRAINT contact_contactmessage_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_content_type django_content_type_app_label_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_content_type
+    ADD CONSTRAINT django_content_type_app_label_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: django_site django_site_domain_a2e37b91_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_site
+    ADD CONSTRAINT django_site_domain_a2e37b91_uniq UNIQUE (domain);
+
+
+--
+-- Name: django_site django_site_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_site
+    ADD CONSTRAINT django_site_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: favorites_favorites_anuncios favorites_favorites_anuncios_favorites_id_fb89ed2f_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites_anuncios
+    ADD CONSTRAINT favorites_favorites_anuncios_favorites_id_fb89ed2f_uniq UNIQUE (favorites_id, anuncio_id);
+
+
+--
+-- Name: favorites_favorites_anuncios favorites_favorites_anuncios_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites_anuncios
+    ADD CONSTRAINT favorites_favorites_anuncios_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: favorites_favorites favorites_favorites_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites
+    ADD CONSTRAINT favorites_favorites_pkey PRIMARY KEY (owner_id);
+
+
+--
+-- Name: gallery_imageanuncio gallery_imageanuncio_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY gallery_imageanuncio
+    ADD CONSTRAINT gallery_imageanuncio_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payments_paymentipn payments_paymentipn_invoice_key; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY payments_paymentipn
+    ADD CONSTRAINT payments_paymentipn_invoice_key UNIQUE (invoice);
+
+
+--
+-- Name: payments_paymentipn payments_paymentipn_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY payments_paymentipn
+    ADD CONSTRAINT payments_paymentipn_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pmessages_message pmessages_message_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY pmessages_message
+    ADD CONSTRAINT pmessages_message_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: promos_promo promos_promo_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY promos_promo
+    ADD CONSTRAINT promos_promo_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ratings_ratio ratings_ratio_pkey; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY ratings_ratio
+    ADD CONSTRAINT ratings_ratio_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ratings_ratio ratings_ratio_user_id_anuncio_id_b22b6ff0_uniq; Type: CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY ratings_ratio
+    ADD CONSTRAINT ratings_ratio_user_id_anuncio_id_b22b6ff0_uniq UNIQUE (user_id, anuncio_id);
+
+
+--
+-- Name: accounts_user_2dbcba41; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_2dbcba41 ON accounts_user USING btree (slug);
+
+
+--
+-- Name: accounts_user_groups_0e939a4f; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_groups_0e939a4f ON accounts_user_groups USING btree (group_id);
+
+
+--
+-- Name: accounts_user_groups_e8701ad4; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_groups_e8701ad4 ON accounts_user_groups USING btree (user_id);
+
+
+--
+-- Name: accounts_user_slug_b5afb108_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_slug_b5afb108_like ON accounts_user USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: accounts_user_user_permissions_8373b171; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_user_permissions_8373b171 ON accounts_user_user_permissions USING btree (permission_id);
+
+
+--
+-- Name: accounts_user_user_permissions_e8701ad4; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_user_permissions_e8701ad4 ON accounts_user_user_permissions USING btree (user_id);
+
+
+--
+-- Name: accounts_user_username_6088629e_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_user_username_6088629e_like ON accounts_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: accounts_userlocation_location_string_6b68efe3_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_userlocation_location_string_6b68efe3_like ON accounts_userlocation USING btree (location_string varchar_pattern_ops);
+
+
+--
+-- Name: accounts_userlocation_location_string_6b68efe3_uniq; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_userlocation_location_string_6b68efe3_uniq ON accounts_userlocation USING btree (location_string);
+
+
+--
+-- Name: accounts_userlocation_point_id; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_userlocation_point_id ON accounts_userlocation USING gist (point);
+
+
+--
+-- Name: accounts_userlocation_polygon_id; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX accounts_userlocation_polygon_id ON accounts_userlocation USING gist (polygon);
+
+
+--
+-- Name: alerts_alertanuncio_5e7b1936; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX alerts_alertanuncio_5e7b1936 ON alerts_alertanuncio USING btree (owner_id);
+
+
+--
+-- Name: alerts_alertanuncio_location_string_06940d4f_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX alerts_alertanuncio_location_string_06940d4f_like ON alerts_alertanuncio USING btree (location_string varchar_pattern_ops);
+
+
+--
+-- Name: alerts_alertanuncio_location_string_06940d4f_uniq; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX alerts_alertanuncio_location_string_06940d4f_uniq ON alerts_alertanuncio USING btree (location_string);
+
+
+--
+-- Name: alerts_alertanuncio_point_id; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX alerts_alertanuncio_point_id ON alerts_alertanuncio USING gist (point);
+
+
+--
+-- Name: alerts_alertanuncio_polygon_id; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX alerts_alertanuncio_polygon_id ON alerts_alertanuncio USING gist (polygon);
+
+
+--
+-- Name: anuncios_anuncio_5e7b1936; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX anuncios_anuncio_5e7b1936 ON anuncios_anuncio USING btree (owner_id);
+
+
+--
+-- Name: anuncios_anuncio_location_string_c44934ae_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX anuncios_anuncio_location_string_c44934ae_like ON anuncios_anuncio USING btree (location_string varchar_pattern_ops);
+
+
+--
+-- Name: anuncios_anuncio_location_string_c44934ae_uniq; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX anuncios_anuncio_location_string_c44934ae_uniq ON anuncios_anuncio USING btree (location_string);
+
+
+--
+-- Name: anuncios_anuncio_point_id; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX anuncios_anuncio_point_id ON anuncios_anuncio USING gist (point);
+
+
+--
+-- Name: anuncios_anuncio_polygon_id; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX anuncios_anuncio_polygon_id ON anuncios_anuncio USING gist (polygon);
+
+
+--
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions_0e939a4f; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX auth_group_permissions_0e939a4f ON auth_group_permissions USING btree (group_id);
+
+
+--
+-- Name: auth_group_permissions_8373b171; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX auth_group_permissions_8373b171 ON auth_group_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_permission_417f1b1c; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX auth_permission_417f1b1c ON auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: authentication_registeruser_email_6f36ee2a_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX authentication_registeruser_email_6f36ee2a_like ON authentication_registeruser USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: authentication_registeruser_username_2b798930_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX authentication_registeruser_username_2b798930_like ON authentication_registeruser USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: blog_article_5e7b1936; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_article_5e7b1936 ON blog_article USING btree (owner_id);
+
+
+--
+-- Name: blog_article_ad225a86; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_article_ad225a86 ON blog_article USING btree (default_tag_id);
+
+
+--
+-- Name: blog_article_slug_c3fca16d_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_article_slug_c3fca16d_like ON blog_article USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: blog_article_tags_76f094bc; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_article_tags_76f094bc ON blog_article_tags USING btree (tag_id);
+
+
+--
+-- Name: blog_article_tags_a00c1b00; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_article_tags_a00c1b00 ON blog_article_tags USING btree (article_id);
+
+
+--
+-- Name: blog_article_title_3c514952_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_article_title_3c514952_like ON blog_article USING btree (title varchar_pattern_ops);
+
+
+--
+-- Name: blog_articlesubscribe_email_16364471_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_articlesubscribe_email_16364471_like ON blog_articlesubscribe USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: blog_articlesubscribe_token_unsigned_eb66e44c_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_articlesubscribe_token_unsigned_eb66e44c_like ON blog_articlesubscribe USING btree (token_unsigned varchar_pattern_ops);
+
+
+--
+-- Name: blog_tag_slug_01068d0e_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_tag_slug_01068d0e_like ON blog_tag USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: blog_tag_title_9d5dcaf6_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX blog_tag_title_9d5dcaf6_like ON blog_tag USING btree (title varchar_pattern_ops);
+
+
+--
+-- Name: django_admin_log_417f1b1c; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX django_admin_log_417f1b1c ON django_admin_log USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_e8701ad4; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX django_admin_log_e8701ad4 ON django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_session_de54fa62; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX django_session_de54fa62 ON django_session USING btree (expire_date);
+
+
+--
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: django_site_domain_a2e37b91_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX django_site_domain_a2e37b91_like ON django_site USING btree (domain varchar_pattern_ops);
+
+
+--
+-- Name: favorites_favorites_anuncios_1fe2d476; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX favorites_favorites_anuncios_1fe2d476 ON favorites_favorites_anuncios USING btree (favorites_id);
+
+
+--
+-- Name: favorites_favorites_anuncios_5dbc91ef; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX favorites_favorites_anuncios_5dbc91ef ON favorites_favorites_anuncios USING btree (anuncio_id);
+
+
+--
+-- Name: gallery_imageanuncio_5dbc91ef; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX gallery_imageanuncio_5dbc91ef ON gallery_imageanuncio USING btree (anuncio_id);
+
+
+--
+-- Name: payments_paymentipn_e8701ad4; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX payments_paymentipn_e8701ad4 ON payments_paymentipn USING btree (user_id);
+
+
+--
+-- Name: payments_paymentipn_invoice_207f4cdb_like; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX payments_paymentipn_invoice_207f4cdb_like ON payments_paymentipn USING btree (invoice varchar_pattern_ops);
+
+
+--
+-- Name: pmessages_message_5dbc91ef; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX pmessages_message_5dbc91ef ON pmessages_message USING btree (anuncio_id);
+
+
+--
+-- Name: pmessages_message_6be37982; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX pmessages_message_6be37982 ON pmessages_message USING btree (parent_id);
+
+
+--
+-- Name: pmessages_message_8b938c66; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX pmessages_message_8b938c66 ON pmessages_message USING btree (recipient_id);
+
+
+--
+-- Name: pmessages_message_924b1846; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX pmessages_message_924b1846 ON pmessages_message USING btree (sender_id);
+
+
+--
+-- Name: ratings_ratio_anuncio_id_650715fe; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX ratings_ratio_anuncio_id_650715fe ON ratings_ratio USING btree (anuncio_id);
+
+
+--
+-- Name: ratings_ratio_user_id_26b1756b; Type: INDEX; Schema: public; Owner: oferviviendacom
+--
+
+CREATE INDEX ratings_ratio_user_id_26b1756b ON ratings_ratio USING btree (user_id);
+
+
+--
+-- Name: accounts_user_groups accounts_user_groups_group_id_bd11a704_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_groups
+    ADD CONSTRAINT accounts_user_groups_group_id_bd11a704_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: accounts_user_groups accounts_user_groups_user_id_52b62117_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_groups
+    ADD CONSTRAINT accounts_user_groups_user_id_52b62117_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: accounts_user_user_permissions accounts_user_user_permiss_user_id_e4f0a161_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_user_permissions
+    ADD CONSTRAINT accounts_user_user_permiss_user_id_e4f0a161_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: accounts_user_user_permissions accounts_user_user_permission_id_113bb443_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_user_user_permissions
+    ADD CONSTRAINT accounts_user_user_permission_id_113bb443_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: accounts_userlocation accounts_userlocation_user_id_66f94a3f_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_userlocation
+    ADD CONSTRAINT accounts_userlocation_user_id_66f94a3f_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: accounts_useroptions accounts_useroptions_user_id_06ec90a6_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY accounts_useroptions
+    ADD CONSTRAINT accounts_useroptions_user_id_06ec90a6_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertterreno alerts_a_alertanuncio_ptr_id_024e70b2_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertterreno
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_024e70b2_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertapartamento alerts_a_alertanuncio_ptr_id_2e7b1e1d_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertapartamento
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_2e7b1e1d_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertpiso alerts_a_alertanuncio_ptr_id_36ac5f5b_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertpiso
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_36ac5f5b_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertcasa alerts_a_alertanuncio_ptr_id_641d9bb9_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertcasa
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_641d9bb9_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alerthabitacion alerts_a_alertanuncio_ptr_id_941e9de8_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alerthabitacion
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_941e9de8_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertlocal alerts_a_alertanuncio_ptr_id_c011ac10_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertlocal
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_c011ac10_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertparking alerts_a_alertanuncio_ptr_id_e4ed1d9b_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertparking
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_e4ed1d9b_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertindustrial alerts_a_alertanuncio_ptr_id_f0d5bee8_fk_alerts_alertanuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertindustrial
+    ADD CONSTRAINT alerts_a_alertanuncio_ptr_id_f0d5bee8_fk_alerts_alertanuncio_id FOREIGN KEY (alertanuncio_ptr_id) REFERENCES alerts_alertanuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: alerts_alertanuncio alerts_alertanuncio_owner_id_30ec375f_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY alerts_alertanuncio
+    ADD CONSTRAINT alerts_alertanuncio_owner_id_30ec375f_fk_accounts_user_id FOREIGN KEY (owner_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anunciopiso anuncios_anuncio_anuncio_ptr_id_086a442b_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciopiso
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_086a442b_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anunciohabitacion anuncios_anuncio_anuncio_ptr_id_2669015b_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciohabitacion
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_2669015b_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anuncioindustrial anuncios_anuncio_anuncio_ptr_id_6022eba7_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioindustrial
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_6022eba7_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anuncioapartamento anuncios_anuncio_anuncio_ptr_id_7a886911_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioapartamento
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_7a886911_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anuncioparking anuncios_anuncio_anuncio_ptr_id_85f7e8a4_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioparking
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_85f7e8a4_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anunciolocal anuncios_anuncio_anuncio_ptr_id_87c5c645_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciolocal
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_87c5c645_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anuncioterreno anuncios_anuncio_anuncio_ptr_id_a5d586fc_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncioterreno
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_a5d586fc_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anunciocasa anuncios_anuncio_anuncio_ptr_id_e3c5b5a6_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anunciocasa
+    ADD CONSTRAINT anuncios_anuncio_anuncio_ptr_id_e3c5b5a6_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_ptr_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: anuncios_anuncio anuncios_anuncio_owner_id_60cd0835_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY anuncios_anuncio
+    ADD CONSTRAINT anuncios_anuncio_owner_id_60cd0835_fk_accounts_user_id FOREIGN KEY (owner_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permiss_permission_id_84c5c92e_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permiss_permission_id_84c5c92e_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_permission auth_permiss_content_type_id_2f476e4b_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY auth_permission
+    ADD CONSTRAINT auth_permiss_content_type_id_2f476e4b_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: authentication_useremailupdate authentication_usere_user_id_0b366043_fk_accounts_; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY authentication_useremailupdate
+    ADD CONSTRAINT authentication_usere_user_id_0b366043_fk_accounts_ FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_article blog_article_default_tag_id_361fd616_fk_blog_tag_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article
+    ADD CONSTRAINT blog_article_default_tag_id_361fd616_fk_blog_tag_id FOREIGN KEY (default_tag_id) REFERENCES blog_tag(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_article blog_article_owner_id_5cc237cd_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article
+    ADD CONSTRAINT blog_article_owner_id_5cc237cd_fk_accounts_user_id FOREIGN KEY (owner_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_article_tags blog_article_tags_article_id_82c02dd6_fk_blog_article_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article_tags
+    ADD CONSTRAINT blog_article_tags_article_id_82c02dd6_fk_blog_article_id FOREIGN KEY (article_id) REFERENCES blog_article(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_article_tags blog_article_tags_tag_id_88eb3ed9_fk_blog_tag_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY blog_article_tags
+    ADD CONSTRAINT blog_article_tags_tag_id_88eb3ed9_fk_blog_tag_id FOREIGN KEY (tag_id) REFERENCES blog_tag(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_content_type_id_c4bce8eb_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_admin_log
+    ADD CONSTRAINT django_admin_content_type_id_c4bce8eb_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: favorites_favorites_anuncios favorites_favorites__anuncio_id_6d332942_fk_anuncios_; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites_anuncios
+    ADD CONSTRAINT favorites_favorites__anuncio_id_6d332942_fk_anuncios_ FOREIGN KEY (anuncio_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: favorites_favorites_anuncios favorites_favorites__favorites_id_aa7e1414_fk_favorites; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites_anuncios
+    ADD CONSTRAINT favorites_favorites__favorites_id_aa7e1414_fk_favorites FOREIGN KEY (favorites_id) REFERENCES favorites_favorites(owner_id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: favorites_favorites favorites_favorites_owner_id_e5c93c7f_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY favorites_favorites
+    ADD CONSTRAINT favorites_favorites_owner_id_e5c93c7f_fk_accounts_user_id FOREIGN KEY (owner_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: gallery_imageanuncio gallery_imageanuncio_anuncio_id_77e9e775_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY gallery_imageanuncio
+    ADD CONSTRAINT gallery_imageanuncio_anuncio_id_77e9e775_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: payments_paymentipn payments_paymentipn_user_id_6b8fa610_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY payments_paymentipn
+    ADD CONSTRAINT payments_paymentipn_user_id_6b8fa610_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: pmessages_message pmessages_message_anuncio_id_71ff5edf_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY pmessages_message
+    ADD CONSTRAINT pmessages_message_anuncio_id_71ff5edf_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: pmessages_message pmessages_message_parent_id_1cd8bcf5_fk_pmessages_message_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY pmessages_message
+    ADD CONSTRAINT pmessages_message_parent_id_1cd8bcf5_fk_pmessages_message_id FOREIGN KEY (parent_id) REFERENCES pmessages_message(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: pmessages_message pmessages_message_recipient_id_dbff9d5a_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY pmessages_message
+    ADD CONSTRAINT pmessages_message_recipient_id_dbff9d5a_fk_accounts_user_id FOREIGN KEY (recipient_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: pmessages_message pmessages_message_sender_id_e5a5cf9b_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY pmessages_message
+    ADD CONSTRAINT pmessages_message_sender_id_e5a5cf9b_fk_accounts_user_id FOREIGN KEY (sender_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: ratings_ratio ratings_ratio_anuncio_id_650715fe_fk_anuncios_anuncio_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY ratings_ratio
+    ADD CONSTRAINT ratings_ratio_anuncio_id_650715fe_fk_anuncios_anuncio_id FOREIGN KEY (anuncio_id) REFERENCES anuncios_anuncio(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: ratings_ratio ratings_ratio_user_id_26b1756b_fk_accounts_user_id; Type: FK CONSTRAINT; Schema: public; Owner: oferviviendacom
+--
+
+ALTER TABLE ONLY ratings_ratio
+    ADD CONSTRAINT ratings_ratio_user_id_26b1756b_fk_accounts_user_id FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

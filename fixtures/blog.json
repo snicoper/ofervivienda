@@ -1,0 +1,63 @@
+[
+{
+  "model": "blog.tag",
+  "pk": 1,
+  "fields": {
+    "title": "Test Tag 1",
+    "slug": "test-tag-1",
+    "views": 0,
+    "thumbnail": "blog/tags/Xplo_by_Hugo_Cliff.png"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 2,
+  "fields": {
+    "title": "Test Tag 2",
+    "slug": "test-tag-2",
+    "views": 0,
+    "thumbnail": "blog/tags/wallpaper_windows_8_rtm_18.jpg"
+  }
+},
+{
+  "model": "blog.article",
+  "pk": 1,
+  "fields": {
+    "owner": 1,
+    "default_tag": 1,
+    "title": "Test Article 1",
+    "slug": "test-article-1",
+    "image_header": "blog/headers/Xplo_by_Hugo_Cliff.png",
+    "description": "Ad duis aliquip id tempor consequat nisi labore proident. Quis eiusmod proident et aliquip esse qui.",
+    "body": "# Test de articulo\r\n\r\n## Cabeceras\r\n\r\n# Cabecera 1\r\n## Cabecera 2\r\n### Cabecera 3\r\n#### Cabecera 4\r\n##### Cabecera 5\r\n###### Cabecera 6\r\n\r\n## Link\r\n\r\n[Link a Google](https://www.google.es)\r\n\r\n## Tag code\r\n\r\n`Texto en tag <code></code>`\r\n\r\n## Bloque code Python\r\n\r\nCon `code` (Tres \\`)\r\n\r\n```python\r\nclass ArticleListView(generic.ListView):\r\n    \"\"\"Muestra lista de art\u00edculos.\"\"\"\r\n    template_name = 'blog/article_list.html'\r\n    context_object_name = 'articles'\r\n    model = Article\r\n    paginate_by = 10\r\n\r\n    def get_queryset(self):\r\n        if self.queryset is not None:\r\n            queryset = self.queryset.published()\r\n        else:\r\n            queryset = self.model.objects.published()\r\n        return queryset.select_related(\r\n            'owner',\r\n            'default_tag',\r\n            'article_num_views'\r\n        ).prefetch_related('tags')\r\n```\r\n\r\nCon indentaci\u00f3n\r\n\r\n    class ArticleListView(generic.ListView):\r\n        \"\"\"Muestra lista de art\u00edculos.\"\"\"\r\n        template_name = 'blog/article_list.html'\r\n        context_object_name = 'articles'\r\n        model = Article\r\n        paginate_by = 10\r\n\r\n        def get_queryset(self):\r\n            if self.queryset is not None:\r\n                queryset = self.queryset.published()\r\n            else:\r\n                queryset = self.model.objects.published()\r\n            return queryset.select_related(\r\n                'owner',\r\n                'default_tag',\r\n                'article_num_views'\r\n            ).prefetch_related('tags')",
+    "active": true,
+    "views": 7,
+    "create_at": "2016-11-11T07:04:10.239Z",
+    "update_at": "2016-11-11T07:11:34.516Z",
+    "tags": [
+      1
+    ]
+  }
+},
+{
+  "model": "blog.article",
+  "pk": 2,
+  "fields": {
+    "owner": 1,
+    "default_tag": 2,
+    "title": "Test Article 2",
+    "slug": "test-article-2",
+    "image_header": "",
+    "description": "Ad duis aliquip id tempor consequat nisi labore proident. Quis eiusmod proident et aliquip esse qui.",
+    "body": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "active": true,
+    "views": 9,
+    "create_at": "2016-11-11T07:12:50.120Z",
+    "update_at": "2016-11-11T07:12:50.120Z",
+    "tags": [
+      1,
+      2
+    ]
+  }
+}
+]

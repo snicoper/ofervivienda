@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Añadir imágenes en el anuncio {{ anuncio.get_title }}{% endblock meta_description %}
+{% block head_title %}- Añadir imágenes en el anuncio {{ anuncio.get_title }}{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Añadir imágenes</h1>
+      <hr>
+      <p class="lead">{{ anuncio.get_title }}</p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-8 m-auto">
+        {% if restantes %}
+          <div class="alert alert-info alert-icon">
+            Puedes poner un máximo de <span class="badge badge-default">{{ images_max }}</span>
+            imágenes, te queda por poner <span class="badge badge-default">{{ restantes }}</span>.
+          </div>
+        {% endif %}
+
+        <form method="post" action="" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ formset.management_form }}
+
+          {% for form in formset %}
+            <div class="text-center mb-4">
+              <img id="img-anuncio-{{ forloop.counter0 }}"
+                   class="img-fluid rounded"
+                   alt="Añadir imagen"
+                   width="300"
+              >
+            </div>
+
+            <div class="form-group">{{ form.image }}</div>
+
+            <div class="form-group">
+              <label class="form-control-label" for="{{ form.description.id_for_label }}">
+                {{ form.description.label }}
+              </label>
+              <input id="{{ form.description.id_for_label }}"
+                     name="form-{{ forloop.counter0 }}-description"
+                     class="form-control"
+                     type="text"
+                     value="{% if form.description.value %}{{ form.description.value }}{% endif %}"
+                     placeholder="Añade una descripción (Opcional)"
+              >
+            </div>
+            <hr>
+          {% endfor %}
+
+          <div>
+            <button class="btn btn-success" type="submit">Añadir</button>
+            <a class="btn btn-primary" href="{% url 'gallery:anuncio_gallery_list' anuncio.pk %}">
+              Ir a imágenes
+            </a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  {% for form in formset %}
+    <script>
+      $(document).ready(function() {
+        $('#id_form-{{ forloop.counter0 }}-image').on('change', function() {
+          $('#img-anuncio-{{ forloop.counter0 }}').addClass('z-depth-1');
+          readImagePreview('#img-anuncio-{{ forloop.counter0 }}', this);
+        });
+      });
+    </script>
+  {% endfor %}
+{% endblock scripts %}

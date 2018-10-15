@@ -1,0 +1,67 @@
+{% extends "accounts/base_accounts.html" %}
+{% load payments_tags %}
+
+{% block meta_description %}Adquirir un anuncio premium{% endblock meta_description %}
+{% block head_title %}- Anuncio premium{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Anuncio premium</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-12">
+        <h2 class="h4">Ventajas de un Anuncio Premium</h2>
+        <hr>
+
+        <ul>
+          <li>Las imágenes tienen una mayor resolución.</li>
+          <li>Todas las imágenes que quieras en cada anuncio.</li>
+          <li>Los posicionamientos de las búsquedas saldrán antes que los anuncios normales.</li>
+          <li>Actualizar el anuncio cada {{ reload_update_at }} días y subirlos en los resultados de búsqueda.</li>
+        </ul>
+
+        <h3 class="h5 mt-5">¿Como convertir mi anuncio en premium?</h3>
+        <hr>
+
+        <p>Para convertir un anuncio <strong>Normal</strong> a <strong>premium</strong>
+          primero has de pagar por <a href="{% url 'payments:process_account_premium' %}">Cuenta premium</a>
+          o un <a href="#paypal-button">Anuncio premium</a>.<br>
+
+          Después en los detalles del anuncio, en <strong>Convertir anuncio premium</strong>
+          en vez de salirte el icono <i class="fa fa-paypal" aria-hidden="true"></i>
+          te saldrá este otro <i class="fa fa-plus-square" aria-hidden="true"></i>.<br>
+
+          Simplemente pinchando en el icono, el anuncio sera <strong>Premium</strong> para siempre.
+        </p>
+
+        <div class="alert alert-info alert-icon">
+          Si ya tienes <strong>Cuenta premium</strong> o <strong>Anuncios premium</strong>
+          pagados, cuando creas un anuncio nuevo, automáticamente, se convierte en <strong>Premium</strong>
+        </div>
+
+        <h3 class="h5 mt-5">Si convierto mi anuncio en premium, ¿Las imágenes aumentaran su calidad?</h3>
+        <hr>
+
+        <p>No, has de eliminar las que tengas/quieras y volverlas a subir. Por cuestión de espacio
+          no se guardan las imágenes originales. Lo sentimos!</p>
+      </div>
+    </section>
+
+    <section class="row">
+      <a name="paypal-button"></a>
+      {% for form in forms %}
+        {% with card_info|get_card_info:forloop.counter0 as card_info %}
+          <div class="col-md-6">
+            {% include "payments/_payments_card.html" with form=form card_info=card_info %}
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </section>
+  </section>
+{% endblock accounts_content %}

@@ -1,0 +1,63 @@
+<div class="mb-3 bg-light">
+  {# <h2><i class="material-icons md-5">contact_mail</i> Información y contacto</h2>#}
+  <!-- Contacto -->
+  <table class="table">
+    <tbody>
+      {% if not anuncio.owner.username == 'ofervivienda' %}
+      <tr>
+        <td>
+          <i class="material-icons">person</i> Anunciante
+        </td>
+        <td class="text-value">
+          <a class="btn btn-outline-info btn-sm" href="{% url 'accounts:profile_public' anuncio.owner.slug %}">
+            {{ anuncio.owner.get_public_name }}
+          </a>
+        </td>
+      </tr>
+      {% endif %}
+
+      {% with anuncio.owner.user_options as user_options %}
+        {% if anuncio.phone or user_options.phone_public and anuncio.owner.phone %}
+          <tr>
+            <td><i class="material-icons">phone</i> Teléfono</td>
+            <td class="text-value">
+              {% if anuncio.phone %}{{ anuncio.phone }}{% else %}{{ anuncio.owner.phone }}{% endif %}
+            </td>
+          </tr>
+        {% endif %}
+
+        {% if user_options.email_public %}
+          <tr>
+            <td><i class="material-icons">email</i> Email</td>
+            <td class="text-value">{{ anuncio.owner.email }}</td>
+          </tr>
+        {% endif %}
+
+        {% with anuncio.owner.user_location as user_location %}
+          {% if user_options.address_public and user_location.location_string %}
+            <tr>
+              <td><i class="material-icons">location_on</i> Dirección</td>
+              <td class="text-value">
+                <span data-toggle="tooltip" title="{{ user_location.location_string }}">
+                  <a class="set-position-gmaps btn btn-outline-info btn-sm"
+                     href="javascript:void(0)"
+                     data-toggle="modal"
+                     data-target="#map-modal"
+                     data-latitude="{{ user_location.point.coords.1 }}"
+                     data-longitude="{{ user_location.point.coords.0 }}"
+                  >
+                    <i class="material-icons md-3">place</i>
+                  </a>
+                </span>
+              </td>
+            </tr>
+          {% endif %}
+        {% endwith %}
+      {% endwith %}
+    </tbody>
+  </table><!-- end contacto -->
+
+  {% if anuncio.owner != user %}
+    {% include "pmessages/_form_pmessage.html" %}
+  {% endif %}
+</div>

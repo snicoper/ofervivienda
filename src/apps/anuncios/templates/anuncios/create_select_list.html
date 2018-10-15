@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Seleccionar categoría para la creación de un nuevo anuncio{% endblock meta_description %}
+{% block head_title %}- Crear Anuncio - Seleccionar categoría{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Selecciona categoría</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-8 m-auto">
+        <section class="row">
+          <div class="col-12">
+            <div class="alert alert-info alert-icon">
+              {% if user.is_premium or user.anuncios_premium %}
+                  El anuncio que vas a crear es un anuncio <strong>Premium</strong>.
+                {% if not user.is_premium %}
+                  <span class="badge badge-secondary">{{ user.anuncios_premium }}</span> restantes.
+                {% endif %}
+              {% else %}
+                Si quieres un anuncio con mejor posicionamiento en las búsquedas y con mejor
+                calidad en las imágenes, puedes adquirir un
+                <a href="{% url 'payments:process_anuncio_premium' %}">Anuncio premium</a>
+              {% endif %}
+            </div>
+          </div>
+        </section>
+
+        <section class="row">
+          <div class="col-12">
+            <form method="post" action="">
+              <select id="id_category" class="form-control" name="category">
+                <option value="" selected="selected">Selecciona una categoría</option>
+                {% for key, value in category_list.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </form>
+          </div>
+        </section>
+      </div>
+    </section>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script>
+    $('#id_category').on('change', function() {
+      var value = this.value.toLowerCase();
+      if (value) {
+        var url = "{% url 'anuncios:create' 'piso' %}".replace('piso', value.toString());
+        window.location.href = url;
+      }
+    });
+  </script>
+{% endblock scripts %}

@@ -1,0 +1,142 @@
+{% load anuncios_tags %}
+
+<div class="mb-3 p-2 bg-light">
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>Editar anuncio</td>
+        <td class="text-value">
+          <a href="{% url 'anuncios:update' anuncio.category|lower anuncio.pk %}"
+             data-toggle="tooltip"
+             title="Editar anuncio"
+          >
+            <i class="material-icons">edit</i>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>Editar imágenes</td>
+        <td class="text-value">
+          <a href="{% url 'gallery:anuncio_gallery_list' anuncio.id %}"
+             data-toggle="tooltip"
+             title="Editar imágenes"
+          >
+            <i class="material-icons">edit</i>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>Actualizar anuncio</td>
+        <td class="text-value">
+          {% can_upload_update_at anuncio as can_upload %}
+          {% if can_upload == "True" %}
+            {# Puede actualizar update_at. #}
+            <a class="field-update-at-anuncio cursor-pointer"
+               data-toggle="tooltip"
+               title="Actualizando el anuncio en las búsquedas volverá a ponerse en primera posición."
+               data-url="{% url 'anuncios:api_update_at' anuncio.pk %}"
+            >
+              <i class="material-icons text-success">update</i>
+            </a>
+          {% elif can_upload == "False" %}
+            {# El anuncio no es premium. #}
+            <a href="{% url 'anuncios:convert_anuncio_premium' anuncio.id %}"
+               data-toggle="tooltip"
+               data-html="true"
+               title="Requiere que el anuncio sea premium<br>
+                      Actualizando el anuncio en las búsquedas volverá a ponerse en
+                      primera posición."
+            >
+              <i class="material-icons text-danger">update</i>
+            </a>
+          {% else %}
+            {# El anuncio es premium pero aun no lo puede actualizar. #}
+            <a href="javascript:void(0);"
+               data-toggle="tooltip"
+               title="El anuncio se podra actualizar el {{ can_upload }}"
+            >
+              <i class="material-icons text-warning">update</i>
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% if anuncio.active %}
+        <tr>
+          <td class="text-success">Anuncio activo</td>
+          <td class="text-value">
+            <a class="text-danger"
+               data-toggle="tooltip"
+               title="Desactivar anuncio"
+               href="{% url 'anuncios:deactivate' anuncio.id %}">
+              <i class="fa fa-toggle-off" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td class="text-danger">Anuncio inactivo</td>
+          <td class="text-value">
+            <a class="text-success"
+               data-toggle="tooltip"
+               title="Activar anuncio"
+               href="{% url 'anuncios:activate' anuncio.id %}">
+              <i class="fa fa-toggle-on" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+      {# Da opción de pagar si el anuncio no es Premium. #}
+      {% if not anuncio.is_premium and not user.is_premium and not user.anuncios_premium %}
+        <tr>
+          <td>Convertir a anuncio premium</td>
+          <td class="text-value">
+            <a href="{% url 'anuncios:convert_anuncio_premium' anuncio.id %}">
+              <i class="fa fa-paypal" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+      {# Si el anuncio no es Premium y tiene opciones de convertirlo a Premium #}
+      {% if not anuncio.is_premium and user.is_premium or user.anuncios_premium %}
+        <tr>
+          <td>Convertir a anuncio premium</td>
+          <td class="text-value">
+            <form method="post" action="{% url 'anuncios:convert_anuncio_premium' anuncio.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="can_activate" value="1">
+              <button class="btn btn-flat" type="submit">
+                <i class="fa fa-plus-square" aria-hidden="true"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endif %}
+      {% if anuncio.is_premium %}
+        <tr>
+          <td class="text-success">Anuncio premium</td>
+          <td class="text-value">
+            <i class="material-icons text-success">payment</i>
+          </td>
+        </tr>
+      {% endif %}
+      <tr>
+        <td>Visitas</td>
+        <td class="text-value">
+          <span class="badge badge-{% if anuncio.views %}success{% else %}secondary{% endif %}">{{ anuncio.views }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Personas que lo tienen en favoritos</td>
+        <td class="text-value">
+          <span class="badge badge-{% if anuncio.favorites_anuncios.count %}success{% else %}secondary{% endif %}">
+            {{ anuncio.favorites_anuncios.count }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <span class="text-info">
+    <small><strong>Nota: </strong>Estas opciones las ves por ser dueño del anuncio</small>
+  </span>
+</div>

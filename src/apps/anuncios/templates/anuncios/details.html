@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Anuncio {{ anuncio.get_title }}{% endblock meta_description %}
+{% block head_title %}- Detalles del anuncio {{ anuncio.get_title }}{% endblock head_title %}
+{% block og_properties %}
+  <meta property="og:title" content="{{ anuncio.get_title }}">
+  <meta property="og:description" content="Anuncio {{ anuncio.get_title }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{{ PROTOCOL }}{{ request.get_host }}{{ MEDIA_URL }}{{ anuncio.get_random_thumbnail }}">
+{% endblock og_properties %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1 class="text-header">
+        Detalles del anuncio
+        <span class="badge bgcolor-{{ anuncio.category|lower }}">{{ anuncio.get_category_display }}</span>
+        <span class="badge bgcolor-tipo-{{ anuncio.get_type_anuncio_display|lower }}">{{ anuncio.get_type_anuncio_display }}</span>
+      </h1>
+      <hr>
+      <p class="lead">
+        {{ anuncio.location_string }}
+        <a class="set-position-gmaps ml-3 btn btn-outline-success btn-sm"
+           href="javascript:void(0);"
+           data-toggle="modal"
+           data-target="#map-modal"
+           data-latitude="{{ anuncio.latitude }}"
+           data-longitude="{{ anuncio.longitude }}"
+        >
+          <i class="material-icons">place</i>
+        </a>
+      </p>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block content %}
+  <section class="container">
+    <section class="row">
+      <div class="col-lg-4">
+        {% if user == anuncio.owner %}
+          {% include "anuncios/_panel_owner_anuncio.html" %}
+        {% endif %}
+
+        {% include "anuncios/_panel_navbar.html" %}
+        {% include "anuncios/_panel_info_contact.html" %}
+      </div>
+
+      <div class="col-lg-8">
+        {% if anuncio.image_anuncio.count %}
+          {% include "anuncios/_panel_gallery.html" %}
+        {% endif %}
+
+        {% include "anuncios/_panel_caracteristicas.html" %}
+
+        {% if anuncio.description %}
+          {% include "anuncios/_panel_description.html" %}
+        {% endif %}
+      </div>
+    </section>
+
+    {% if anuncios_related_list %}
+      <section class="row">
+        <div class="col-lg-10 m-auto">
+          <h2>Anuncios en la zona</h2>
+          <hr>
+        </div>
+      </section>
+
+      {% include "anuncios/_anuncio_list.html" with anuncio_list=anuncios_related_list col="col-lg-10 offset-lg-1" %}
+    {% endif %}
+  </section>
+
+  {% include "_gmaps_modal.html" %}
+{% endblock content %}
+
+{% block scripts %}
+  {% include "_gmaps_script.html" with libraries="drawing" %}
+
+  <script>
+    // Galería de imágenes.
+    $("#lightgallery").lightGallery({
+      thumbnail: true,
+      animateThumb: true,
+      showThumbByDefault: true,
+      selector: 'div a '
+    });
+  </script>
+{% endblock scripts %}

@@ -1,0 +1,79 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block meta_description %}Lista de alertas{% endblock meta_description %}
+{% block head_title %}- Lista de alertas{% endblock head_title %}
+
+{% block page_title %}
+  <section class="jumbotron">
+    <section class="container">
+      <h1>Lista de alertas</h1>
+    </section>
+  </section>
+{% endblock page_title %}
+
+{% block accounts_content %}
+  <section class="row">
+    <div class="col-12">
+      <table class="table">
+        <thead>
+          {% if alert_list %}
+            <tr>
+              <th>Identificador</th>
+              <th colspan="2">Categoría</th>
+            </tr>
+          {% endif %}
+        </thead>
+        <tbody>
+          {% for alert in alert_list %}
+            <tr>
+              <td><i class="material-icons">notifications</i> {{ alert.description }}</td>
+              <td>
+                <span class="badge bgcolor-{{ alert.category|lower }}">
+                  {{ alert.get_category_display }}
+                </span>
+              </td>
+              <td class="text-right">
+                <a class="btn btn-outline-primary btn-sm"
+                   data-toggle="tooltip"
+                   title="Ver"
+                   href="{% url 'alerts:details' alert.pk %}"
+                >
+                  <i class="material-icons md-3">remove_red_eye</i>
+                </a>
+                <a class="btn btn-outline-success btn-sm"
+                   data-toggle="tooltip"
+                   title="Editar"
+                   href="{% url 'alerts:update' alert.pk %}"
+                >
+                  <i class="material-icons md-3">edit</i>
+                </a>
+                <a class="btn btn-outline-danger btn-sm"
+                   data-toggle="tooltip"
+                   title="Eliminar"
+                   href="{% url 'alerts:delete' alert.pk %}"
+                >
+                  <i class="material-icons md-3">delete</i>
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td class="text-center pt-4"><h5>No tienes alertas para mostrar</h5></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <hr>
+
+      <a class="btn btn-primary" href="{% url 'alerts:create' 'piso' %}">
+        <i class="material-icons">add_alert</i> Añadir alerta
+      </a>
+      {% if alert_list %}
+        <a class="btn btn-outline-warning" href="{% url 'alerts:delete_all' %}">
+          <i class="material-icons">delete</i> Eliminar todas
+        </a>
+      {% endif %}
+    </div>
+  </section>
+{% endblock accounts_content %}

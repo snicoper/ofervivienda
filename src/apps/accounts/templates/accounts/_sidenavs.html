@@ -1,0 +1,66 @@
+{% load utils_tags %}
+
+{% if user.is_superuser %}
+  <div class="list-group mb-4 mt-4 mt-lg-0">
+    <div class="list-group-item active">Administración</div>
+
+    <a class="list-group-item list-group-item-action pl-2 pl-2" href="{% url 'stats:index' %}">
+      <i class="material-icons">timeline</i> Stats
+    </a>
+    <a class="list-group-item list-group-item-action pl-2" href="{% url 'promos:generate_code_promo' %}">
+      <i class="material-icons">alarm_add</i> Promos
+    </a>
+    <a class="list-group-item list-group-item-action pl-2" href="{% url 'anuncios:list' %}">
+      <i class="material-icons">featured_play_list</i> Lista de anuncios
+    </a>
+    <a class="list-group-item list-group-item-action pl-2" href="{% url 'blog:index' %}">
+      <i class="material-icons">chrome_reader_mode</i> Blog
+    </a>
+    <a class="d-flex list-group-item list-group-item-action pl-2" href="{% url 'contact:message_list' %}">
+      <span class="mr-auto">
+        <i class="material-icons">contact_mail</i> Mensajes contacto
+      </span>
+      <span>
+        <span class="badge badge-{% if CONTACT_MESSAGES_UNREAD %}success{% else %}secondary{% endif %}">
+          {{ CONTACT_MESSAGES_UNREAD }}
+        </span>
+      </span>
+    </a>
+    <a class="list-group-item list-group-item-action pl-2" href="/admin/">
+      <i class="material-icons">verified_user</i> Admin
+    </a>
+  </div>
+{% endif %}
+
+<div class="list-group mb-3">
+  <div class="list-group-item active">Menú</div>
+
+  <a class="list-group-item list-group-item-action pl-2" href="{% url 'accounts:profile' %}">
+    <i class="material-icons">person</i> Perfil
+  </a>
+  <a class="list-group-item list-group-item-action pl-2" href="{% url 'accounts:location' %}">
+    <i class="material-icons">language</i> Localización
+  </a>
+  <a class="list-group-item list-group-item-action pl-2" href="{% url 'accounts:options' %}">
+    <i class="material-icons">settings</i> Opciones
+  </a>
+  <a class="list-group-item list-group-item-action pl-2" href="{% url 'alerts:list' %}">
+    <i class="material-icons">notifications</i> Alertas
+  </a>
+  <a class="list-group-item list-group-item-action pl-2" href="{% url 'anuncios:list_by_owner' user.slug %}">
+    <i class="material-icons">chrome_reader_mode</i> Mis anuncios
+  </a>
+  <a class="list-group-item list-group-item-action pl-2" href="{% url 'favorites:list' %}">
+    <i class="material-icons">star</i> Favoritos
+  </a>
+  <a class="d-flex list-group-item list-group-item-action pl-2" href="{% url 'pmessages:inbox' %}">
+    <span class="mr-auto">
+      <i class="material-icons">message</i> Mensajes
+    </span>
+    <span>
+      <span class="badge badge-{% if INBOX_COUNT %}success{% else %}secondary{% endif %}">
+        {{ INBOX_COUNT|default:'0' }}
+      </span>
+    </span>
+  </a>
+</div>
